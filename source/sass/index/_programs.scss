@@ -1,0 +1,9 @@
+
+
+.www {
+  display: none;
+}
+
+.www:checked + label {
+  color: red;
+}
