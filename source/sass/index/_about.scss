@@ -1,0 +1,105 @@
+.about__wrap {
+  width: 870px;
+  margin: auto;
+}
+
+.about__title {
+@include header();
+  margin-top: -11px;
+  margin-bottom: 26px;
+}
+
+.about__content {
+  padding: 0 91px;
+  @include font(17, 1.7);
+  margin-bottom: 0;
+  text-align: center;
+
+}
+
+.about__bg {
+  position: relative;
+  background-image: url("../img/desktop/watercolor_Bg@1x.png");
+  background-repeat: no-repeat;
+  padding-top: 44%;
+}
+
+.about__img {
+  margin-top: 17px;
+  position: absolute;
+  top: 0;
+  right: 50%;
+  transform: translate(50%);
+  width: 870px;
+  height: 460px;
+  overflow: hidden;
+}
+
+.about__img img {
+  position: absolute;
+  top: -100px;
+  left: -64px;
+}
+
+.about__play-btn {
+  color: white;
+}
+
+.about__play {
+  position: absolute;
+  top: 45.5%;
+  right: 50%;
+  width: 96px;
+  height: 96px;
+  transform: translate(50%);
+  z-index: 2;
+  border-radius: 50%;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.32);
+  border: none;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: white;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 50%;
+    right: 19%;
+    transform: translateY(50%);
+    border-top: 10px solid transparent;
+    border-right: 18px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 18px solid $blue;
+  }
+
+  &:hover::before {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  &:hover::after,
+  &:focus::after {
+    border-left-color: #63D3FD;
+  }
+
+  &:active::before {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    background-color: #F4F4F4;
+  }
+
+  &:active::after {
+    border-left-color: $blue;
+  }
+
+}
+

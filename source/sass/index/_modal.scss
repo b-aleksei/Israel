@@ -1,0 +1,136 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $modalBg;
+  opacity: 0.95;
+}
+
+.modal--success-invisible,
+.modal--call-invisible {
+  display: none;
+}
+
+
+.modal__wrap {
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  padding: 31px 47px;
+  transform: translate(50%, 47%);
+  width: 480px;
+  height: 521px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.modal__wrap--success {
+  text-align: center;
+  padding-top: 120px;
+}
+
+.modal__title {
+  @include header(28);
+  text-transform: none;
+  margin-bottom: 18px;
+  letter-spacing: -0.05rem
+}
+
+.modal__title--call {
+  text-align: left;
+}
+
+.modal__content {
+  @include font(15, 1.7);
+  opacity: 0.87;
+  padding-right: 30px;
+  margin-bottom: 33px;
+}
+
+.modal__content--success {
+  padding-left: 28px;
+}
+
+.modal__input {
+  border: 2px solid #E3E3E3;
+  border-radius: 80px;
+  width: 360px;
+  height: 59px;
+  padding: 0 39px;
+  @include font(17, 1.2, 500);
+  font-variant: small-caps;
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+}
+
+.modal__input--phone {
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.modal__submit {
+  @include yellowButton();
+  margin: 0 auto 17px auto;
+
+}
+
+.modal__check {
+display: none;
+}
+
+.modal__apply {
+  position: relative;
+  display: block;
+  padding-left: 86px;
+  padding-right: 50px;
+  @include font(13, 1.5);
+  opacity: 0.74;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 62px;
+    width: 15px;
+    height: 15px;
+    border: 2px solid $yellow;
+  }
+}
+
+.modal__ok {
+  @include yellowButton();
+  margin: 0 auto 17px auto;
+}
+
+.modal__close {
+  position: absolute;
+  top: 32px;
+  right: 33px;
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: -3px;
+    width: 22px;
+    height: 2px;
+    background: $gradient;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}

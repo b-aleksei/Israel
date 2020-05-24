@@ -9,27 +9,44 @@
   text-decoration: none;
 }
 
-@mixin font($size: 1.5, $lineHeight: 1.6, $weight:400) {
-  font-size: ($size * 1rem);
+@mixin font($size, $lineHeight: 1.6, $weight:400) {
+  font-size: ($size * 0.1rem);
   line-height: ($lineHeight);
   font-weight: $weight;
 }
 
-@mixin yellowButton($width) {
+@mixin header($size: 40, $lineHeight: 1.2) {
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 600;
+  color: $blue;
+  text-transform: uppercase;
+  letter-spacing: -0.08rem;
+  text-align: center;
+  font-size: ($size * 0.1rem);
+  line-height: ($lineHeight);
+}
+
+@mixin yellowButton($width: 264px, $pv: 20px) {
   display: block;
   width: $width;
-  @include font(12, 15, 600);
+  padding: $pv 20px;
+  text-align: center;
   text-decoration: none;
-  background-color: $basic;
-  letter-spacing: 2px;
+  background: $gradient;
+  border: none;
+  border-radius: 80px;
   text-transform: uppercase;
-  color: $white;
+  @include font(15, 1.2, 500);
+  font-variant: small-caps;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   word-break: break-word;
+  cursor: pointer;
 
   &:hover,
   &:focus
   {
-    background-color: $accent;
+    //background-color: $accent;
   }
 }
 
