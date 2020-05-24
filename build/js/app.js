@@ -1,28 +1,31 @@
 "use strict";
 
-(function () {
+( function () {
 
 
 //  data-send-form
-let body = document.body
-let modalOpeners = document.querySelectorAll("[data-modal-opener]");
-let classHidden = "modal--call-invisible";
-let modalCall = document.querySelector("." + classHidden);
-let modalCallClose = modalCall.querySelectorAll(".modal__close--call")
-
+  let body = document.body
+  let modalOpeners = document.querySelectorAll("[data-modal-opener]");
+  let classHidden = "modal--call-invisible";
+  let modalCall = document.querySelector("." + classHidden);
+  let modalCallClose = modalCall.querySelectorAll(".modal__close--call");
   let classHiddenSuccess = "modal--success-invisible";
-let modalSuccess = document.querySelector("." + classHiddenSuccess);
+  let modalSuccess = document.querySelector("." + classHiddenSuccess);
 // let sendForm = document.querySelector('[data-send-form]');
-let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
+  let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
 
-let storage = {};
-let form = modalCall.querySelector(".modal__form");
-let inputs = form.querySelectorAll(".modal__input");
-inputs.forEach(function (input) {
-  storage[input.name] = localStorage.getItem(input.name)
-})
+  let storage = {};
+  let form = modalCall.querySelector(".modal__form");
+  let inputs = form.querySelectorAll(".modal__input");
+  let phone = form.querySelector('.modal__input--phone');
+  let name = form.querySelector('.modal__input--name');
+
+  inputs.forEach(function (input) {
+    storage[input.name] = localStorage.getItem(input.name)
+  })
 
   let doAction = function () {
+    name.focus();
     inputs.forEach(function (input) {
       let value = storage[input.name]
       if (value) {
@@ -30,15 +33,15 @@ inputs.forEach(function (input) {
       }
       input.parentElement.classList.remove('invalid');
     })
-  let submitForm = function (e) {
-    inputs.forEach(function (input) {
-      storage[input.name] = localStorage.setItem(input.name, input.value)
-    })
-    modalCall.classList.add(classHidden)
-    form.removeEventListener("submit", submitForm)
-    onPopupOpener(modalSuccess, classHiddenSuccess, '' , modalSuccessClose)
-    e.preventDefault();
-  }
+    let submitForm = function (e) {
+      inputs.forEach(function (input) {
+        storage[input.name] = localStorage.setItem(input.name, input.value)
+      })
+      modalCall.classList.add(classHidden);
+      onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+      form.removeEventListener("submit", submitForm);
+      e.preventDefault();
+    }
     form.addEventListener("submit", submitForm)
   }
 
@@ -58,21 +61,21 @@ inputs.forEach(function (input) {
     }
 
     function getBodyScrollTop() {
-      return self.pageYOffset || (document.documentElement && document.documentElement.ScrollTop) || (document.body && document.body.scrollTop);
+      return self.pageYOffset || ( document.documentElement && document.documentElement.ScrollTop ) || ( document.body && document.body.scrollTop );
     }
 
-  // открытие попапа
+    // открытие попапа
     let openPopup = function (e) {
       if (e) {
-      e.preventDefault();
+        e.preventDefault();
       }
       overlay.classList.remove(classHidden);
       document.addEventListener("keydown", onCloseModalKey);
       overlay.addEventListener("click", onCloseModalMouse);
       if (doAction) doAction();
-    //  для предотвращения скрола
+      //  для предотвращения скрола
       body.dataset.scrollY = getBodyScrollTop() // сохраним значение скролла
-      if(existVerticalScroll()) {
+      if (existVerticalScroll()) {
         body.classList.add('body-lock')
         body.style.top = body.dataset.scrollY + 'px'
       }
@@ -82,7 +85,7 @@ inputs.forEach(function (input) {
     let onCloseModalMouse = function (e) {
       e.stopPropagation();
       let isButtonClose = Array.from(buttonsClose).some(function (button) {
-        return  e.target === button
+        return e.target === button
       });
       if (e.target === this || isButtonClose) {
         removeHandler()
@@ -99,10 +102,10 @@ inputs.forEach(function (input) {
       overlay.classList.add(classHidden);
       document.removeEventListener("keydown", onCloseModalKey);
       overlay.removeEventListener("click", onCloseModalMouse);
-    //  для предовращения скрола
-      if(existVerticalScroll()) {
+      //  для предовращения скрола
+      if (existVerticalScroll()) {
         body.classList.remove('body-lock')
-        window.scrollTo(0,body.dataset.scrollY)
+        window.scrollTo(0, body.dataset.scrollY)
       }
     }
 
@@ -116,17 +119,15 @@ inputs.forEach(function (input) {
 
   onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction)
 
-/*})();
+  /*})();
 
-//=================validation phone======================================
-( function () {*/
+  //=================validation phone======================================
+  ( function () {*/
 
   const START_INDEX = 4;
   const CLOSE_BRACE = 6;
   const FIRST_NUMBER = "7"
   let sep = ' ';
-  let phone = form.querySelector('.modal__input--phone');
-  let name = form.querySelector('.modal__input--name');
   let startSelection = 0;
   let endSelection = 0;
   let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', sep, '9', '9', sep, '9', '9'];
@@ -185,7 +186,7 @@ inputs.forEach(function (input) {
         let clearData = pattern.slice(startSelection, endSelection);
         result.splice(startSelection, endSelection - startSelection, ...clearData);
       }
-     if (/\d/.test(e.key) && focus < result.length) {
+      if (/\d/.test(e.key) && focus < result.length) {
         let index = result.indexOf('_');
         let separator = result.indexOf(sep, this.selectionStart);
 
