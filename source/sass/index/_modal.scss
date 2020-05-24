@@ -8,8 +8,8 @@
   opacity: 0.95;
 }
 
-.modal--success-invisible,
-.modal--call-invisible {
+.modal--call-invisible,
+.modal--success-invisible {
   display: none;
 }
 
@@ -66,6 +66,10 @@
   &::placeholder {
     opacity: 0.5;
   }
+
+  &:focus {
+    border-color: $yellow;
+  }
 }
 
 .modal__input--phone {
@@ -80,7 +84,7 @@
 }
 
 .modal__check {
-display: none;
+  display: none;
 }
 
 .modal__apply {
@@ -100,6 +104,18 @@ display: none;
     height: 15px;
     border: 2px solid $yellow;
   }
+}
+
+.modal__check:checked + label::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 65px;
+  width: 19px;
+  height: 8px;
+  border-bottom: 2px solid $yellow;
+  border-left: 2px solid $yellow;
+  transform: rotate(-45deg);
 }
 
 .modal__ok {
@@ -132,5 +148,104 @@ display: none;
 
   &::after {
     transform: rotate(-45deg);
+  }
+}
+
+.valid input {
+  border-color: $validColor;
+}
+
+.invalid {
+  position: relative;
+}
+
+.invalid input {
+  border-color: $errorColor;
+}
+
+.invalid::before {
+  content: 'Ошибка: неверный формат';
+  position: absolute;
+  top: -40px;
+  left: 30px;
+  @include font(13, 1.2);
+  color: $errorColor;
+}
+
+.modal__label.invalid::before {
+  top: 105px;
+  left: -327px;
+  z-index: 5;
+}
+
+@media (max-width: $mobile) {
+  .modal__wrap {
+    top: 0;
+    bottom: auto;
+    right: 50%;
+    padding: 135px 0 0 0;
+    transform: translate(50%, 0);
+    width: 320px;
+    height: 768px;
+    text-align: center;
+  }
+
+  .modal__wrap--success {
+    padding-top: 200px;
+  }
+
+  .modal__title {
+    font-size: 24px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+
+  .modal__title--call {
+    text-align: center;
+  }
+
+  .modal__content {
+    font-size: 14px;
+    line-height: 1.6;
+    padding-right: 23px;
+    margin-bottom: 33px;
+  }
+
+  .modal__content--call {
+    width: 272px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 0;
+  }
+
+  .modal__input {
+    width: 288px;
+    height: 59px;
+    padding: 0 39px;
+  }
+
+  .modal__apply {
+    padding-left: 45px;
+    padding-right: 21px;
+
+    &::before {
+      left: 31px;
+    }
+  }
+
+  .modal__close {
+    top: 26px;
+    right: 26px;
+  }
+
+  .modal__close--call {
+    top: 17px;
+    right: 24px;
+  }
+
+  .modal__label.invalid::before {
+    top: 105px;
+    left: -260px;
+    z-index: 5;
   }
 }

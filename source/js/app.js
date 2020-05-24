@@ -2,8 +2,9 @@
 
 (function () {
 
-//  data-send-form
 
+//  data-send-form
+let body = document.body
 let modalOpeners = document.querySelectorAll("[data-modal-opener]");
 let classHidden = "modal--call-invisible";
 let modalCall = document.querySelector("." + classHidden);
@@ -15,7 +16,7 @@ let modalSuccess = document.querySelector("." + classHiddenSuccess);
 let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
 
 let storage = {};
-let form = modalCall.querySelector("form");
+let form = modalCall.querySelector(".modal__form");
 let inputs = form.querySelectorAll(".modal__input");
 inputs.forEach(function (input) {
   storage[input.name] = localStorage.getItem(input.name)
@@ -27,6 +28,7 @@ inputs.forEach(function (input) {
       if (value) {
         input.value = value
       }
+      input.parentElement.classList.remove('invalid');
     })
   let submitForm = function (e) {
     inputs.forEach(function (input) {
@@ -36,23 +38,9 @@ inputs.forEach(function (input) {
     form.removeEventListener("submit", submitForm)
     onPopupOpener(modalSuccess, classHiddenSuccess, '' , modalSuccessClose)
     e.preventDefault();
-    // checkInput()
   }
     form.addEventListener("submit", submitForm)
   }
-
-
-/*  let checkInput = function () {
-    let conditionPhone = !this.value.match(regCheckPhone);
-    let conditionEmail = !this.value.match(regCheckEmail) && this.value !== '';
-    let cssClass = (this === phone || this === email) ? 'modal__input--mistake' : 'feedback__input--mistake';
-    let condition = (this === phone || this === phoneFeedback) ? conditionPhone : conditionEmail;
-    if (condition) {
-      this.classList.add(cssClass)
-    } else {
-      this.classList.remove(cssClass)
-    }
-  }*/
 
 
   let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonsClose, doAction = false) {
@@ -65,6 +53,14 @@ inputs.forEach(function (input) {
     * buttonCloseOther - дполнителная кнопка закрытия окна
     * */
 
+    function existVerticalScroll() {
+      return document.body.offsetHeight > window.innerHeight
+    }
+
+    function getBodyScrollTop() {
+      return self.pageYOffset || (document.documentElement && document.documentElement.ScrollTop) || (document.body && document.body.scrollTop);
+    }
+
   // открытие попапа
     let openPopup = function (e) {
       if (e) {
@@ -73,7 +69,13 @@ inputs.forEach(function (input) {
       overlay.classList.remove(classHidden);
       document.addEventListener("keydown", onCloseModalKey);
       overlay.addEventListener("click", onCloseModalMouse);
-      if (doAction) doAction()
+      if (doAction) doAction();
+    //  для предотвращения скрола
+      body.dataset.scrollY = getBodyScrollTop() // сохраним значение скролла
+      if(existVerticalScroll()) {
+        body.classList.add('body-lock')
+        body.style.top = body.dataset.scrollY + 'px'
+      }
     }
 
 //  Обработчик на оверлее для закрытия попапа по клику на нем или на соотв. кнопки
@@ -97,6 +99,11 @@ inputs.forEach(function (input) {
       overlay.classList.add(classHidden);
       document.removeEventListener("keydown", onCloseModalKey);
       overlay.removeEventListener("click", onCloseModalMouse);
+    //  для предовращения скрола
+      if(existVerticalScroll()) {
+        body.classList.remove('body-lock')
+        window.scrollTo(0,body.dataset.scrollY)
+      }
     }
 
     // навершиваем на каждую кнопку обработчик открытия попапа
@@ -109,29 +116,32 @@ inputs.forEach(function (input) {
 
   onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction)
 
-})();
+/*})();
 
-//=================validation form======================================
-( function () {
+//=================validation phone======================================
+( function () {*/
 
   const START_INDEX = 4;
   const CLOSE_BRACE = 6;
-  let form = document.querySelector('.modal__form');
+  const FIRST_NUMBER = "7"
+  let sep = ' ';
   let phone = form.querySelector('.modal__input--phone');
+  let name = form.querySelector('.modal__input--name');
   let startSelection = 0;
   let endSelection = 0;
-  let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', '-', '9', '9', '-', '9', '9'];
-  let pattern = ['+', '7', ' ', '(', '_', '_', '_', ')', ' ', '_', '_', '_', '-', '_', '_', '-', '_', '_'];
+  let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', sep, '9', '9', sep, '9', '9'];
+  let pattern = ['+', FIRST_NUMBER, ' ', '(', '_', '_', '_', ')', ' ', '_', '_', '_', sep, '_', '_', sep, '_', '_'];
+  let controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
   let result = pattern.slice();
   let focus;
   let initialValue = pattern.join('');
 
   let checkValidity = function () {
     if (this.validity.patternMismatch || this.value === '') {
-      this.style.borderColor = '#ba0b11';
       this.parentElement.classList.remove('valid')
+      this.parentElement.classList.add('invalid')
     } else {
-      this.style.borderColor = '';
+      this.parentElement.classList.remove('invalid')
       this.parentElement.classList.add('valid')
     }
   };
@@ -145,7 +155,7 @@ inputs.forEach(function (input) {
         if (pattern[i] !== '9') continue;
         pattern[i] = value.pop() || '_';
       }
-      pattern[1] = '1';
+      pattern[1] = FIRST_NUMBER;
       result = pattern;
       this.value = pattern.join('');
       startSelection = endSelection = 0;
@@ -159,22 +169,25 @@ inputs.forEach(function (input) {
   };
 
   let enterValue = function (e) {
-
     let IsSelectionTrue = startSelection !== endSelection;
     if (!e.ctrlKey) {
       focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
     }
 
-    if (e.key !== 'Tab' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && !e.ctrlKey) {
+    let isControlKey = controlKeys.some(function (key) {
+      return e.key === key
+    })
+
+    if (!isControlKey && !e.ctrlKey) {
+      console.log('tre');
       e.preventDefault();
       if (IsSelectionTrue && this.selectionStart !== this.selectionEnd) {
         let clearData = pattern.slice(startSelection, endSelection);
         result.splice(startSelection, endSelection - startSelection, ...clearData);
       }
-
-      if (/\d/.test(e.key) && focus < result.length) {
+     if (/\d/.test(e.key) && focus < result.length) {
         let index = result.indexOf('_');
-        let separator = result.indexOf('-', this.selectionStart);
+        let separator = result.indexOf(sep, this.selectionStart);
 
         if (index === -1) {
           for (let i = this.selectionStart; i < result.length; i++) {
@@ -190,9 +203,6 @@ inputs.forEach(function (input) {
           if (!IsSelectionTrue && result[focus - 1] !== '(') {
             let insert;
             switch (result[this.selectionStart - 1]) {
-              case '-' :
-                insert = '-';
-                break;
               case ' ' :
                 insert = ' ';
                 break;
@@ -229,11 +239,9 @@ inputs.forEach(function (input) {
     checkValidity.call(this);
   };
 
-  // ----------------------
-
   form.addEventListener('focusin', function (e) {
     if (e.target === phone) {
-      phone.value = initialValue || phone.value;
+      phone.value = phone.value || storage[phone.name] || initialValue;
       setTimeout(() => {
         phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
       });
@@ -241,6 +249,11 @@ inputs.forEach(function (input) {
       phone.addEventListener('paste', pasteValue);
       phone.addEventListener('select', selectValue);
       phone.addEventListener('keydown', enterValue);
+    }
+
+    if (e.target === name) {
+      name.addEventListener('input', checkValidity);
+      name.value = name.value || storage[name.name] || " ";
     }
   });
 
@@ -252,6 +265,11 @@ inputs.forEach(function (input) {
       phone.removeEventListener('keydown', enterValue);
     }
 
+    if (e.target === name) {
+      name.removeEventListener('input', checkValidity);
+    }
+
   });
 
 } )();
+//===========================================================================

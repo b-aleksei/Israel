@@ -36,3 +36,8 @@ body {
   max-width: 1920px;
   margin: auto;
 }
+
+.body-lock {
+  overflow-y: scroll;
+  position:fixed;
+}

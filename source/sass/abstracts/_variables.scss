@@ -2,11 +2,13 @@ $mobile: 767px;
 $tablet: 1023px;
 $desktop: 1920px;
 
-$black: #484848;
+$black: rgba(72, 72, 72, 0.5);
 $blue: #1FC0FC;
 $yellow: #FFC341;
 $gradient: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%);
 $modalBg: #EBEBEB;
+$errorColor: rgba(255, 0, 0, 0.5);
+$validColor: rgba(72, 72, 72, 0.5);
 $lightGray: #cccccc;
 
 $retina-dppx: 1.5dppx;
