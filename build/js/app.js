@@ -7,14 +7,12 @@
 let modalOpeners = document.querySelectorAll("[data-modal-opener]");
 let classHidden = "modal--call-invisible";
 let modalCall = document.querySelector("." + classHidden);
-let modalCallClose = modalCall.querySelector(".modal__close--call")
+let modalCallClose = modalCall.querySelectorAll(".modal__close--call")
 
   let classHiddenSuccess = "modal--success-invisible";
 let modalSuccess = document.querySelector("." + classHiddenSuccess);
-
 // let sendForm = document.querySelector('[data-send-form]');
-let modalSuccessClose = modalSuccess.querySelector(".modal__close--success");
-let modalSuccessCloseOk = modalSuccess.querySelector(".modal__ok");
+let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
 
 let storage = {};
 let form = modalCall.querySelector("form");
@@ -36,7 +34,7 @@ inputs.forEach(function (input) {
     })
     modalCall.classList.add(classHidden)
     form.removeEventListener("submit", submitForm)
-    onPopupOpener(modalSuccess, classHiddenSuccess, '' , modalSuccessClose, modalSuccessCloseOk)
+    onPopupOpener(modalSuccess, classHiddenSuccess, '' , modalSuccessClose)
     e.preventDefault();
     // checkInput()
   }
@@ -57,7 +55,7 @@ inputs.forEach(function (input) {
   }*/
 
 
-  let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonClose, buttonCloseOther = false, doAction = false) {
+  let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonsClose, doAction = false) {
     /*
     Попап открывается посредством удаления класса со св-м display: none
     * overlay - див с модальным окном(попапом)
@@ -78,10 +76,13 @@ inputs.forEach(function (input) {
       if (doAction) doAction()
     }
 
-//  закрытие модалки по клику на оверлее и соотв. кнопкам
+//  Обработчик на оверлее для закрытия попапа по клику на нем или на соотв. кнопки
     let onCloseModalMouse = function (e) {
       e.stopPropagation();
-      if (e.target === this || e.target === buttonClose || e.target === buttonCloseOther) {
+      let isButtonClose = Array.from(buttonsClose).some(function (button) {
+        return  e.target === button
+      });
+      if (e.target === this || isButtonClose) {
         removeHandler()
       }
     }
@@ -106,6 +107,151 @@ inputs.forEach(function (input) {
     } else openPopup()
   }
 
-  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, '', doAction)
+  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction)
 
 })();
+
+//=================validation form======================================
+( function () {
+
+  const START_INDEX = 4;
+  const CLOSE_BRACE = 6;
+  let form = document.querySelector('.modal__form');
+  let phone = form.querySelector('.modal__input--phone');
+  let startSelection = 0;
+  let endSelection = 0;
+  let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', '-', '9', '9', '-', '9', '9'];
+  let pattern = ['+', '7', ' ', '(', '_', '_', '_', ')', ' ', '_', '_', '_', '-', '_', '_', '-', '_', '_'];
+  let result = pattern.slice();
+  let focus;
+  let initialValue = pattern.join('');
+
+  let checkValidity = function () {
+    if (this.validity.patternMismatch || this.value === '') {
+      this.style.borderColor = '#ba0b11';
+      this.parentElement.classList.remove('valid')
+    } else {
+      this.style.borderColor = '';
+      this.parentElement.classList.add('valid')
+    }
+  };
+
+  let pasteValue = function () {
+    setTimeout(() => {
+      let value = Array.from(this.value).filter(item => /\d/.test(item));
+      value.reverse();
+      let pattern = pastePattern.slice();
+      for (let i = 0; i < pattern.length; i++) {
+        if (pattern[i] !== '9') continue;
+        pattern[i] = value.pop() || '_';
+      }
+      pattern[1] = '1';
+      result = pattern;
+      this.value = pattern.join('');
+      startSelection = endSelection = 0;
+      checkValidity.call(this);
+    })
+  };
+
+  let selectValue = function () {
+    startSelection = this.selectionStart;
+    endSelection = this.selectionEnd;
+  };
+
+  let enterValue = function (e) {
+
+    let IsSelectionTrue = startSelection !== endSelection;
+    if (!e.ctrlKey) {
+      focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
+    }
+
+    if (e.key !== 'Tab' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && !e.ctrlKey) {
+      e.preventDefault();
+      if (IsSelectionTrue && this.selectionStart !== this.selectionEnd) {
+        let clearData = pattern.slice(startSelection, endSelection);
+        result.splice(startSelection, endSelection - startSelection, ...clearData);
+      }
+
+      if (/\d/.test(e.key) && focus < result.length) {
+        let index = result.indexOf('_');
+        let separator = result.indexOf('-', this.selectionStart);
+
+        if (index === -1) {
+          for (let i = this.selectionStart; i < result.length; i++) {
+            index = i;
+            if (/\d/.test(result[i])) break;
+          }
+        }
+        result[index] = e.key;
+        focus = ( index === CLOSE_BRACE ) ? CLOSE_BRACE + 2 : ( separator - index === 1 ) ? index + 1 : index;
+
+      } else {
+        if (e.key === 'Backspace') {
+          if (!IsSelectionTrue && result[focus - 1] !== '(') {
+            let insert;
+            switch (result[this.selectionStart - 1]) {
+              case '-' :
+                insert = '-';
+                break;
+              case ' ' :
+                insert = ' ';
+                break;
+              case ')' :
+                insert = ')';
+                break;
+              default :
+                insert = '_';
+            }
+
+            result.splice(this.selectionStart - 1, 1, insert);
+            focus -= 1
+          }
+        }
+
+        if (e.key === 'Delete' && !IsSelectionTrue) {
+          let index = result.slice(focus).findIndex(item => {
+            return /\d/.test(item)
+          });
+          if (~index) {
+            result[focus + index] = '_';
+          }
+        }
+      }
+
+      this.value = result.join('');
+
+      this.selectionStart = this.selectionEnd = focus + 1;
+
+      if (!/\d/.test(e.key)) {
+        this.selectionStart = this.selectionEnd = focus;
+      }
+    }
+    checkValidity.call(this);
+  };
+
+  // ----------------------
+
+  form.addEventListener('focusin', function (e) {
+    if (e.target === phone) {
+      phone.value = initialValue || phone.value;
+      setTimeout(() => {
+        phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
+      });
+      initialValue = '';
+      phone.addEventListener('paste', pasteValue);
+      phone.addEventListener('select', selectValue);
+      phone.addEventListener('keydown', enterValue);
+    }
+  });
+
+  form.addEventListener('focusout', function (e) {
+
+    if (e.target === phone) {
+      phone.removeEventListener('paste', pasteValue);
+      phone.removeEventListener('select', selectValue);
+      phone.removeEventListener('keydown', enterValue);
+    }
+
+  });
+
+} )();
