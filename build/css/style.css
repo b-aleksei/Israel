@@ -293,13 +293,13 @@ body {
       border-left: 14px solid #1FC0FC; } }
 
 .programs {
-  padding-top: 107px;
+  padding-top: 194px;
   background-image: url("../img/bg/city_one.png");
   background-repeat: no-repeat;
-  background-position: 100% 38%; }
+  background-position: 100% 145px; }
 
 .programs__container {
-  width: 946px;
+  max-width: 946px;
   margin: auto; }
 
 .programs__title {
@@ -356,6 +356,8 @@ body {
     border-right: none;
     border-bottom: 34px solid white;
     border-left: 30px solid transparent; }
+  .programs__type:hover {
+    color: #FFC341; }
 
 .programs__type--religious {
   margin-left: 5px; }
@@ -407,6 +409,11 @@ body {
 #voluntary:checked ~ .programs__block .programs__type--voluntary,
 #religious:checked ~ .programs__block .programs__type--religious {
   background: linear-gradient(138.15deg, #FFC341 20.46%, #FFD701 65.31%);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  font-weight: 500;
+  font-variant: small-caps;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   color: white; }
 
 #share:checked ~ .programs__block .programs__content {
@@ -428,6 +435,66 @@ body {
 #religious:checked ~ .programs__block .programs__content {
   -webkit-transform: translate(-80%);
           transform: translate(-80%); }
+
+@media (max-width: 767px) {
+  .programs {
+    background-image: url("../img/bg/city_one_m.png"); }
+  .programs__title {
+    font-size: 32px; }
+  .programs__block {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    overflow-x: hidden; }
+  .programs__captions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: auto;
+    -ms-flex-negative: initial;
+        flex-shrink: initial; }
+  .programs__captions li {
+    margin-bottom: 0; }
+  .programs__type {
+    min-height: 39px;
+    border-radius: 60px; }
+    .programs__type::after {
+      display: none; }
+  .programs__captions svg {
+    margin-right: 18px; }
+  .programs__wrap {
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: hidden; }
+  .programs__content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 500%;
+    padding: 0;
+    margin: 0;
+    list-style: none; }
+  .programs__item {
+    width: 100%; }
+  .programs__subtitle {
+    margin-top: 16px;
+    margin-bottom: 25px;
+    font-family: "Montserrat", "Arial", sans-serif;
+    font-weight: 600;
+    color: #1FC0FC;
+    text-transform: uppercase;
+    letter-spacing: -0.08rem;
+    font-size: 2.8rem;
+    line-height: 1.2;
+    text-transform: unset; }
+  .programs__text {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    font-weight: 400;
+    color: rgba(72, 72, 72, 0.87); }
+  .programs__text:first-of-type {
+    margin-bottom: 17px; } }
 
 .faq__header {
   text-transform: uppercase;
