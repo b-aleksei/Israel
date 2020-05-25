@@ -56,13 +56,6 @@
     * buttonCloseOther - дполнителная кнопка закрытия окна
     * */
 
-    function existVerticalScroll() {
-      return document.body.offsetHeight > window.innerHeight
-    }
-
-    function getBodyScrollTop() {
-      return self.pageYOffset || ( document.documentElement && document.documentElement.ScrollTop ) || ( document.body && document.body.scrollTop );
-    }
 
     // открытие попапа
     let openPopup = function (e) {
@@ -74,11 +67,9 @@
       overlay.addEventListener("click", onCloseModalMouse);
       if (doAction) doAction();
       //  для предотвращения скрола
-      body.dataset.scrollY = getBodyScrollTop() // сохраним значение скролла
-      if (existVerticalScroll()) {
+      body.dataset.scrollY = self.pageYOffset // сохраним значение скролла
         body.classList.add('body-lock')
         body.style.top = body.dataset.scrollY + 'px'
-      }
     }
 
 //  Обработчик на оверлее для закрытия попапа по клику на нем или на соотв. кнопки
@@ -103,10 +94,8 @@
       document.removeEventListener("keydown", onCloseModalKey);
       overlay.removeEventListener("click", onCloseModalMouse);
       //  для предовращения скрола
-      if (existVerticalScroll()) {
         body.classList.remove('body-lock')
         window.scrollTo(0, body.dataset.scrollY)
-      }
     }
 
     // навершиваем на каждую кнопку обработчик открытия попапа
@@ -119,19 +108,17 @@
 
   onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction)
 
-  /*})();
 
-  //=================validation phone======================================
-  ( function () {*/
-
+  // ======================валидация телефона===================================================
   const START_INDEX = 4;
   const CLOSE_BRACE = 6;
-  const FIRST_NUMBER = "7"
+  const FIRST_NUMBER = "7";
+  let marker = '_';
   let sep = ' ';
   let startSelection = 0;
   let endSelection = 0;
   let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', sep, '9', '9', sep, '9', '9'];
-  let pattern = ['+', FIRST_NUMBER, ' ', '(', '_', '_', '_', ')', ' ', '_', '_', '_', sep, '_', '_', sep, '_', '_'];
+  let pattern = ['+', FIRST_NUMBER, ' ', '(', marker, marker, marker, ')', ' ', marker, marker, marker, sep, marker, marker, sep, marker, marker];
   let controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
   let result = pattern.slice();
   let focus;
@@ -148,13 +135,15 @@
   };
 
   let pasteValue = function () {
-    setTimeout(() => {
-      let value = Array.from(this.value).filter(item => /\d/.test(item));
+    setTimeout(function() {
+      let value = Array.from(this.value).filter(function(item) {
+       return /\d/.test(item)
+      });
       value.reverse();
       let pattern = pastePattern.slice();
       for (let i = 0; i < pattern.length; i++) {
         if (pattern[i] !== '9') continue;
-        pattern[i] = value.pop() || '_';
+        pattern[i] = value.pop() || marker;
       }
       pattern[1] = FIRST_NUMBER;
       result = pattern;
@@ -187,7 +176,7 @@
         result.splice(startSelection, endSelection - startSelection, ...clearData);
       }
       if (/\d/.test(e.key) && focus < result.length) {
-        let index = result.indexOf('_');
+        let index = result.indexOf(marker);
         let separator = result.indexOf(sep, this.selectionStart);
 
         if (index === -1) {
@@ -211,7 +200,7 @@
                 insert = ')';
                 break;
               default :
-                insert = '_';
+                insert = marker;
             }
 
             result.splice(this.selectionStart - 1, 1, insert);
@@ -220,11 +209,11 @@
         }
 
         if (e.key === 'Delete' && !IsSelectionTrue) {
-          let index = result.slice(focus).findIndex(item => {
+          let index = result.slice(focus).findIndex(function(item) {
             return /\d/.test(item)
           });
           if (~index) {
-            result[focus + index] = '_';
+            result[focus + index] = marker;
           }
         }
       }
@@ -243,7 +232,7 @@
   form.addEventListener('focusin', function (e) {
     if (e.target === phone) {
       phone.value = phone.value || storage[phone.name] || initialValue;
-      setTimeout(() => {
+      setTimeout(function() {
         phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
       });
       initialValue = '';
