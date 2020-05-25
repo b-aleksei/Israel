@@ -41,7 +41,8 @@
       <h1 class="header__title">Учёба, путешествие и карьера
         для еврейской молодёжи</h1>
       <picture>
-        <source type="image/webp" srcset="img/desktop/header-bg@1x.webp 1x, img/desktop/header-bg@2x.webp 2x">
+        <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/header-bg_m@1x.webp 1x, img/mobile/header-bg_m@2x.webp 2x">
+        <source media="(max-width: 767px)" srcset="img/mobile/header-bg_m@1x.jpg 1x, img/mobile/header-bg_m@2x.jpg 2x">
       <img class="header__bg" src="img/desktop/header-bg@1x.jpg" srcset="img/desktop/header-bg@2x.jpg 2x" width="1366" height="906" alt="Фоновое изображение">
       </picture>
     </div>
@@ -50,20 +51,23 @@
   <main>
     <section class="about">
       <div class="about__wrap">
-        <h2 class="about__title">О программе</h2>
-        <p class="about__content">«Маса» — совместный проект правительства Израиля и Еврейского агентства Сохнут.
-          &nbsp;&nbsp;Более 250 учебных программ (60 на русском) и возможность стажировки в Израиле.  В течение освоения программ предусмотрен грант от 4200 до
-          8400$.</p>
+      <h2 class="about__title">О программе</h2>
+      <p class="about__content">«Маса» — совместный проект правительства Израиля и Еврейского агентства Сохнут. <span></span>
+        Более 250 учебных программ (60 на русском) и возможность стажировки в Израиле.  В течение освоения
+        программ предусмотрен грант от 4200 до
+        8400$.</p>
+      <div class="about__img">
+        <picture>
+          <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/photo_about_m@1x.webp 1x, img/mobile/photo_about_m@2x.webp 2x">
+          <source media="(max-width: 767px)" srcset="img/mobile/photo_about_m@1x.png 1x, img/mobile/photo_about_m@2x.png 2x">
+        <img src="img/desktop/photo_about@1x.png" srcset="img/desktop/photo_about@2x.png 2x" alt="Фоновое изображение" width="870" height="460">
+        </picture>
+        <button class="about__play" type="button" aria-label="Воспроизвести"></button>
       </div>
-      <div class="about__bg">
-        <div class="about__img">
-          <img src="img/desktop/photo_about@1x.jpg" alt="Фоновое изображение" width="870" height="460">
-          <button class="about__play" type="button" aria-label="Воспроизвести"></button>
-        </div>
-      </div>
+    </div>
     </section>
 
-    <section class="programs">
+<!--    <section class="programs">
       <div class="programs__container">
       <h2 class="programs__title">Программы</h2>
       <input class="programs__toggle" id="share" type="radio" name="program">
@@ -73,27 +77,27 @@
       <input class="programs__toggle" id="religious" type="radio" name="program">
       <div class="programs__block">
         <ul class="programs__captions">
-          <li><label class="programs__type programs__type--share" for="share">
+          <li><label class="programs__type programs__type&#45;&#45;share" for="share">
             <svg width="32" height="36">
               <use xlink:href="#1"></use>
             </svg>
             <span>Общие</span></label></li>
-          <li><label class="programs__type programs__type--academy" for="academy">
+          <li><label class="programs__type programs__type&#45;&#45;academy" for="academy">
             <svg width="36" height="36">
               <use xlink:href="#2"></use>
             </svg>
             <span>Академические</span></label></li>
-          <li><label class="programs__type programs__type--stage" for="stage">
+          <li><label class="programs__type programs__type&#45;&#45;stage" for="stage">
             <svg width="32" height="25">
               <use xlink:href="#3"></use>
             </svg>
             <span>Стажировки</span></label></li>
-          <li><label class="programs__type programs__type--voluntary" for="voluntary">
+          <li><label class="programs__type programs__type&#45;&#45;voluntary" for="voluntary">
             <svg width="32" height="30">
               <use xlink:href="#4"></use>
             </svg>
             <span>Волонтёрство</span></label></li>
-          <li><label class="programs__type programs__type--religious" for="religious">
+          <li><label class="programs__type programs__type&#45;&#45;religious" for="religious">
             <svg width="23" height="25">
               <use xlink:href="#5"></use>
             </svg>
@@ -159,9 +163,9 @@
           </ul>
         </div>
       </div>
-    </div></section>
+    </div></section>-->
 
-    <section class="">
+<!--    <section class="">
       <div>
         <h2>Хочу поехать!</h2>
         <p>Оставьте свой телефон и мы свяжемся с вами, подберём куратора и ответим на все вопросы!</p>
@@ -171,9 +175,9 @@
         </form>
       </div>
       <img src="" width="" height="" alt="фоновое изображение">
-    </section>
+    </section>-->
 
-    <section class="">
+<!--    <section class="">
       <img src="" alt="">
       <div>
         <h2>Как поехать</h2>
@@ -190,9 +194,9 @@
         <p>Если вы не подходите по этим правилам, вы всё равно можете
           принять участие в программе «Маса», оплатив её полную стоимость.</p>
       </div>
-    </section>
+    </section>-->
 
-    <section class="">
+<!--    <section class="">
       <h2>Жизнь в израиле</h2>
       <p>Помимо учёбы, в рамках программе у вас будет возможность путешествовать по стране и познакомиться с богатой
         культурно-исторической жизнью Израиля и его жителей.</p>
@@ -226,9 +230,9 @@
             <p></p>
         </ul>
       </div>
-    </section>
+    </section>-->
 
-    <section class="">
+<!--    <section class="">
       <img src="" alt="фоновое изображение">
       <div>
         <h2>#masaisrael</h2>
@@ -236,9 +240,9 @@
           путешествиях в Израиле.</p>
         <button type="button">смотреть фото</button>
       </div>
-    </section>
+    </section>-->
 
-    <section class="faq">
+<!--    <section class="faq">
       <h2 class="faq__header">Частые вопросы</h2>
       <ul class="faq__accordion accordion">
         <li class="accordion__item">
@@ -310,9 +314,9 @@
           </div>
         </li>
       </ul>
-    </section>
+    </section>-->
 
-    <section class="feedback slider">
+<!--    <section class="feedback slider">
       <h2 class="feedback__title">Отзывы</h2>
       <ul class="feedback__list slider__list">
         <li class="feedback__item slider__item">
@@ -397,9 +401,9 @@
           </li>
         </ul>
       </div>
-    </section>
+    </section>-->
 
-    <section class="contact">
+  <!--  <section class="contact">
       <div>
         <h2>Узнать подробности</h2>
         <p><span>Ваш город:</span>новосибирск</p>
@@ -444,10 +448,10 @@
           <button data-send-form type="submit">перезвоните мне</button>
         </form>
       </div>
-    </section>
+    </section>-->
   </main>
 
-  <footer>
+<!--  <footer>
     <a href=""></a>
     <small>Copyright someDesignCompany ©2019</small>
     <ul class="social-icons">
@@ -461,7 +465,7 @@
         <a href="#" aria-label="Инстаграмм">И</a>
       </li>
     </ul>
-  </footer>
+  </footer>-->
 </div>
 
 <div class="modal modal--call-invisible">

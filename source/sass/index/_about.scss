@@ -1,5 +1,11 @@
+.about {
+  background-image: url("../img/bg/watercolor_Bg.png");
+  background-repeat: no-repeat;
+  background-position: 100% 160px;
+}
+
 .about__wrap {
-  width: 870px;
+  max-width: 870px;
   margin: auto;
 }
 
@@ -13,25 +19,17 @@
 .about__content {
   padding: 0 91px;
   @include font(17, 1.7);
-  margin-bottom: 0;
+  margin-bottom: 47px;
   text-align: center;
-
 }
 
-.about__bg {
-  position: relative;
-  background-image: url("../img/bg/watercolor_Bg.png");
-  background-repeat: no-repeat;
-  padding-top: 44%;
+.about__content span {
+  display: inline-block;
+  width: 5px;
 }
 
 .about__img {
-  position: absolute;
-  top: 47px;
-  right: 50%;
-  transform: translate(50%);
-  width: 870px;
-  height: 460px;
+  position: relative;
 }
 
 .about__img img {
@@ -39,13 +37,9 @@
   height: auto;
 }
 
-.about__play-btn {
-  color: white;
-}
-
 .about__play {
   position: absolute;
-  top: 39%;
+  top: 38.4%;
   right: 50%;
   width: 96px;
   height: 96px;
@@ -98,6 +92,53 @@
   &:active::after {
     border-left-color: $blue;
   }
-
 }
 
+
+@media (max-width: $mobile) {
+
+  .about {
+    background-image: url("../img/bg/watercolor_Bg_m.png");
+    background-position: 0 201px;
+  }
+
+  .about__title {
+    margin-bottom: 26px;
+    font-size: 3.2rem;
+    margin-top: -5px;
+  }
+
+  .about__content {
+    font-size: 1.6rem;
+    line-height: 1.6;
+    padding: 0 17px;
+    margin-bottom: 49px;
+    text-align: left;
+  }
+
+  .about__content span {
+    display: none;
+  }
+
+  .about__play {
+    position: absolute;
+    top: 35%;
+    right: 49%;
+    width: 80px;
+    height: 80px;
+
+
+    &::before {
+      width: 54px;
+      height: 54px;
+    }
+
+    &::after {
+      bottom: 51%;
+      right: 39%;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 14px solid $blue;
+    }
+  }
+}
