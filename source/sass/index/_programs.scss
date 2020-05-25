@@ -182,7 +182,6 @@
   .programs__content {
     display: flex;
     width: 500%;
-    @include resetList;
   }
 
   .programs__item {
