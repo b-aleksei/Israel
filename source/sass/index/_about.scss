@@ -20,26 +20,23 @@
 
 .about__bg {
   position: relative;
-  background-image: url("../img/bg/watercolor_Bg@1x.png");
+  background-image: url("../img/bg/watercolor_Bg.png");
   background-repeat: no-repeat;
   padding-top: 44%;
 }
 
 .about__img {
-  margin-top: 17px;
   position: absolute;
-  top: 0;
+  top: 47px;
   right: 50%;
   transform: translate(50%);
   width: 870px;
   height: 460px;
-  overflow: hidden;
 }
 
 .about__img img {
-  position: absolute;
-  top: -100px;
-  left: -64px;
+  width: 100%;
+  height: auto;
 }
 
 .about__play-btn {
@@ -48,7 +45,7 @@
 
 .about__play {
   position: absolute;
-  top: 45.5%;
+  top: 39%;
   right: 50%;
   width: 96px;
   height: 96px;
@@ -76,10 +73,10 @@
     content: '';
     position: absolute;
     bottom: 50%;
-    right: 19%;
+    right: 37%;
     transform: translateY(50%);
     border-top: 10px solid transparent;
-    border-right: 18px solid transparent;
+    border-right: none;
     border-bottom: 10px solid transparent;
     border-left: 18px solid $blue;
   }
