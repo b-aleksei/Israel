@@ -7,6 +7,7 @@
 @include header();
   margin-top: -11px;
   margin-bottom: 26px;
+  text-align: center;
 }
 
 .about__content {
@@ -19,7 +20,7 @@
 
 .about__bg {
   position: relative;
-  background-image: url("../img/desktop/watercolor_Bg@1x.png");
+  background-image: url("../img/bg/watercolor_Bg@1x.png");
   background-repeat: no-repeat;
   padding-top: 44%;
 }

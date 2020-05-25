@@ -1,9 +1,128 @@
+.programs {
+  padding-top: 107px;
+  background-image: url('../img/bg/sketch_Bg@1x.png');
+  background-repeat: no-repeat;
+  background-position: 100% 38%;
+}
 
+.programs__container {
+  width: 946px;
+  margin: auto;
+}
 
-.www {
+.programs__title {
+  @include header();
+  margin-top: 0;
+  margin-bottom: 67px;
+}
+
+.programs__toggle {
   display: none;
 }
 
-.www:checked + label {
-  color: red;
+.programs__block {
+  display: flex;
+}
+
+.programs__captions {
+  width: 228px;
+  flex-shrink: 0;
+  @include resetList;
+}
+
+.programs__captions li {
+  margin-bottom: 4px;
+}
+
+.programs__type {
+  display: flex;
+  position: relative;
+  min-height: 68px;
+  align-items: center;
+  padding:0 30px 0 22px;
+  @include font(15, 1.2);
+  color: $blackLight;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top: 34px solid white;
+    border-right: none;
+    border-bottom: 34px solid white;
+    border-left: 30px solid transparent;
+  }
+
+  &:hover {
+  }
+}
+
+.programs__type--religious {
+  margin-left: 5px;
+}
+
+.programs__captions svg {
+  margin-right: 18px;
+}
+
+.programs__wrap {
+  margin-left: 64px;
+  margin-right: 102px;
+  overflow-x: hidden;
+}
+
+.programs__content {
+  display: flex;
+  width: 500%;
+  @include resetList;
+}
+
+.programs__item {
+  width: 100%;
+}
+
+.programs__subtitle {
+  margin-top: 16px;
+  margin-bottom: 25px;
+  @include header(28, 1.2);
+  text-transform: unset;
+}
+
+.programs__text {
+  @include font(15, 1.7);
+  color: $blackLight;
+}
+
+.programs__text:first-of-type{
+  margin-bottom: 17px;
+}
+
+#share:checked ~ .programs__block .programs__type--share,
+#academy:checked ~ .programs__block .programs__type--academy,
+#stage:checked ~ .programs__block .programs__type--stage,
+#voluntary:checked ~ .programs__block .programs__type--voluntary,
+#religious:checked ~ .programs__block .programs__type--religious {
+  background: linear-gradient(138.15deg, #FFC341 20.46%, #FFD701 65.31%);
+  color: white;
+}
+
+#share:checked ~ .programs__block .programs__content {
+  transform: translate(0%);
+  //background-color: lightblue;
+}
+#academy:checked ~ .programs__block .programs__content {
+  transform: translate(-20%);
+  //background-color: lightcoral;
+}
+#stage:checked ~ .programs__block .programs__content {
+  transform: translate(-40%);
+  //background-color: lightgreen;
+}
+#voluntary:checked ~ .programs__block .programs__content {
+  transform: translate(-60%);
+}
+#religious:checked ~ .programs__block .programs__content {
+  transform: translate(-80%);
 }

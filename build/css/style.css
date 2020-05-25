@@ -59,7 +59,7 @@ body {
   line-height: 1.6;
   min-width: 320px;
   margin: 0;
-  color: rgba(72, 72, 72, 0.5); }
+  color: #484848; }
 
 .visually-hidden {
   position: absolute;
@@ -120,7 +120,7 @@ body {
 
 .header__link--modal {
   margin-right: 5px;
-  border-bottom: 2px dashed rgba(72, 72, 72, 0.5); }
+  border-bottom: 2px dashed #484848; }
 
 .header__title {
   position: absolute;
@@ -162,11 +162,11 @@ body {
   color: #1FC0FC;
   text-transform: uppercase;
   letter-spacing: -0.08rem;
-  text-align: center;
   font-size: 4rem;
   line-height: 1.2;
   margin-top: -11px;
-  margin-bottom: 26px; }
+  margin-bottom: 26px;
+  text-align: center; }
 
 .about__content {
   padding: 0 91px;
@@ -178,7 +178,7 @@ body {
 
 .about__bg {
   position: relative;
-  background-image: url("../img/desktop/watercolor_Bg@1x.png");
+  background-image: url("../img/bg/watercolor_Bg@1x.png");
   background-repeat: no-repeat;
   padding-top: 44%; }
 
@@ -249,11 +249,142 @@ body {
   .about__play:active::after {
     border-left-color: #1FC0FC; }
 
-.www {
+.programs {
+  padding-top: 107px;
+  background-image: url("../img/bg/sketch_Bg@1x.png");
+  background-repeat: no-repeat;
+  background-position: 100% 38%; }
+
+.programs__container {
+  width: 946px;
+  margin: auto; }
+
+.programs__title {
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 600;
+  color: #1FC0FC;
+  text-transform: uppercase;
+  letter-spacing: -0.08rem;
+  font-size: 4rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 67px; }
+
+.programs__toggle {
   display: none; }
 
-.www:checked + label {
-  color: red; }
+.programs__block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+
+.programs__captions {
+  width: 228px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none; }
+
+.programs__captions li {
+  margin-bottom: 4px; }
+
+.programs__type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  min-height: 68px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 30px 0 22px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 400;
+  color: rgba(72, 72, 72, 0.87);
+  cursor: pointer; }
+  .programs__type::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top: 34px solid white;
+    border-right: none;
+    border-bottom: 34px solid white;
+    border-left: 30px solid transparent; }
+
+.programs__type--religious {
+  margin-left: 5px; }
+
+.programs__captions svg {
+  margin-right: 18px; }
+
+.programs__wrap {
+  margin-left: 64px;
+  margin-right: 102px;
+  overflow-x: hidden; }
+
+.programs__content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 500%;
+  padding: 0;
+  margin: 0;
+  list-style: none; }
+
+.programs__item {
+  width: 100%; }
+
+.programs__subtitle {
+  margin-top: 16px;
+  margin-bottom: 25px;
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 600;
+  color: #1FC0FC;
+  text-transform: uppercase;
+  letter-spacing: -0.08rem;
+  font-size: 2.8rem;
+  line-height: 1.2;
+  text-transform: unset; }
+
+.programs__text {
+  font-size: 1.5rem;
+  line-height: 1.7;
+  font-weight: 400;
+  color: rgba(72, 72, 72, 0.87); }
+
+.programs__text:first-of-type {
+  margin-bottom: 17px; }
+
+#share:checked ~ .programs__block .programs__type--share,
+#academy:checked ~ .programs__block .programs__type--academy,
+#stage:checked ~ .programs__block .programs__type--stage,
+#voluntary:checked ~ .programs__block .programs__type--voluntary,
+#religious:checked ~ .programs__block .programs__type--religious {
+  background: linear-gradient(138.15deg, #FFC341 20.46%, #FFD701 65.31%);
+  color: white; }
+
+#share:checked ~ .programs__block .programs__content {
+  -webkit-transform: translate(0%);
+          transform: translate(0%); }
+
+#academy:checked ~ .programs__block .programs__content {
+  -webkit-transform: translate(-20%);
+          transform: translate(-20%); }
+
+#stage:checked ~ .programs__block .programs__content {
+  -webkit-transform: translate(-40%);
+          transform: translate(-40%); }
+
+#voluntary:checked ~ .programs__block .programs__content {
+  -webkit-transform: translate(-60%);
+          transform: translate(-60%); }
+
+#religious:checked ~ .programs__block .programs__content {
+  -webkit-transform: translate(-80%);
+          transform: translate(-80%); }
 
 .faq__header {
   text-transform: uppercase;
@@ -304,7 +435,6 @@ body {
   color: #1FC0FC;
   text-transform: uppercase;
   letter-spacing: -0.08rem;
-  text-align: center;
   font-size: 2.8rem;
   line-height: 1.2;
   text-transform: none;
