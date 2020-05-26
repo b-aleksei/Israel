@@ -131,8 +131,6 @@ let pageForms = document.querySelectorAll('[data-send-form]');
   let initialValue = pattern.join('');
 
   let checkValidity = function (inp) {
-    console.log('inp ', inp);
-    console.log(inp.validity.patternMismatch);
     if (inp.validity.patternMismatch || inp.value === '') {
       inp.parentElement.classList.remove('valid')
       inp.parentElement.classList.add('invalid')
@@ -256,25 +254,6 @@ let pageForms = document.querySelectorAll('[data-send-form]');
     }
 
 
-/*  let onValidate = function (e) {
-      if (e.target === phone) {
-        phone.value = phone.value || storage[phone.name] || initialValue;
-        setTimeout(function() {
-          phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
-        });
-        initialValue = '';
-        phone.addEventListener('paste', pasteValue);
-        phone.addEventListener('select', selectValue);
-        phone.addEventListener('keydown', enterValue);
-      }
-
-      if (e.target === name) {
-        name.value = name.value || storage[name.name] || " ";
-        name.addEventListener('input', checkInputName);
-      }
-      form.addEventListener('focusout', deleteHandler);
-    }*/
-
   let onValidate = function (e) {
     if (e.target.name === 'phone') {
       let phone = e.target;
@@ -289,8 +268,8 @@ let pageForms = document.querySelectorAll('[data-send-form]');
     }
 
     if (e.target.name === 'name') {
-      let name = e.target
-      name.value = storage[name.name] || name.value;
+      let name = e.target;
+      name.value = storage[name.name] || '';
       name.addEventListener('input', checkInputName);
     }
     this.addEventListener('focusout', deleteHandler);
