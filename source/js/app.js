@@ -131,7 +131,7 @@ let pageForms = document.querySelectorAll('[data-send-form]');
   let initialValue = pattern.join('');
 
   let checkValidity = function (inp) {
-    if (inp.validity.patternMismatch || inp.value === '') {
+    if (!inp.validity.valid) {
       inp.parentElement.classList.remove('valid')
       inp.parentElement.classList.add('invalid')
     } else {
@@ -269,7 +269,7 @@ let pageForms = document.querySelectorAll('[data-send-form]');
 
     if (e.target.name === 'name') {
       let name = e.target;
-      name.value = storage[name.name] || '';
+      name.value = storage[name.name] || name.value;
       name.addEventListener('input', checkInputName);
     }
     this.addEventListener('focusout', deleteHandler);
