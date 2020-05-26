@@ -151,27 +151,6 @@
   }
 }
 
-.valid input {
-  border-color: $validColor;
-}
-
-.invalid {
-  position: relative;
-}
-
-.invalid input {
-  border-color: $errorColor;
-}
-
-.invalid::before {
-  content: 'Ошибка: неверный формат';
-  position: absolute;
-  top: -40px;
-  left: 30px;
-  @include font(13, 1.2);
-  color: $errorColor;
-}
-
 .modal__label.invalid::before {
   top: 105px;
   left: -327px;

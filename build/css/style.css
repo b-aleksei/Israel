@@ -82,6 +82,25 @@ body {
   overflow-y: scroll;
   position: fixed; }
 
+.valid input {
+  border-color: rgba(72, 72, 72, 0.5); }
+
+.invalid {
+  position: relative; }
+
+.invalid input {
+  border-color: rgba(255, 0, 0, 0.5); }
+
+.invalid::before {
+  content: 'Ошибка: неверный формат';
+  position: absolute;
+  top: -40px;
+  left: 30px;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  font-weight: 400;
+  color: rgba(255, 0, 0, 0.5); }
+
 .header {
   position: relative; }
 
@@ -605,6 +624,9 @@ body {
   margin-left: -46px;
   z-index: 1; }
 
+.trip__label.invalid::before {
+  top: -20px; }
+
 @media (max-width: 1200px) {
   .trip__wrap-content {
     margin-top: 8%;
@@ -655,11 +677,18 @@ body {
     margin: 0 auto 8px auto; }
   .trip__submit {
     width: 264px;
-    margin: auto; } }
+    margin: auto; }
+  .trip__label.invalid::before {
+    left: 120px; } }
 
 @media (max-width: 510px) {
   .trip__content {
-    width: auto; } }
+    width: auto; }
+  .trip__label {
+    -ms-flex-item-align: center;
+        align-self: center; }
+  .trip__label.invalid::before {
+    left: 32px; } }
 
 .faq__header {
   text-transform: uppercase;
@@ -853,25 +882,6 @@ body {
   .modal__close::after {
     -webkit-transform: rotate(-45deg);
             transform: rotate(-45deg); }
-
-.valid input {
-  border-color: rgba(72, 72, 72, 0.5); }
-
-.invalid {
-  position: relative; }
-
-.invalid input {
-  border-color: rgba(255, 0, 0, 0.5); }
-
-.invalid::before {
-  content: 'Ошибка: неверный формат';
-  position: absolute;
-  top: -40px;
-  left: 30px;
-  font-size: 1.3rem;
-  line-height: 1.2;
-  font-weight: 400;
-  color: rgba(255, 0, 0, 0.5); }
 
 .modal__label.invalid::before {
   top: 105px;
