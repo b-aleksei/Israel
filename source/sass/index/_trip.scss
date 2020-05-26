@@ -1,6 +1,7 @@
 .trip {
   display: flex;
-  margin-top: 11px;
+  max-width: 1366px;
+  margin: 11px auto 0 auto;
   justify-content: flex-end;
 }
 
@@ -60,3 +61,83 @@
   margin-left: -46px;
   z-index: 1;
 }
+
+@media (max-width: 1200px) {
+  .trip__wrap-content {
+    margin-top: 8%;
+    margin-left: 30px;
+  }
+
+  .trip__wrap-img {
+    width: 70%;
+  }
+}
+
+@media (max-width: 920px) {
+
+  .trip__wrap-content {
+    margin-top: 0;
+    margin-left: 20px;
+  }
+
+  .trip__wrap-img {
+    width: 60%;
+  }
+}
+
+@media (max-width: $mobile) {
+  .trip {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .trip__wrap-content {
+    width: auto;
+    margin: 0 20px;
+  }
+
+  .trip__wrap-img {
+    width: auto;
+  }
+
+  .trip__title {
+    margin-top: 7px;
+    text-align: center;
+    font-size: 3.2rem;
+  }
+  // width: 470px;
+  .trip__content {
+    width: 470px;
+    font-size: 1.6rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .trip__content br {
+    display: none;
+  }
+
+  .trip__form {
+   flex-direction: column;
+  }
+
+  .trip__input {
+    display: block;
+    width: 287px;
+    margin: 0 auto 8px auto;
+  }
+
+  .trip__submit {
+    width: 264px;
+    margin: auto;
+  }
+}
+
+
+@media (max-width: 510px) {
+
+  .trip__content {
+    width: auto;
+  }
+}
+

@@ -3,7 +3,6 @@
   background-image: url('../img/bg/city_one.png');
   background-repeat: no-repeat;
   background-position: 100% 145px;
-  //outline: 1px dashed tomato;
 }
 
 .programs__container {
@@ -137,6 +136,36 @@
   transform: translate(-80%);
 }
 
+@media (max-width: 1020px) {
+  .programs {
+    padding-top: 110px;
+  }
+
+  .programs__wrap {
+    max-width: 552px;
+    margin-left: 44px;
+    margin-right: 0;
+  }
+
+  .programs__container {
+    max-width: 826px;
+  }
+}
+
+@media (max-width: 890px) {
+  .programs {
+    padding-top: 110px;
+  }
+
+  .programs__wrap {
+    max-width: 552px;
+  }
+
+  .programs__container {
+    margin: 0 20px;
+  }
+}
+
 @media (max-width: $mobile) {
   .programs {
     padding-top: 75px;
@@ -145,8 +174,12 @@
     background-position: 100% 193px;
   }
 
+  .programs__container {
+    margin: auto;
+  }
+
   .programs__title {
-    font-size: 32px;
+    font-size: 3.2rem;
     margin-bottom: 15px;
   }
 
@@ -191,12 +224,12 @@
   .programs__subtitle {
     margin-top: 32px;
     margin-bottom: 17px;
-    font-size: 24px;
+    font-size: 2.4rem;
     text-align: left;
   }
 
   .programs__text {
-    font-size: 14px;
+    font-size: 1.4rem;
     line-height: 1.6;
     color: $blackLight;
     text-align: left;
@@ -214,3 +247,4 @@
     margin-bottom: -2px;
   }
 }
+

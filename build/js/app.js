@@ -295,6 +295,7 @@ let pageForms = document.querySelectorAll('[data-send-form]');
 
   let tabs = document.querySelector('.programs__captions');
   let initialLeft = tabs.offsetLeft;
+  console.log(initialLeft);
   let isTouch = false;
   let touch = 'mousedown';
   let touchMove = 'mousemove';
