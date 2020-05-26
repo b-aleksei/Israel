@@ -3,59 +3,6 @@
 ( function () {
 
 
-//  data-send-form
-  let body = document.body
-  let modalOpeners = document.querySelectorAll("[data-modal-opener]");
-  let classHidden = "modal--call-invisible";
-  let modalCall = document.querySelector("." + classHidden);
-  let modalCallClose = modalCall.querySelectorAll(".modal__close--call");
-  let classHiddenSuccess = "modal--success-invisible";
-  let modalSuccess = document.querySelector("." + classHiddenSuccess);
-// let sendForm = document.querySelector('[data-send-form]');
-  let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
-
-  let storage = {};
-  let form = modalCall.querySelector(".modal__form");
-  let formTrip = document.querySelector(".trip__form");
-  let inputsModal = form.querySelectorAll(".modal__input");
-  let phoneMain = document.querySelector('.trip__input');
-  let phone = form.querySelector('.modal__input--phone');
-  let name = form.querySelector('.modal__input--name');
-
-  modalCall.endAction = function () {
-    name.removeEventListener('input', checkValidity);
-    form.removeEventListener("submit", submitForm);
-    console.log('endAction');
-  }
-  inputsModal.forEach(function (input) {
-    storage[input.name] = localStorage.getItem(input.name)
-  })
-
-  let submitForm = function (e) {
-    inputsModal.forEach(function (input) {
-      storage[input.name] = localStorage.setItem(input.name, input.value)
-    })
-    modalCall.classList.add(classHidden);
-    onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
-    e.preventDefault();
-  }
-
-  let doAction = function () {
-    name.focus();
-    // name.addEventListener('input', checkValidity.bind(name));
-    inputsModal.forEach(function (input) {
-      let value = storage[input.name]
-      if (value) {
-        input.value = value
-      }
-      input.parentElement.classList.remove('invalid');
-    })
-
-    form.addEventListener("submit", submitForm, )
-    validateForm(form, phone, name);
-  }
-
-
   let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonsClose, doAction = false) {
     /*
     Попап открывается посредством удаления класса со св-м display: none
@@ -67,7 +14,7 @@
     .body-lock {overflow-y: scroll; position:fixed;}
     * */
 
-
+    let body = document.body
     // открытие попапа
     let openPopup = function (e) {
       if (e) {
@@ -79,8 +26,8 @@
       if (doAction) doAction();
       //  для предотвращения скрола
       body.dataset.scrollY = self.pageYOffset // сохраним значение скролла
-        body.classList.add('body-lock')
-        body.style.top = body.dataset.scrollY + 'px'
+      body.classList.add('body-lock')
+      body.style.top = body.dataset.scrollY + 'px'
     }
 
 //  Обработчик на оверлее для закрытия попапа по клику на нем или на соотв. кнопки
@@ -105,10 +52,10 @@
       document.removeEventListener("keydown", onCloseModalKey);
       overlay.removeEventListener("click", onCloseModalMouse);
       //  для предовращения скрола
-        body.classList.remove('body-lock')
-        window.scrollTo(0, body.dataset.scrollY);
-        if(typeof overlay.endAction === 'function') {
-      overlay.endAction() // эта функция снаружи что то делает после закрытия окна
+      body.classList.remove('body-lock')
+      window.scrollTo(0, body.dataset.scrollY);
+      if(typeof overlay.endAction === 'function') {
+        overlay.endAction() // эта функция снаружи что то делает после закрытия окна
       }
     }
 
@@ -120,7 +67,56 @@
     } else openPopup()
   }
 
-  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction)
+  let modalOpeners = document.querySelectorAll("[data-modal-opener]");
+  let classHidden = "modal--call-invisible";
+  let modalCall = document.querySelector("." + classHidden);
+  let modalCallClose = modalCall.querySelectorAll(".modal__close--call");
+  let classHiddenSuccess = "modal--success-invisible";
+  let modalSuccess = document.querySelector("." + classHiddenSuccess);
+// let sendForm = document.querySelector('[data-send-form]');
+  let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
+
+  let storage = {};
+  let form = modalCall.querySelector(".modal__form");
+  let formTrip = document.querySelector(".trip__form");
+  let inputsModal = form.querySelectorAll(".modal__input");
+  let phoneMain = document.querySelector('.trip__input');
+  let phone = form.querySelector('.modal__input--phone');
+  let name = form.querySelector('.modal__input--name');
+
+  modalCall.endAction = function () {
+    name.removeEventListener('input', checkValidity);
+    form.removeEventListener("submit", submitForm);
+    form.removeEventListener('focusin', startValidate);
+    console.log('endAction');
+  }
+  inputsModal.forEach(function (input) {
+    storage[input.name] = localStorage.getItem(input.name)
+  })
+
+  let submitForm = function (e) {
+    inputsModal.forEach(function (input) {
+      storage[input.name] = localStorage.setItem(input.name, input.value)
+    })
+    modalCall.classList.add(classHidden);
+    onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+    e.preventDefault();
+  }
+
+  let doAction = function () {
+    name.focus();
+    form.addEventListener('focusin', startValidate);
+    inputsModal.forEach(function (input) {
+      let value = storage[input.name]
+      if (value) {
+        input.value = value
+      }
+      input.parentElement.classList.remove('invalid');
+    })
+    form.addEventListener("submit", submitForm, )
+  }
+
+  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction);
 
 
   // ======================валидация телефона===================================================
@@ -138,21 +134,8 @@
   let focus;
   let initialValue = pattern.join('');
 
-/*  let checkValidity = function () {
-    if (this.validity.patternMismatch || this.value === '') {
-      this.parentElement.classList.remove('valid')
-      this.parentElement.classList.add('invalid')
-    } else {
-      this.parentElement.classList.remove('invalid')
-      this.parentElement.classList.add('valid')
-    }
-  };*/
-  //patternMismatch
-
   let checkValidity = function (inp) {
-    console.log(inp);
-    console.log(!inp.validity.valid, inp.validity.patternMismatch);
-    if (!inp.validity.valid || inp.value === '') {
+    if (inp.validity.patternMismatch || inp.value === '') {
       inp.parentElement.classList.remove('valid')
       inp.parentElement.classList.add('invalid')
     } else {
@@ -160,6 +143,7 @@
       inp.parentElement.classList.add('valid')
     }
   };
+
 
   let pasteValue = function () {
     setTimeout(function() {
@@ -255,9 +239,7 @@
     checkValidity(this);
   };
 
-
-
-  let validateForm = function (form, phone, name) {
+  // let validateForm = function (form, phone, name) {
 
     let deleteHandler = function (e) {
       if (e.target === phone) {
@@ -269,13 +251,14 @@
 
       if (e.target === name) {
         // console.log('remove name');
-        // name.removeEventListener('input', checkValidity);
+        name.removeEventListener('input', checkValidity);
       }
       form.removeEventListener('focusout', deleteHandler);
       checkValidity(name)
     }
 
-    let checkValue = function (e) {
+    let startValidate = function (e) {
+      console.log('start');
       if (e.target === phone) {
         phone.value = phone.value || storage[phone.name] || initialValue;
         setTimeout(function() {
@@ -289,18 +272,15 @@
 
       if (e.target === name) {
         name.value = name.value || storage[name.name] || " ";
+        name.removeEventListener('input', checkValidity);
       }
       form.addEventListener('focusout', deleteHandler);
     }
 
-    form.addEventListener('focusin', checkValue);
-  }
 
+  // }
 
   // validateForm(formTrip, phoneMain)
-
-
-
 
 } )();
 //=========================секция программы==================================================
