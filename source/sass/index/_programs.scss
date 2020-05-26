@@ -101,6 +101,10 @@
   margin-bottom: 17px;
 }
 
+.programs__text--space br:not(.space) {
+  display: none;
+}
+
 #share:checked ~ .programs__block .programs__type--share,
 #academy:checked ~ .programs__block .programs__type--academy,
 #stage:checked ~ .programs__block .programs__type--stage,
@@ -135,13 +139,15 @@
 
 @media (max-width: $mobile) {
   .programs {
-    //padding-top: 194px;
+    padding-top: 75px;
+    text-align: center;
     background-image: url('../img/bg/city_one_m.png');
-    //background-position: 100% 145px;
+    background-position: 100% 193px;
   }
 
   .programs__title {
     font-size: 32px;
+    margin-bottom: 15px;
   }
 
   .programs__block {
@@ -150,8 +156,9 @@
   }
 
   .programs__captions {
+    position: relative;
     display: flex;
-    width: auto;
+    width: 765px;
     flex-shrink: initial;
   }
 
@@ -162,7 +169,7 @@
   .programs__type {
     min-height: 39px;
     border-radius: 60px;
-    //padding: 0 30px 0 22px;
+    padding: 8px 11px 8px 11px;
 
     &::after {
       display: none;
@@ -170,37 +177,40 @@
   }
 
   .programs__captions svg {
-    margin-right: 18px;
+    margin-right: 10px;
+    width: 32px;
+    height: 32px;
   }
 
   .programs__wrap {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 17px;
+    margin-right: 18px;
     overflow-x: hidden;
   }
 
-  .programs__content {
-    display: flex;
-    width: 500%;
-  }
-
-  .programs__item {
-    width: 100%;
-  }
-
   .programs__subtitle {
-    margin-top: 16px;
-    margin-bottom: 25px;
-    @include header(28, 1.2);
-    text-transform: unset;
+    margin-top: 32px;
+    margin-bottom: 17px;
+    font-size: 24px;
+    text-align: left;
   }
 
   .programs__text {
-    @include font(15, 1.7);
+    font-size: 14px;
+    line-height: 1.6;
     color: $blackLight;
+    text-align: left;
+  }
+
+  .programs__text--space br:not(.space) {
+    display: block;
+  }
+
+  .programs__text--space .space {
+    display: none;
   }
 
   .programs__text:first-of-type {
-    margin-bottom: 17px;
+    margin-bottom: -2px;
   }
 }
