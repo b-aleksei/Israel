@@ -73,20 +73,18 @@
   let modalCallClose = modalCall.querySelectorAll(".modal__close--call");
   let classHiddenSuccess = "modal--success-invisible";
   let modalSuccess = document.querySelector("." + classHiddenSuccess);
-// let sendForm = document.querySelector('[data-send-form]');
+let pageForms = document.querySelectorAll('[data-send-form]');
   let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
 
   let storage = {};
   let form = modalCall.querySelector(".modal__form");
-  let formTrip = document.querySelector(".trip__form");
   let inputsModal = form.querySelectorAll(".modal__input");
-  let phoneMain = document.querySelector('.trip__input');
   let phone = form.querySelector('.modal__input--phone');
   let name = form.querySelector('.modal__input--name');
 
   modalCall.endAction = function () {
     form.removeEventListener("submit", submitForm);
-    form.removeEventListener('focusin', startValidate);
+    form.removeEventListener('focusin', onValidate);
   }
 
   inputsModal.forEach(function (input) {
@@ -103,8 +101,8 @@
   }
 
   let doAction = function () {
+    form.addEventListener('focusin', onValidate);
     name.focus();
-    form.addEventListener('focusin', startValidate);
     inputsModal.forEach(function (input) {
       let value = storage[input.name]
       if (value) {
@@ -116,7 +114,6 @@
   }
 
   onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction);
-
 
   // ======================валидация телефона===================================================
   const START_INDEX = 4;
@@ -135,12 +132,7 @@
 
   let checkValidity = function (inp) {
     console.log('inp ', inp);
-    try {
-     console.log(inp.validity.patternMismatch);
-    } catch (e) {
-      console.log('error ',e);
-    }
-    // console.log(inp.validity.patternMismatch);
+    console.log(inp.validity.patternMismatch);
     if (inp.validity.patternMismatch || inp.value === '') {
       inp.parentElement.classList.remove('valid')
       inp.parentElement.classList.add('invalid')
@@ -151,8 +143,9 @@
   };
 
   let pasteValue = function () {
+    let ctx = this
     setTimeout(function() {
-      let value = Array.from(this.value).filter(function(item) {
+      let value = Array.from(ctx.value).filter(function(item) {
        return /\d/.test(item)
       });
       value.reverse();
@@ -163,9 +156,9 @@
       }
       pattern[1] = FIRST_NUMBER;
       result = pattern;
-      this.value = pattern.join('');
+      ctx.value = pattern.join('');
       startSelection = endSelection = 0;
-      checkValidity(this);
+      checkValidity(ctx);
     })
   };
 
@@ -262,7 +255,8 @@
       checkValidity(name)
     }
 
-    let startValidate = function (e) {
+
+/*  let onValidate = function (e) {
       if (e.target === phone) {
         phone.value = phone.value || storage[phone.name] || initialValue;
         setTimeout(function() {
@@ -279,10 +273,44 @@
         name.addEventListener('input', checkInputName);
       }
       form.addEventListener('focusout', deleteHandler);
+    }*/
+
+  let onValidate = function (e) {
+    if (e.target.name === 'phone') {
+      let phone = e.target;
+      phone.value = phone.value || storage[phone.name] || initialValue;
+      setTimeout(function() {
+        phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
+      });
+      initialValue = '';
+      phone.addEventListener('paste', pasteValue);
+      phone.addEventListener('select', selectValue);
+      phone.addEventListener('keydown', enterValue);
     }
 
+    if (e.target.name === 'name') {
+      let name = e.target
+      name.value = storage[name.name] || name.value;
+      name.addEventListener('input', checkInputName);
+    }
+    this.addEventListener('focusout', deleteHandler);
+  }
+
+  // валидация форм на главной странице
+  pageForms.forEach(function (form) {
+    let inputs = form.querySelectorAll('input:not([type=checkbox])');
+    form.addEventListener('focusin', onValidate);
+    form.addEventListener('submit', function (e) {
+      inputs.forEach(function (input) {
+        storage[input.name] = localStorage.setItem(input.name, input.value)
+      })
+      onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+      e.preventDefault();
+    });
+  });
 
 } )();
+
 //=========================секция программы==================================================
 (function () {
 
@@ -318,7 +346,7 @@
     };
     document.addEventListener(touchMove, onMove);
 
-    let onMouseUp = () => {
+    let onMouseUp = function () {
       document.removeEventListener(touchMove, onMove);
       document.removeEventListener(touchUp, onMouseUp);
     };
