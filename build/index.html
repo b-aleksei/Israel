@@ -43,6 +43,7 @@
       <picture>
         <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/header-bg_m@1x.webp 1x, img/mobile/header-bg_m@2x.webp 2x">
         <source media="(max-width: 767px)" srcset="img/mobile/header-bg_m@1x.jpg 1x, img/mobile/header-bg_m@2x.jpg 2x">
+        <source type="image/webp" srcset="img/desktop/header-bg@1x.webp 1x, img/desktop/header-bg@2x.webp 2x">
       <img class="header__bg" src="img/desktop/header-bg@1x.jpg" srcset="img/desktop/header-bg@2x.jpg 2x" width="1366" height="906" alt="Фоновое изображение">
       </picture>
     </div>
@@ -60,6 +61,7 @@
         <picture>
           <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/photo_about_m@1x.webp 1x, img/mobile/photo_about_m@2x.webp 2x">
           <source media="(max-width: 767px)" srcset="img/mobile/photo_about_m@1x.png 1x, img/mobile/photo_about_m@2x.png 2x">
+          <source type="image/webp" srcset="img/desktop/photo_about@1x.webp 1x, img/desktop/photo_about@2x.webp 2x">
         <img src="img/desktop/photo_about@1x.png" srcset="img/desktop/photo_about@2x.png 2x" alt="Фоновое изображение" width="870" height="460">
         </picture>
         <button class="about__play" type="button" aria-label="Воспроизвести"></button>
@@ -135,9 +137,7 @@
                 консультация с широким активом позволяет оценить значение новых предложений. Равным образом укрепление и
                 развитие структуры требуют определения и уточнения систем массового участия. </p>
               <p class="programs__text">Таким образом реализация намеченных плановых заданий в значительной степени обуславливает создание
-                позиций, занимаемых участниками в отношении поставленных задач. Значимость этих проблем настолько
-                очевидна, что рамки и место обучения кадров представляет собой интересный эксперимент проверки
-                дальнейших направлений развития. </p>
+                позиций, занимаемых участниками в отношении поставленных задач.</p>
             </li>
             <li class="programs__item">
               <h3 class="programs__subtitle">Волонтёрство</h3>
@@ -147,8 +147,7 @@
                 активизации.</p>
               <p class="programs__text"> Идейные соображения высшего порядка, а также постоянное информационно-пропагандистское обеспечение
                 нашей деятельности требуют определения и уточнения системы обучения кадров, соответствует насущным
-                потребностям. Идейные соображения высшего порядка, а также дальнейшее развитие различных форм
-                деятельности требуют определения и уточнения новых предложений.</p>
+                потребностям.</p>
             </li>
             <li class="programs__item">
               <h3 class="programs__subtitle">Религиозные</h3>
@@ -157,25 +156,32 @@
                 Таким образом постоянное информационно-пропагандистское обеспечение нашей деятельности представляет
                 собой интересный эксперимент проверки систем массового участия.</p>
               <p class="programs__text"> Товарищи! консультация с широким активом играет важную роль в формировании позиций, занимаемых
-                участниками в отношении поставленных задач. Равным образом начало повседневной работы по формированию
-                позиции требуют определения и уточнения модели развития.</p>
+                участниками в отношении поставленных задач.</p>
             </li>
           </ul>
         </div>
       </div>
     </div></section>
 
-<!--    <section class="">
-      <div>
-        <h2>Хочу поехать!</h2>
-        <p>Оставьте свой телефон и мы свяжемся с вами, подберём куратора и ответим на все вопросы!</p>
-        <form method="post">
-          <label><span class="visually-hidden">телефон</span><input type="tel" name="phone"></label>
-          <button data-modal-opener type="submit">перезвонить мне</button>
+    <section class="trip">
+      <div class="trip__wrap-content">
+        <h2 class="trip__title">Хочу поехать!</h2>
+        <p class="trip__content">Оставьте свой телефон и мы свяжемся с вами, <br> подберём куратора и ответим на все вопросы!</p>
+        <form class="trip__form" method="post">
+          <label><span class="visually-hidden">Укажите телефон</span>
+            <input class="trip__input" type="tel" name="phone" placeholder="телефон"></label>
+          <button class="trip__submit" type="submit">перезвонить мне</button>
         </form>
       </div>
-      <img src="" width="" height="" alt="фоновое изображение">
-    </section>-->
+      <div class="trip__wrap-img">
+        <picture>
+          <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/girl-flag-bg_m@1x.webp 1x, img/mobile/girl-flag-bg_m@2x.webp 2x">
+          <source media="(max-width: 767px)" srcset="img/mobile/girl-flag-bg_m@1x.jpg 1x, img/mobile/girl-flag-bg_m@2x.jpg 2x">
+          <source type="image/webp" srcset="img/desktop/girl-flag-bg@1x.webp 1x, img/desktop/girl-flag-bg@2x.webp 2x">
+          <img src="img/desktop/girl-flag-bg@1x.jpg" srcset="img/desktop/girl-flag-bg@2x.jpg 2x" width="818" height="594" alt="фоновое изображение">
+        </picture>
+      </div>
+    </section>
 
 <!--    <section class="">
       <img src="" alt="">
@@ -443,7 +449,7 @@
           </label>
           <label>
             <span class="visually-hidden">Укажите номер телефона</span>
-            <input type="text" name="phone">
+            <input type="tel" name="phone">
           </label>
           <button data-send-form type="submit">перезвоните мне</button>
         </form>
@@ -476,7 +482,7 @@
       <label><span class="visually-hidden">Заполните имя</span>
         <input class="modal__input modal__input--name" type="text" name="user" placeholder="имя" pattern="[A-z,А-я]{2,}" required=""></label>
       <label class="modal__label"><span class="visually-hidden">Укажите телефон</span>
-        <input class="phone-valid modal__input modal__input--phone" type="text" name="phone" pattern="\+7\s\([0-9]{3}\)\s[0-9]{3}\s[0-9]{2}\s[0-9]{2}" placeholder="телефон" required=""></label>
+        <input class="phone-valid modal__input modal__input--phone" type="tel" name="phone" pattern="\+7\s\([0-9]{3}\)\s[0-9]{3}\s[0-9]{2}\s[0-9]{2}" placeholder="телефон" required=""></label>
       <button class="modal__submit" type="submit" aria-label="отправить данные">перезвоните мне</button>
       <input class="modal__check" id="data" type="checkbox" name="data">
       <label class="modal__apply" for="data">Нажимая на кнопку, вы даёте согласие на обработку персональных

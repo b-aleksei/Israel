@@ -16,33 +16,43 @@
 
   let storage = {};
   let form = modalCall.querySelector(".modal__form");
-  let inputs = form.querySelectorAll(".modal__input");
+  let formTrip = document.querySelector(".trip__form");
+  let inputsModal = form.querySelectorAll(".modal__input");
+  let phoneMain = document.querySelector('.trip__input');
   let phone = form.querySelector('.modal__input--phone');
   let name = form.querySelector('.modal__input--name');
 
-  inputs.forEach(function (input) {
+  modalCall.endAction = function () {
+    name.removeEventListener('input', checkValidity);
+    form.removeEventListener("submit", submitForm);
+    console.log('endAction');
+  }
+  inputsModal.forEach(function (input) {
     storage[input.name] = localStorage.getItem(input.name)
   })
 
+  let submitForm = function (e) {
+    inputsModal.forEach(function (input) {
+      storage[input.name] = localStorage.setItem(input.name, input.value)
+    })
+    modalCall.classList.add(classHidden);
+    onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+    e.preventDefault();
+  }
+
   let doAction = function () {
     name.focus();
-    inputs.forEach(function (input) {
+    // name.addEventListener('input', checkValidity.bind(name));
+    inputsModal.forEach(function (input) {
       let value = storage[input.name]
       if (value) {
         input.value = value
       }
       input.parentElement.classList.remove('invalid');
     })
-    let submitForm = function (e) {
-      inputs.forEach(function (input) {
-        storage[input.name] = localStorage.setItem(input.name, input.value)
-      })
-      modalCall.classList.add(classHidden);
-      onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
-      form.removeEventListener("submit", submitForm);
-      e.preventDefault();
-    }
-    form.addEventListener("submit", submitForm)
+
+    form.addEventListener("submit", submitForm, )
+    validateForm(form, phone, name);
   }
 
 
@@ -54,6 +64,7 @@
     * modalOpeners - массив кнопок открытия попапа
     * buttonClose - кнопка закрытия попапа
     * buttonCloseOther - дполнителная кнопка закрытия окна
+    .body-lock {overflow-y: scroll; position:fixed;}
     * */
 
 
@@ -95,7 +106,10 @@
       overlay.removeEventListener("click", onCloseModalMouse);
       //  для предовращения скрола
         body.classList.remove('body-lock')
-        window.scrollTo(0, body.dataset.scrollY)
+        window.scrollTo(0, body.dataset.scrollY);
+        if(typeof overlay.endAction === 'function') {
+      overlay.endAction() // эта функция снаружи что то делает после закрытия окна
+      }
     }
 
     // навершиваем на каждую кнопку обработчик открытия попапа
@@ -124,13 +138,26 @@
   let focus;
   let initialValue = pattern.join('');
 
-  let checkValidity = function () {
+/*  let checkValidity = function () {
     if (this.validity.patternMismatch || this.value === '') {
       this.parentElement.classList.remove('valid')
       this.parentElement.classList.add('invalid')
     } else {
       this.parentElement.classList.remove('invalid')
       this.parentElement.classList.add('valid')
+    }
+  };*/
+  //patternMismatch
+
+  let checkValidity = function (inp) {
+    console.log(inp);
+    console.log(!inp.validity.valid, inp.validity.patternMismatch);
+    if (!inp.validity.valid || inp.value === '') {
+      inp.parentElement.classList.remove('valid')
+      inp.parentElement.classList.add('invalid')
+    } else {
+      inp.parentElement.classList.remove('invalid')
+      inp.parentElement.classList.add('valid')
     }
   };
 
@@ -149,7 +176,7 @@
       result = pattern;
       this.value = pattern.join('');
       startSelection = endSelection = 0;
-      checkValidity.call(this);
+      checkValidity(this);
     })
   };
 
@@ -169,7 +196,6 @@
     })
 
     if (!isControlKey && !e.ctrlKey) {
-      console.log('tre');
       e.preventDefault();
       if (IsSelectionTrue && this.selectionStart !== this.selectionEnd) {
         let clearData = pattern.slice(startSelection, endSelection);
@@ -226,40 +252,55 @@
         this.selectionStart = this.selectionEnd = focus;
       }
     }
-    checkValidity.call(this);
+    checkValidity(this);
   };
 
-  form.addEventListener('focusin', function (e) {
-    if (e.target === phone) {
-      phone.value = phone.value || storage[phone.name] || initialValue;
-      setTimeout(function() {
-        phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
-      });
-      initialValue = '';
-      phone.addEventListener('paste', pasteValue);
-      phone.addEventListener('select', selectValue);
-      phone.addEventListener('keydown', enterValue);
+
+
+  let validateForm = function (form, phone, name) {
+
+    let deleteHandler = function (e) {
+      if (e.target === phone) {
+        console.log('remove phone');
+        phone.removeEventListener('paste', pasteValue);
+        phone.removeEventListener('select', selectValue);
+        phone.removeEventListener('keydown', enterValue);
+      }
+
+      if (e.target === name) {
+        // console.log('remove name');
+        // name.removeEventListener('input', checkValidity);
+      }
+      form.removeEventListener('focusout', deleteHandler);
+      checkValidity(name)
     }
 
-    if (e.target === name) {
-      name.addEventListener('input', checkValidity);
-      name.value = name.value || storage[name.name] || " ";
+    let checkValue = function (e) {
+      if (e.target === phone) {
+        phone.value = phone.value || storage[phone.name] || initialValue;
+        setTimeout(function() {
+          phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
+        });
+        initialValue = '';
+        phone.addEventListener('paste', pasteValue);
+        phone.addEventListener('select', selectValue);
+        phone.addEventListener('keydown', enterValue);
+      }
+
+      if (e.target === name) {
+        name.value = name.value || storage[name.name] || " ";
+      }
+      form.addEventListener('focusout', deleteHandler);
     }
-  });
 
-  form.addEventListener('focusout', function (e) {
+    form.addEventListener('focusin', checkValue);
+  }
 
-    if (e.target === phone) {
-      phone.removeEventListener('paste', pasteValue);
-      phone.removeEventListener('select', selectValue);
-      phone.removeEventListener('keydown', enterValue);
-    }
 
-    if (e.target === name) {
-      name.removeEventListener('input', checkValidity);
-    }
+  // validateForm(formTrip, phoneMain)
 
-  });
+
+
 
 } )();
 //=========================секция программы==================================================
