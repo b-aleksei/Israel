@@ -85,11 +85,10 @@
   let name = form.querySelector('.modal__input--name');
 
   modalCall.endAction = function () {
-    name.removeEventListener('input', checkValidity);
     form.removeEventListener("submit", submitForm);
     form.removeEventListener('focusin', startValidate);
-    console.log('endAction');
   }
+
   inputsModal.forEach(function (input) {
     storage[input.name] = localStorage.getItem(input.name)
   })
@@ -135,6 +134,13 @@
   let initialValue = pattern.join('');
 
   let checkValidity = function (inp) {
+    console.log('inp ', inp);
+    try {
+     console.log(inp.validity.patternMismatch);
+    } catch (e) {
+      console.log('error ',e);
+    }
+    // console.log(inp.validity.patternMismatch);
     if (inp.validity.patternMismatch || inp.value === '') {
       inp.parentElement.classList.remove('valid')
       inp.parentElement.classList.add('invalid')
@@ -143,7 +149,6 @@
       inp.parentElement.classList.add('valid')
     }
   };
-
 
   let pasteValue = function () {
     setTimeout(function() {
@@ -239,26 +244,25 @@
     checkValidity(this);
   };
 
-  // let validateForm = function (form, phone, name) {
 
     let deleteHandler = function (e) {
       if (e.target === phone) {
-        console.log('remove phone');
         phone.removeEventListener('paste', pasteValue);
         phone.removeEventListener('select', selectValue);
         phone.removeEventListener('keydown', enterValue);
       }
 
       if (e.target === name) {
-        // console.log('remove name');
-        name.removeEventListener('input', checkValidity);
+        name.removeEventListener('input', checkInputName);
       }
       form.removeEventListener('focusout', deleteHandler);
+    }
+
+    let checkInputName = function () {
       checkValidity(name)
     }
 
     let startValidate = function (e) {
-      console.log('start');
       if (e.target === phone) {
         phone.value = phone.value || storage[phone.name] || initialValue;
         setTimeout(function() {
@@ -272,15 +276,11 @@
 
       if (e.target === name) {
         name.value = name.value || storage[name.name] || " ";
-        name.removeEventListener('input', checkValidity);
+        name.addEventListener('input', checkInputName);
       }
       form.addEventListener('focusout', deleteHandler);
     }
 
-
-  // }
-
-  // validateForm(formTrip, phoneMain)
 
 } )();
 //=========================секция программы==================================================
