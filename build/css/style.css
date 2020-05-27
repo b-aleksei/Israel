@@ -690,6 +690,51 @@ body {
   .trip__label.invalid::before {
     left: 32px; } }
 
+.condition {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+
+.condition__wrap-img {
+  width: 581px; }
+
+.condition__wrap-img img {
+  width: 100%;
+  height: auto; }
+
+.condition__title {
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 600;
+  color: #1FC0FC;
+  text-transform: uppercase;
+  letter-spacing: -0.08rem;
+  font-size: 4rem;
+  line-height: 1.2; }
+
+.condition__content {
+  font-size: 1.5rem;
+  line-height: 1.7;
+  font-weight: 400;
+  color: rgba(72, 72, 72, 0.87); }
+
+.condition__content--bold {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: #484848; }
+
+.condition__content--small {
+  line-height: 1.4;
+  color: rgba(72, 72, 72, 0.5); }
+
+.condition__list {
+  padding: 0;
+  margin: 0;
+  list-style: none; }
+
+.condition__item {
+  line-height: 1.4;
+  color: rgba(72, 72, 72, 0.87); }
+
 .faq__header {
   text-transform: uppercase;
   color: #1FC0FC; }

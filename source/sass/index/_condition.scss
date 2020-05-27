@@ -1,0 +1,45 @@
+.condition {
+  display: flex;
+}
+
+.condition__wrap-img {
+  width: 581px;
+}
+
+.condition__wrap-img img {
+  width: 100%;
+  height: auto;
+}
+
+.condition__wrap-content {
+
+}
+
+.condition__title {
+  @include header()
+}
+
+.condition__content {
+  @include font(15, 1.7);
+  color: $blackLight;
+}
+
+.condition__content--bold {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: $black;
+}
+
+.condition__content--small {
+  line-height: 1.4;
+  color: $validColor;
+}
+
+.condition__list {
+  @include resetList
+}
+
+.condition__item {
+  line-height: 1.4;
+  color: $blackLight;
+}
