@@ -96,12 +96,13 @@
   }
 
   .trip__wrap-content {
-    width: auto;
-    margin: 0 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0 17px;
   }
 
   .trip__wrap-img {
-    width: auto;
+    width: 100%;
   }
 
   .trip__title {
@@ -109,12 +110,12 @@
     text-align: center;
     font-size: 3.2rem;
   }
-  // width: 470px;
+
   .trip__content {
     width: 470px;
     font-size: 1.6rem;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin: 0 auto 24px auto;
   }
 
   .trip__content br {
@@ -145,7 +146,7 @@
 @media (max-width: 510px) {
 
   .trip__content {
-    width: auto;
+    width: 100%;
   }
 
   .trip__label {

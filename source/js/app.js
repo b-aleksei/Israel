@@ -1,7 +1,10 @@
 "use strict";
+// для поддержки forEach в IE11
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
 
 ( function () {
-
 
   let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonsClose, doAction = false) {
     /*
@@ -110,7 +113,7 @@ let pageForms = document.querySelectorAll('[data-send-form]');
       }
       input.parentElement.classList.remove('invalid');
     })
-    form.addEventListener("submit", submitForm, )
+    form.addEventListener("submit", submitForm)
   }
 
   onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction);
@@ -295,7 +298,6 @@ let pageForms = document.querySelectorAll('[data-send-form]');
 
   let tabs = document.querySelector('.programs__captions');
   let initialLeft = tabs.offsetLeft;
-  console.log(initialLeft);
   let isTouch = false;
   let touch = 'mousedown';
   let touchMove = 'mousemove';
