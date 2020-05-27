@@ -1,9 +1,27 @@
 .condition {
+  position: relative;
   display: flex;
+  max-width: 1366px;
+  margin: 152px auto 0 auto;
+  background-image: url('../img/bg/stamp_desktop.png');
+  background-repeat: no-repeat;
+  background-position: 100% 212px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -199px;
+    left: 0;
+    width: 100%;
+    height: 88.4%;
+    background-image: url('../img/bg/watercolor_Bg_two.png');
+    z-index: -1;
+  }
 }
 
 .condition__wrap-img {
   width: 581px;
+  margin-left: 12px;
 }
 
 .condition__wrap-img img {
@@ -12,34 +30,255 @@
 }
 
 .condition__wrap-content {
-
+  width: 552px;
+  margin-left: 106px;
 }
 
 .condition__title {
-  @include header()
+  @include header();
+  margin-bottom: 23px;
 }
 
 .condition__content {
   @include font(15, 1.7);
   color: $blackLight;
+  margin-right: 64px;
 }
 
 .condition__content--bold {
   font-size: 1.7rem;
   font-weight: 500;
   color: $black;
+  margin: 35px 90px 30px 0;
 }
 
 .condition__content--small {
   line-height: 1.4;
   color: $validColor;
+  margin-right: 0;
+  padding-left: 13px;
+  border-left: 3px solid $yellow;
 }
 
 .condition__list {
-  @include resetList
+  position: relative;
+  @include resetList;
+  margin-right: 90px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2px;
+    height: 248px;
+    z-index: -1;
+    border-left: 1px dashed rgba(72, 72, 72, 0.2)
+  }
 }
 
 .condition__item {
+  position: relative;
+  min-height: 76px;
+  padding-left: 44px;
+  margin: 0;
   line-height: 1.4;
   color: $blackLight;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+
+  &::after {
+    content: '1';
+    position: absolute;
+    top: 0;
+    left: -3px;
+    @include font(17, 1.7, 600);
+    color: $yellow;
+    z-index: 2;
+  }
+}
+
+.condition__item--1 {
+  &::before {
+    top: -6px;
+  }
+
+  &::after {
+    top: -3px;
+  }
+}
+
+.condition__item--2 {
+  min-height: 67px;
+
+  &::before {
+    top: -7px;
+  }
+
+  &::after {
+    content: "2";
+    top: -4px;
+  }
+}
+
+.condition__item--3 {
+  min-height: 81px;
+
+  &::before {
+    top: 3px;
+  }
+
+  &::after {
+    content: "3";
+    top: 5px;
+  }
+}
+
+.condition__item--4 {
+  border-left: none;
+
+  &::after {
+    content: "4";
+    top: 1px;
+  }
+}
+
+@media (max-width: 1365px) {
+  .condition {
+    justify-content: space-around;
+  }
+
+  .condition__wrap-img {
+    margin: auto;
+  }
+
+  .condition__wrap-content {
+    width: 552px;
+    margin-left: 20px;
+    margin-right: 17px;
+  }
+}
+
+@media (max-width: 1070px) {
+  .condition__content {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .condition__list {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: $mobile) {
+  .condition {
+    margin-top: 48px;
+    background-image: url('../img/bg/stamp_m.png');
+    background-position: 100% 300px;
+
+    &::before {
+      display: none;
+    }
+  }
+  .condition__wrap-img {
+    display: none;
+  }
+
+  .condition__wrap-content {
+    margin: 0 17px 0 17px;
+  }
+
+  .condition__content {
+    font-size: 1.4rem;
+    line-height: 160%;
+  }
+
+  .condition__content--bold {
+    font-size: 1.6rem;
+    margin: 23px 0 32px 0;
+  }
+
+  .condition__title {
+    text-align: center;
+    font-size: 3.2rem;
+  }
+
+  .condition__item {
+    min-height: 82px;
+    font-size: 1.4rem;
+    line-height: 1.6;
+
+    &::before {
+      top: -7px;
+      left: -9px;
+    }
+
+    &::after {
+      top: -4px;
+      left: 5px;
+    }
+  }
+
+  .condition__item--2 {
+
+    &::before {
+      top: 3px;
+    }
+
+    &::after {
+      content: "2";
+      top: 5px;
+    }
+  }
+
+  .condition__item--3 {
+    min-height: 90px;
+
+    &::before {
+      top: 13px;
+    }
+
+    &::after {
+      content: "3";
+      top: 15px;
+    }
+  }
+
+  .condition__item--4 {
+    padding-left: 43px;
+    border-left: none;
+
+    &::before {
+      top: 15px;
+    }
+
+    &::after {
+      content: "4";
+      top: 17px;
+    }
+  }
+
+  .condition__content--small {
+    margin-top: 10px;
+    margin-left: -5px;
+    padding-left: 9px;
+  }
+
+
+  .condition__list::before {
+    left: 8px;
+    height: 300px;
+    border-left: 1px dashed rgba(72, 72, 72, 0.2)
+
+  }
 }

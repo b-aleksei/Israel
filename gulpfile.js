@@ -33,8 +33,8 @@ gulp.task("css", function () {
 gulp.task('babel', () =>
   gulp.src('source/js/*.js')
     .pipe(babel({
-      // presets: ['@babel/env']
-      presets: ["@babel/preset-es2015"]
+      presets: ['@babel/env']
+      // presets: ["@babel/preset-es2015"]
     }))
     .pipe(gulp.dest('build/js'))
 );
