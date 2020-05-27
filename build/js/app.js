@@ -370,4 +370,17 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
     document.addEventListener(touchUp, onMouseUp);
   });
+})(); //========пунктир в секции conditions ====================================
+
+
+(function () {
+  var list = document.querySelector('.condition__list');
+  var firstItem = document.querySelector('.condition__item--1');
+  var lastItem = document.querySelectorAll('.condition__item');
+  lastItem = lastItem[lastItem.length - 1];
+  var heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height');
+  var heightLastItem = getComputedStyle(lastItem).getPropertyValue('height');
+  var heightList = getComputedStyle(list).getPropertyValue('height');
+  var lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
+  list.style.setProperty('--line-dashed', lineHeight + 'px');
 })();
