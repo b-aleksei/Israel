@@ -364,10 +364,21 @@ let pageForms = document.querySelectorAll('[data-send-form]');
   // let firstImg = document.querySelector('.gallery__first-img');
 
   // let firstImgContent = firstImg.innerHTML;
-  let template = document.querySelector('template').content;
+  // let template = document.querySelector('template').content;
 
   // template.prepend(firstImg);
-  galleryList.append(template);
+  // galleryList.append(template);
+  galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' +
+    '    <picture>\n' +
+    '      <source type="image/webp" media="(max-width: 767px)"\n' +
+    '              srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">\n' +
+    '      <source media="(max-width: 767px)"\n' +
+    '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' +
+    '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' +
+    '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' +
+    '           height="732" alt="фоновое изображение">\n' +
+    '    </picture>\n' +
+    '  </li>')
   sliderGallery.classList.remove('no-js')
 
 /*  const DELAY_START_SLIDER = 5000;

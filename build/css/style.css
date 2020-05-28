@@ -771,7 +771,8 @@ body {
   margin: 0;
   list-style: none;
   margin-right: 90px;
-  --line-dashed: 243px; }
+  --line-dashed: 243px;
+  outline: 1px dashed tomato; }
 
 .condition__item {
   position: relative;
@@ -803,6 +804,7 @@ body {
   position: absolute;
   top: 50%;
   left: 0;
+  height: 243px;
   height: var(--line-dashed, 243px);
   z-index: -1;
   border-left: 1px dashed rgba(72, 72, 72, 0.2); }
@@ -870,6 +872,7 @@ body {
       left: -9px; }
   .condition__item--1::after {
     left: 9px;
+    height: 290px;
     height: var(--line-dashed, 290px); }
   .condition__item--2 {
     top: 20px; }
@@ -987,7 +990,7 @@ body {
           order: 4; }
 
 .gallery__item img {
-  width: auto;
+  width: 100%;
   height: auto; }
 
 .gallery__caption {
@@ -1088,7 +1091,7 @@ body {
     -webkit-box-ordinal-group: 2;
         -ms-flex-order: 1;
             order: 1;
-    width: 100%; }
+    width: 288px; }
   .gallery__item--1 {
     -webkit-box-ordinal-group: 1;
         -ms-flex-order: 0;

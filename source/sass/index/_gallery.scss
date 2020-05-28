@@ -93,7 +93,7 @@
 }
 
 .gallery__item img {
-  width: auto;
+  width: 100%;
   height: auto;
 }
 
@@ -222,7 +222,7 @@
 
   .gallery__item {
     order: 1;
-    width: 100%;
+    width: 288px;
   }
 
   .gallery__item--1 {
