@@ -388,17 +388,17 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 (function () {
   // let startSlider = function () {
-  console.log('start');
   var sliderGallery = document.querySelector('.gallery__slider');
-  var firstImg = document.querySelector('.gallery__first-img'); // let firstImgContent = firstImg.innerHTML;
+  var galleryList = document.querySelector('.gallery__list'); // let firstImg = document.querySelector('.gallery__first-img');
+  // let firstImgContent = firstImg.innerHTML;
 
-  var galleryList = document.querySelector('.gallery__list');
-  var template = document.querySelector('template').content.firstChild;
-  template.prepend(firstImg);
-  galleryList.prepend(template);
+  var template = document.querySelector('template').content; // template.prepend(firstImg);
+
+  galleryList.append(template);
   sliderGallery.classList.remove('no-js');
-  var DELAY_START_SLIDER = 5000;
-  var TIME_SHOW_SLIDE = 4000;
+  /*  const DELAY_START_SLIDER = 5000;
+    const TIME_SHOW_SLIDE = 4000;*/
+
   var slider = document.querySelector('.slider');
   var buttonForward = slider.querySelector(".slider__forward");
   var buttonBack = slider.querySelector(".slider__back");
@@ -417,9 +417,22 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   // displayTotalSlide.textContent = amountSlides + '';
   // displayCurrentSlide.textContent = translate + 1 + '';
 
+  window.onresize = function () {
+    if (document.documentElement.clientWidth >= 767) {
+      indicatorContainer.children[translate].classList.remove('slider__ind-color');
+      translate = 0;
+      indicatorContainer.children[translate].classList.add('slider__ind-color');
+      slideContainer.style.transform = 'translate(0)';
+      buttonForward.disabled = false;
+      buttonBack.disabled = true;
+    }
+  };
+
   for (var i = 0; i < amountSlides; i++) {
     indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">');
   }
+
+  indicatorContainer.children[translate].classList.add('slider__ind-color');
 
   if (amountSlides > 1) {
     //для автоматической прокрутки слайдов
@@ -484,8 +497,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       indicatorContainer.children[translate].classList.add('slider__ind-color'); //=======================
 
       moveSlide();
-      hideArrow();
-      startAutoScroll();
+      hideArrow(); // startAutoScroll();
     };
 
     buttonForward.addEventListener("click", onClickSlider);
@@ -494,15 +506,10 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     var startAutoScroll = function startAutoScroll() {
       timer = setTimeout(function () {
         intervalSlider = setInterval(function () {
-          if (document.documentElement.clientWidth <= 767) {
-            scrollAuto();
-          } else {
-            slideContainer.style.transform = 'translate(0)';
-          }
+          scrollAuto();
         }, TIME_SHOW_SLIDE);
       }, DELAY_START_SLIDER);
-    };
+    }; // startAutoScroll()
 
-    startAutoScroll();
   }
 })();

@@ -358,20 +358,20 @@ let pageForms = document.querySelectorAll('[data-send-form]');
 
   // let startSlider = function () {
 
-    console.log('start');
 
   let sliderGallery = document.querySelector('.gallery__slider');
-  let firstImg = document.querySelector('.gallery__first-img');
-  // let firstImgContent = firstImg.innerHTML;
   let galleryList = document.querySelector('.gallery__list');
-  let template = document.querySelector('template').content.firstChild;
+  // let firstImg = document.querySelector('.gallery__first-img');
 
-  template.prepend(firstImg);
-  galleryList.prepend(template);
+  // let firstImgContent = firstImg.innerHTML;
+  let template = document.querySelector('template').content;
+
+  // template.prepend(firstImg);
+  galleryList.append(template);
   sliderGallery.classList.remove('no-js')
 
-  const DELAY_START_SLIDER = 5000;
-  const TIME_SHOW_SLIDE = 4000;
+/*  const DELAY_START_SLIDER = 5000;
+  const TIME_SHOW_SLIDE = 4000;*/
   let slider = document.querySelector('.slider');
   let buttonForward = slider.querySelector(".slider__forward");
   let buttonBack = slider.querySelector(".slider__back");
@@ -390,10 +390,21 @@ let pageForms = document.querySelectorAll('[data-send-form]');
   //показ текущего и суммы слайдов
   // displayTotalSlide.textContent = amountSlides + '';
   // displayCurrentSlide.textContent = translate + 1 + '';
+  window.onresize = function () {
+  if (document.documentElement.clientWidth >= 767) {
+    indicatorContainer.children[translate].classList.remove('slider__ind-color');
+    translate = 0
+    indicatorContainer.children[translate].classList.add('slider__ind-color');
+    slideContainer.style.transform = 'translate(0)';
+    buttonForward.disabled = false;
+    buttonBack.disabled = true;
+  }
+  }
 
   for (let i = 0; i < amountSlides; i++) {
     indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
   }
+  indicatorContainer.children[translate].classList.add('slider__ind-color');
 
   if (amountSlides > 1) {
 
@@ -436,7 +447,7 @@ let pageForms = document.querySelectorAll('[data-send-form]');
       //=======================
       moveSlide();
       hideArrow();
-      startAutoScroll();
+      // startAutoScroll();
     };
 
     buttonForward.addEventListener("click", onClickSlider);
@@ -465,16 +476,12 @@ let pageForms = document.querySelectorAll('[data-send-form]');
     let startAutoScroll = function () {
       timer = setTimeout(function () {
         intervalSlider = setInterval(function () {
-          if (document.documentElement.clientWidth <= 767) {
           scrollAuto();
-          } else {
-            slideContainer.style.transform = 'translate(0)';
-          }
         }, TIME_SHOW_SLIDE);
       }, DELAY_START_SLIDER)
     };
 
-    startAutoScroll()
+    // startAutoScroll()
   }
 
 
