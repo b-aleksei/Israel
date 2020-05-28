@@ -70,7 +70,6 @@
   @include resetList;
   margin-right: 90px;
   --line-dashed: 243px;
-  outline: 1px dashed tomato;
 }
 
 .condition__item {
@@ -103,7 +102,7 @@
   top: 50%;
   left: 0;
   height: 243px;
-  height: var(--line-dashed, 243px);
+  height: var(--line-dashed);
   z-index: -1;
   border-left: 1px dashed rgba(72, 72, 72, 0.2)
 }
@@ -210,7 +209,7 @@ display: none;
   .condition__item--1::after {
     left: 9px;
     height: 290px;
-    height: var(--line-dashed, 290px);
+    height: var(--line-dashed);
   }
 
   .condition__item--2 {

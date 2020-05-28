@@ -2,7 +2,6 @@
 .slider {
   position: relative;
   --auto-duration: 1000ms;
-  --click-duration: 500ms;
   overflow: hidden;
 }
 
@@ -46,11 +45,11 @@
 }
 
 .slider__list--click-duration {
-  transition: var(--click-duration, 600ms) ease-in-out;
+  transition: 600ms ease-in-out;
 }
 
 .slider__list--auto-duration {
-  transition: var(--auto-duration, 2000ms) linear;
+  //transition: var(--auto-duration, 2000ms) linear;
 }
 
 .slider__forward[disabled],
