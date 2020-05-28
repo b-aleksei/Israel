@@ -383,4 +383,126 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   var heightList = getComputedStyle(list).getPropertyValue('height');
   var lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
   list.style.setProperty('--line-dashed', lineHeight + 'px');
+})(); //=====================slider===========================================
+
+
+(function () {
+  // let startSlider = function () {
+  console.log('start');
+  var sliderGallery = document.querySelector('.gallery__slider');
+  var firstImg = document.querySelector('.gallery__first-img'); // let firstImgContent = firstImg.innerHTML;
+
+  var galleryList = document.querySelector('.gallery__list');
+  var template = document.querySelector('template').content.firstChild;
+  template.prepend(firstImg);
+  galleryList.prepend(template);
+  sliderGallery.classList.remove('no-js');
+  var DELAY_START_SLIDER = 5000;
+  var TIME_SHOW_SLIDE = 4000;
+  var slider = document.querySelector('.slider');
+  var buttonForward = slider.querySelector(".slider__forward");
+  var buttonBack = slider.querySelector(".slider__back");
+  var slideContainer = slider.querySelector('.slider__list');
+  var amountSlides = slider.querySelectorAll('.slider__item').length;
+  var indicatorContainer = slider.querySelector('.slider__indicators');
+  /*  let displayCurrentSlide =slider.querySelector('.slider__current-slides');
+    let displayTotalSlide =slider.querySelector('.slider__total-slides');*/
+
+  var autoDuration = getComputedStyle(slider).getPropertyValue('--auto-duration');
+  autoDuration = parseInt(autoDuration);
+  var translate = 0;
+  var delaySlide;
+  var intervalSlider;
+  var timer; //показ текущего и суммы слайдов
+  // displayTotalSlide.textContent = amountSlides + '';
+  // displayCurrentSlide.textContent = translate + 1 + '';
+
+  for (var i = 0; i < amountSlides; i++) {
+    indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">');
+  }
+
+  if (amountSlides > 1) {
+    //для автоматической прокрутки слайдов
+    var scrollAuto = function scrollAuto() {
+      //==================
+      indicatorContainer.children[translate].classList.remove('slider__ind-color'); //===================
+
+      hideArrow();
+
+      if (translate < amountSlides - 1) {
+        translate += 1;
+      }
+
+      slideContainer.classList.remove('slider__list--click-duration');
+      slideContainer.classList.add('slider__list--auto-duration');
+      moveSlide();
+      translate -= 1;
+      delaySlide = setTimeout(function () {
+        slideContainer.classList.remove('slider__list--auto-duration');
+        moveSlide();
+        slideContainer.append(slideContainer.firstElementChild);
+      }, autoDuration);
+    };
+
+    var moveSlide = function moveSlide() {
+      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+    };
+
+    buttonBack.disabled = true; //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+
+    var hideArrow = function hideArrow() {
+      // displayCurrentSlide.textContent = translate + 1 + '';
+      if (translate === 0) {
+        buttonBack.disabled = true;
+      } else if (translate === amountSlides - 1) {
+        buttonForward.disabled = true;
+      } else {
+        buttonBack.disabled = buttonForward.disabled = false;
+      }
+    }; // для ручного переключения сладов
+
+
+    var onClickSlider = function onClickSlider() {
+      clearTimeout(timer);
+      clearTimeout(delaySlide);
+      clearInterval(intervalSlider);
+      slideContainer.classList.add('slider__list--click-duration');
+      slideContainer.classList.remove('slider__list--auto-duration');
+      var forward = this === buttonForward; //==================
+
+      indicatorContainer.children[translate].classList.remove('slider__ind-color'); //===================
+
+      if (forward && translate < amountSlides - 1) {
+        buttonBack.disabled = false;
+        translate += 1;
+      } else if (!forward && translate > 0) {
+        buttonForward.disabled = false;
+        translate -= 1;
+      } //==================
+
+
+      indicatorContainer.children[translate].classList.add('slider__ind-color'); //=======================
+
+      moveSlide();
+      hideArrow();
+      startAutoScroll();
+    };
+
+    buttonForward.addEventListener("click", onClickSlider);
+    buttonBack.addEventListener("click", onClickSlider);
+
+    var startAutoScroll = function startAutoScroll() {
+      timer = setTimeout(function () {
+        intervalSlider = setInterval(function () {
+          if (document.documentElement.clientWidth <= 767) {
+            scrollAuto();
+          } else {
+            slideContainer.style.transform = 'translate(0)';
+          }
+        }, TIME_SHOW_SLIDE);
+      }, DELAY_START_SLIDER);
+    };
+
+    startAutoScroll();
+  }
 })();

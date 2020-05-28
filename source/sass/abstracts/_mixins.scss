@@ -4,11 +4,6 @@
   list-style: none;
 }
 
-@mixin resetLink {
-  color: inherit;
-  text-decoration: none;
-}
-
 @mixin font($size, $lineHeight: 1.6, $weight:400) {
   font-size: ($size * 0.1rem);
   line-height: ($lineHeight);

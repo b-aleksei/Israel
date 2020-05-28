@@ -207,41 +207,66 @@
       </div>
     </section>
 
-<!--    <section class="">
-      <h2>Жизнь в израиле</h2>
-      <p>Помимо учёбы, в рамках программе у вас будет возможность путешествовать по стране и познакомиться с богатой
-        культурно-исторической жизнью Израиля и его жителей.</p>
-      <div>
-        <picture>
-          <img src="" alt="">
-        </picture>
-        <ul>
-          <li>
+    <section class="gallery">
+      <h2 class="gallery__title">Жизнь <br> в израиле</h2>
+      <p class="gallery__content">Помимо учёбы, в рамках программе у вас будет возможность путешествовать по стране и познакомиться с богатой
+        культурно-исторической жизнью Израиля и его жителей. <span></span></p>
+      <div class="gallery__slider slider no-js">
+        <div class="gallery__first-img">
+          <picture>
+            <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">
+            <source media="(max-width: 767px)" srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">
+            <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">
+            <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482" height="732" alt="фоновое изображение">
+          </picture>
+          <p class="gallery__caption gallery__caption--1">Экскурсии по Израилю  <br>и знакомство с его историей</p>
+        </div>
+        <ul class="gallery__list slider__list">
+          <li class="gallery__item gallery__item--2 slider__item">
             <picture>
-              <img src="" alt="">
+              <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/2_m@1x.webp 1x, img/mobile/2_m@2x.webp 2x">
+              <source media="(max-width: 767px)" srcset="img/mobile/2_m@1x.jpg 1x, img/mobile/2_m@2x.jpg 2x">
+              <source type="image/webp" srcset="img/desktop/2@1x.webp 1x, img/desktop/2@2x.webp 2x">
+              <img src="img/desktop/2@1x.png" srcset="img/desktop/2@2x.png 2x" width="211" height="318" alt="фоновое изображение">
             </picture>
-            <p></p>
+            <p class="gallery__caption">Изучение иврита</p>
           </li>
-          <li>
+          <li class="gallery__item gallery__item--3 slider__item">
             <picture>
-              <img src="" alt="">
+              <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/3_m@1x.webp 1x, img/mobile/3_m@2x.webp 2x">
+              <source media="(max-width: 767px)" srcset="img/mobile/3_m@1x.jpg 1x, img/mobile/3_m@2x.jpg 2x">
+              <source type="image/webp" srcset="img/desktop/3@1x.webp 1x, img/desktop/3@2x.webp 2x">
+              <img src="img/desktop/3@1x.png" srcset="img/desktop/3@2x.png 2x" width="411" height="318" alt="фоновое изображение">
             </picture>
-            <p></p>
+            <p class="gallery__caption gallery__caption--3">Обучение современным навыкам и профессиям</p>
           </li>
-          <li>
+          <li class="gallery__item gallery__item--4 slider__item">
             <picture>
-              <img src="" alt="">
+              <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/4_m@1x.webp 1x, img/mobile/4_m@2x.webp 2x">
+              <source media="(max-width: 767px)" srcset="img/mobile/4_m@1x.jpg 1x, img/mobile/4_m@2x.jpg 2x">
+              <source type="image/webp" srcset="img/desktop/4@1x.webp 1x, img/desktop/4@2x.webp 2x">
+              <img src="img/desktop/4@1x.png" srcset="img/desktop/4@2x.png 2x" width="411" height="318" alt="фоновое изображение">
             </picture>
-            <p></p>
+            <p class="gallery__caption gallery__caption--4">Совместные творческие проекты
+              с израильской молодёжью
+            </p>
           </li>
-          <li>
+          <li class="gallery__item gallery__item--5 slider__item">
             <picture>
-              <img src="" alt="">
+              <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/5_m@1x.webp 1x, img/mobile/5_m@2x.webp 2x">
+              <source media="(max-width: 767px)" srcset="img/mobile/5_m@1x.jpg 1x, img/mobile/5_m@2x.jpg 2x">
+              <source type="image/webp" srcset="img/desktop/5@1x.webp 1x, img/desktop/5@2x.webp 2x">
+              <img src="img/desktop/5@1x.png" srcset="img/desktop/5@2x.png 2x" width="214" height="318" alt="фоновое изображение">
             </picture>
-            <p></p>
-        </ul>
+            <p class="gallery__caption">Развитие  лидерства</p>
+        </li></ul>
+        <div class="gallery__indicators">
+          <button class="gallery__button gallery__button--forward slider__forward" type="button"></button>
+          <button class="gallery__button gallery__button--back slider__back" type="button"></button>
+          <div class="slider__indicators"></div>
+        </div>
       </div>
-    </section>-->
+    </section>
 
 <!--    <section class="">
       <img src="" alt="фоновое изображение">
@@ -508,6 +533,7 @@
     <button class="modal__close modal__close--success" type="button" aria-label="Закрыть окно"></button>
   </div>
 </div>
+<template><li class="gallery__item gallery__item--1 slider__item"></li></template>
 <script src="js/polyfill.js"></script>
 <script src="js/app.js"></script>
 </body>

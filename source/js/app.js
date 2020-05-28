@@ -353,3 +353,129 @@ let pageForms = document.querySelectorAll('[data-send-form]');
 
 })();
 
+//=====================slider===========================================
+( function () {
+
+  // let startSlider = function () {
+
+    console.log('start');
+
+  let sliderGallery = document.querySelector('.gallery__slider');
+  let firstImg = document.querySelector('.gallery__first-img');
+  // let firstImgContent = firstImg.innerHTML;
+  let galleryList = document.querySelector('.gallery__list');
+  let template = document.querySelector('template').content.firstChild;
+
+  template.prepend(firstImg);
+  galleryList.prepend(template);
+  sliderGallery.classList.remove('no-js')
+
+  const DELAY_START_SLIDER = 5000;
+  const TIME_SHOW_SLIDE = 4000;
+  let slider = document.querySelector('.slider');
+  let buttonForward = slider.querySelector(".slider__forward");
+  let buttonBack = slider.querySelector(".slider__back");
+  let slideContainer = slider.querySelector('.slider__list');
+  let amountSlides = slider.querySelectorAll('.slider__item').length;
+
+  let indicatorContainer = slider.querySelector('.slider__indicators');
+  /*  let displayCurrentSlide =slider.querySelector('.slider__current-slides');
+    let displayTotalSlide =slider.querySelector('.slider__total-slides');*/
+  let autoDuration = getComputedStyle(slider).getPropertyValue('--auto-duration');
+  autoDuration = parseInt(autoDuration)
+  let translate = 0;
+  let delaySlide;
+  let intervalSlider;
+  let timer;
+  //показ текущего и суммы слайдов
+  // displayTotalSlide.textContent = amountSlides + '';
+  // displayCurrentSlide.textContent = translate + 1 + '';
+
+  for (let i = 0; i < amountSlides; i++) {
+    indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
+  }
+
+  if (amountSlides > 1) {
+
+    let moveSlide = function () {
+      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+    }
+
+    buttonBack.disabled = true;
+    //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+    let hideArrow = function () {
+      // displayCurrentSlide.textContent = translate + 1 + '';
+      if (translate === 0) {
+        buttonBack.disabled = true;
+      } else if (translate === amountSlides - 1) {
+        buttonForward.disabled = true;
+      } else {
+        buttonBack.disabled = buttonForward.disabled = false;
+      }
+    };
+    // для ручного переключения сладов
+    let onClickSlider = function () {
+      clearTimeout(timer);
+      clearTimeout(delaySlide);
+      clearInterval(intervalSlider);
+      slideContainer.classList.add('slider__list--click-duration');
+      slideContainer.classList.remove('slider__list--auto-duration');
+      let forward = this === buttonForward;
+      //==================
+      indicatorContainer.children[translate].classList.remove('slider__ind-color');
+      //===================
+      if (forward && translate < amountSlides - 1) {
+        buttonBack.disabled = false;
+        translate += 1;
+      } else if (!forward && translate > 0) {
+        buttonForward.disabled = false;
+        translate -= 1;
+      }
+      //==================
+      indicatorContainer.children[translate].classList.add('slider__ind-color');
+      //=======================
+      moveSlide();
+      hideArrow();
+      startAutoScroll();
+    };
+
+    buttonForward.addEventListener("click", onClickSlider);
+    buttonBack.addEventListener("click", onClickSlider);
+
+    //для автоматической прокрутки слайдов
+    function scrollAuto() {
+      //==================
+      indicatorContainer.children[translate].classList.remove('slider__ind-color');
+      //===================
+      hideArrow();
+      if (translate < amountSlides - 1) {
+        translate += 1;
+      }
+      slideContainer.classList.remove('slider__list--click-duration');
+      slideContainer.classList.add('slider__list--auto-duration');
+      moveSlide();
+      translate -= 1;
+      delaySlide = setTimeout(function () {
+        slideContainer.classList.remove('slider__list--auto-duration');
+        moveSlide();
+        slideContainer.append(slideContainer.firstElementChild);
+      }, autoDuration)
+    }
+
+    let startAutoScroll = function () {
+      timer = setTimeout(function () {
+        intervalSlider = setInterval(function () {
+          if (document.documentElement.clientWidth <= 767) {
+          scrollAuto();
+          } else {
+            slideContainer.style.transform = 'translate(0)';
+          }
+        }, TIME_SHOW_SLIDE);
+      }, DELAY_START_SLIDER)
+    };
+
+    startAutoScroll()
+  }
+
+
+} )();
