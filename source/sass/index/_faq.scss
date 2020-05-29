@@ -1,4 +1,58 @@
+.faq {
+  display: flex;
+  max-width: 1366px;
+  padding: 96px 0 94px 110px;
+  margin: auto;
+  justify-content: space-between;
+  background-image: url('../img/bg/watercolor_Bg_four.png'), url('../img/bg/bag.png');
+  background-repeat: no-repeat no-repeat;
+  background-position: 0 50px, 0 100%;
+}
+
 .faq__header {
-  text-transform: uppercase;
-  color: $blue;
+  @include header();
+  margin-bottom: 33px;
+}
+
+.faq__wrap-content {
+  width: 560px;
+}
+
+.faq__item {
+  min-height: 73px;
+  border-bottom: 1px solid rgba(72, 72, 72, 0.2);
+}
+
+.faq__content {
+  margin: 16px 0 6px 0;
+  padding-right: 40px;
+  line-height: 1.4;
+}
+
+.faq__title {
+  display: flex;
+  align-items: baseline;
+  margin-top: 23px;
+  padding-right: 100px;
+  @include font(17, 1.5);
+}
+
+.faq__title--2 {
+  //margin-top: 23px;
+}
+
+.faq__title b {
+  @include font(28, 1.7, 600);
+  margin-right: 15px;
+  color: $yellow;
+}
+
+.faq__wrap-img {
+  width: 645px;
+  padding-top: 33px;
+}
+
+.faq__wrap-img img {
+  width: 100%;
+   height: auto;
 }

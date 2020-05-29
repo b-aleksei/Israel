@@ -52,6 +52,17 @@ html {
           box-sizing: border-box;
   font-size: 62.5%; }
 
+/*html {
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-image: url("../img/simpatichnaya-devushka-lili.jpg");
+}
+
+@media (max-width: 1365px) {
+  html {
+    //background-image: url("maket/320.jpg");
+  }
+}*/
 body {
   font-family: "Fira Sans", "Arial", sans-serif;
   font-size: 1.5rem;
@@ -1331,9 +1342,119 @@ body {
   .detail__wrap {
     top: -77px; } }
 
+.faq {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: 1366px;
+  padding: 96px 0 94px 110px;
+  margin: auto;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-image: url("../img/bg/watercolor_Bg_four.png"), url("../img/bg/bag.png");
+  background-repeat: no-repeat no-repeat;
+  background-position: 0 50px, 0 100%; }
+
 .faq__header {
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 600;
+  color: #1FC0FC;
   text-transform: uppercase;
-  color: #1FC0FC; }
+  letter-spacing: -0.08rem;
+  font-size: 4rem;
+  line-height: 1.2;
+  margin-bottom: 33px; }
+
+.faq__wrap-content {
+  width: 560px; }
+
+.faq__item {
+  min-height: 73px;
+  border-bottom: 1px solid rgba(72, 72, 72, 0.2); }
+
+.faq__content {
+  margin: 16px 0 6px 0;
+  padding-right: 40px;
+  line-height: 1.4; }
+
+.faq__title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  margin-top: 23px;
+  padding-right: 100px;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  font-weight: 400; }
+
+.faq__title b {
+  font-size: 2.8rem;
+  line-height: 1.7;
+  font-weight: 600;
+  margin-right: 15px;
+  color: #FFC341; }
+
+.faq__wrap-img {
+  width: 645px;
+  padding-top: 33px; }
+
+.faq__wrap-img img {
+  width: 100%;
+  height: auto; }
+
+.accordion {
+  padding: 0;
+  margin: 0;
+  list-style: none; }
+
+.accordion__toggle {
+  display: none; }
+
+.accordion__title {
+  position: relative;
+  cursor: pointer; }
+  .accordion__title::before, .accordion__title::after {
+    position: absolute;
+    content: '';
+    top: 20px;
+    right: 38px;
+    width: 13px;
+    height: 2px;
+    background-color: #1FC0FC;
+    -webkit-transition: -webkit-transform 0.3s ease;
+    transition: -webkit-transform 0.3s ease;
+    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, -webkit-transform 0.3s ease; }
+  .accordion__title::before {
+    -webkit-transform: translate(-4px, 8px) rotate(45deg);
+            transform: translate(-4px, 8px) rotate(45deg); }
+  .accordion__title::after {
+    -webkit-transform: translate(4px, 8px) rotate(-45deg);
+            transform: translate(4px, 8px) rotate(-45deg); }
+
+.accordion__content {
+  max-height: 1px;
+  overflow-y: hidden;
+  -webkit-transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s ease-in-out; }
+
+.accordion__toggle:checked ~ .accordion__content {
+  min-height: 110px;
+  max-height: 300px;
+  -webkit-transition: max-height 500ms ease-in-out;
+  transition: max-height 500ms ease-in-out; }
+
+.accordion__toggle:checked + label::before {
+  -webkit-transform: translate(4px, 8px) rotate(45deg);
+          transform: translate(4px, 8px) rotate(45deg); }
+
+.accordion__toggle:checked + label::after {
+  -webkit-transform: translate(-4px, 8px) rotate(-45deg);
+          transform: translate(-4px, 8px) rotate(-45deg); }
 
 .social-icons {
   padding: 0;
