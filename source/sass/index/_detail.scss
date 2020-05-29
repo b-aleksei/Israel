@@ -1,0 +1,139 @@
+.detail {
+  position: relative;
+  max-width: 1361px;
+  margin: 124px auto 0 auto;
+  padding-left: 2px;
+}
+
+.detail img {
+  width: 100%;
+   height: auto;
+}
+
+.detail__wrap {
+  position: absolute;
+  top: 14.8%;
+  right: 12.3%;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 480px;
+  overflow: hidden;
+}
+
+.detail__title {
+  @include header();
+  margin-bottom: 7px;
+}
+
+.detail__content {
+  padding-left: 3px;
+  margin-bottom: 48px;
+  @include font(17, 1.7);
+  color: rgba(255, 255, 255, 0.87);
+  text-shadow: 0 1px 4px
+}
+
+.detail__content span {
+  display: inline-block;
+  width: 1px;
+}
+
+.detail__content br {
+  display: none;
+}
+
+.detail__btn {
+@include yellowButton(230px, 19px);
+  display: flex;
+  font-size: 17px;
+  font-variant: all-petite-caps;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.detail__btn svg {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+@media (max-width: 1050px) {
+  .detail__wrap {
+    top: 10%;
+    right: 4%;
+  }
+}
+
+@media (max-width: 900px) {
+  .detail__wrap {
+    width: 350px;
+    top: 5%;
+    right: 4%;
+  }
+
+  .detail__content {
+    margin-bottom: 25px;
+  }
+}
+
+@media (max-width: $mobile) {
+
+  .detail {
+    margin: 82px auto 0 auto;
+    padding-left: 0;
+  }
+
+  .detail__wrap {
+    width: 100%;
+    height: 650px;
+    align-items: center;
+    top: 0;
+    right: 0;
+  }
+
+  .detail__title {
+    font-size: 40px;
+    margin-bottom: 25%;
+  }
+
+  .detail__content {
+    width: 400px;
+    margin-bottom: 70px;
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+
+  .detail__btn {
+    width: 265px;
+  }
+}
+
+@media (max-width: 460px) {
+
+  .detail__wrap {
+    height: 550px;
+  }
+
+  .detail__content {
+    width: 273px;
+    margin-left: -6px;
+    margin-bottom: 59px;
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+
+  .detail__content br {
+    display: block;
+  }
+
+  .detail__content span {
+    display: none;
+  }
+}
+
+@media (max-width: 340px) {
+  .detail__wrap {
+    top: -77px;
+  }
+}
