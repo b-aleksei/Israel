@@ -37,9 +37,6 @@
   @include font(17, 1.5);
 }
 
-.faq__title--2 {
-  //margin-top: 23px;
-}
 
 .faq__title b {
   @include font(28, 1.7, 600);
@@ -54,5 +51,65 @@
 
 .faq__wrap-img img {
   width: 100%;
-   height: auto;
+  height: auto;
+}
+
+@media (max-width: 1365px) {
+  .faq {
+    padding-left: 30px;
+  }
+
+  .faq__title {
+    padding-right: 70px;
+  }
+}
+
+@media (max-width: $mobile) {
+  .faq {
+    padding-left: 17px;
+    padding-right: 17px;
+    padding-top: 121px;
+    background-image: url('../img/bg/bag.png');
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+  }
+
+  .faq__header {
+    font-size: 3.2rem;
+    margin-bottom: 23px;
+    text-align: center;
+  }
+
+  .faq__wrap-img {
+    display: none;
+  }
+
+
+  .faq__wrap-content {
+    width: 100%;
+  }
+
+  .faq__item {
+    min-height: 66px;
+  }
+
+  .faq__content {
+    margin: 9px 0 6px 0;
+    padding-right: 0;
+    font-size: 1.4rem;
+    line-height: 1.6;
+  }
+
+  .faq__title {
+/*    display: flex;
+    align-items: baseline;*/
+    padding-right: 30px;
+    //margin-top: 23px;
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+
+  .faq__title b {
+    margin-right: 9px;
+  }
 }

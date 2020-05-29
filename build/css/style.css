@@ -52,17 +52,6 @@ html {
           box-sizing: border-box;
   font-size: 62.5%; }
 
-/*html {
-  background-repeat: no-repeat;
-  background-position: 50% 0;
-  background-image: url("../img/simpatichnaya-devushka-lili.jpg");
-}
-
-@media (max-width: 1365px) {
-  html {
-    //background-image: url("maket/320.jpg");
-  }
-}*/
 body {
   font-family: "Fira Sans", "Arial", sans-serif;
   font-size: 1.5rem;
@@ -1406,6 +1395,44 @@ body {
   width: 100%;
   height: auto; }
 
+@media (max-width: 1365px) {
+  .faq {
+    padding-left: 30px; }
+  .faq__title {
+    padding-right: 70px; } }
+
+@media (max-width: 767px) {
+  .faq {
+    padding-left: 17px;
+    padding-right: 17px;
+    padding-top: 121px;
+    background-image: url("../img/bg/bag.png");
+    background-repeat: no-repeat;
+    background-position: 0 100%; }
+  .faq__header {
+    font-size: 3.2rem;
+    margin-bottom: 23px;
+    text-align: center; }
+  .faq__wrap-img {
+    display: none; }
+  .faq__wrap-content {
+    width: 100%; }
+  .faq__item {
+    min-height: 66px; }
+  .faq__content {
+    margin: 9px 0 6px 0;
+    padding-right: 0;
+    font-size: 1.4rem;
+    line-height: 1.6; }
+  .faq__title {
+    /*    display: flex;
+    align-items: baseline;*/
+    padding-right: 30px;
+    font-size: 1.6rem;
+    line-height: 1.6; }
+  .faq__title b {
+    margin-right: 9px; } }
+
 .accordion {
   padding: 0;
   margin: 0;
@@ -1437,16 +1464,16 @@ body {
             transform: translate(4px, 8px) rotate(-45deg); }
 
 .accordion__content {
-  max-height: 1px;
+  height: 0;
   overflow-y: hidden;
   -webkit-transition: max-height 0.3s ease-in-out;
   transition: max-height 0.3s ease-in-out; }
 
 .accordion__toggle:checked ~ .accordion__content {
   min-height: 110px;
-  max-height: 300px;
-  -webkit-transition: max-height 500ms ease-in-out;
-  transition: max-height 500ms ease-in-out; }
+  height: auto;
+  -webkit-transition: height 500ms ease-in-out;
+  transition: height 500ms ease-in-out; }
 
 .accordion__toggle:checked + label::before {
   -webkit-transform: translate(4px, 8px) rotate(45deg);
@@ -1455,6 +1482,13 @@ body {
 .accordion__toggle:checked + label::after {
   -webkit-transform: translate(-4px, 8px) rotate(-45deg);
           transform: translate(-4px, 8px) rotate(-45deg); }
+
+@media (max-width: 767px) {
+  .accordion__title::before, .accordion__title::after {
+    top: 20px;
+    right: 0; }
+  .accordion__toggle:checked ~ .accordion__content {
+    min-height: 110px; } }
 
 .social-icons {
   padding: 0;

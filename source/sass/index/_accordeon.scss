@@ -34,15 +34,15 @@
 }
 
 .accordion__content {
-  max-height: 1px;
+  height: 0;
   overflow-y: hidden;
   transition: max-height 0.3s ease-in-out;
 }
 
 .accordion__toggle:checked ~ .accordion__content {
   min-height: 110px;
-  max-height: 300px;
-  transition: max-height 500ms ease-in-out;
+  height: auto;
+  transition: height 500ms ease-in-out;
 }
 
 .accordion__toggle:checked + label {
@@ -53,5 +53,20 @@
 
   &::after {
     transform: translate(-4px, 8px) rotate(-45deg);
+  }
+}
+
+@media (max-width: $mobile) {
+  .accordion__title {
+
+    &::before,
+    &::after {
+      top: 20px;
+      right: 0;
+    }
+  }
+
+  .accordion__toggle:checked ~ .accordion__content {
+    min-height: 110px;
   }
 }
