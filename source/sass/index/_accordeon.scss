@@ -40,7 +40,8 @@
 }
 
 .accordion__toggle:checked ~ .accordion__content {
-  min-height: 110px;
+  margin-top: -7px;
+  margin-bottom: 31px;
   height: auto;
   transition: height 500ms ease-in-out;
 }

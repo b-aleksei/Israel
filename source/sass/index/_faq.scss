@@ -19,12 +19,12 @@
 }
 
 .faq__item {
-  min-height: 73px;
+  //min-height: 73px;
   border-bottom: 1px solid rgba(72, 72, 72, 0.2);
 }
 
 .faq__content {
-  margin: 16px 0 6px 0;
+  margin: 0 0 0 0;
   padding-right: 40px;
   line-height: 1.4;
 }
@@ -33,6 +33,7 @@
   display: flex;
   align-items: baseline;
   margin-top: 23px;
+  margin-bottom: 25px;
   padding-right: 100px;
   @include font(17, 1.5);
 }
