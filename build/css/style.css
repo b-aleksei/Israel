@@ -348,13 +348,17 @@ body {
   list-style: none; }
 
 .programs__captions li {
-  margin-bottom: 4px; }
+  margin-bottom: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
 
 .programs__type {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   position: relative;
+  width: 100%;
   min-height: 68px;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -381,7 +385,9 @@ body {
   margin-left: 5px; }
 
 .programs__captions svg {
-  margin-right: 18px; }
+  margin-right: 18px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0; }
 
 .programs__wrap {
   margin-left: 64px;
@@ -721,7 +727,14 @@ body {
 
 .condition__wrap-content {
   width: 552px;
-  margin-left: 106px; }
+  margin-left: 106px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column; }
 
 .condition__title {
   font-family: "Montserrat", "Arial", sans-serif;
@@ -731,7 +744,7 @@ body {
   letter-spacing: -0.08rem;
   font-size: 4rem;
   line-height: 1.2;
-  margin-bottom: 23px; }
+  margin-bottom: 10px; }
 
 .condition__content {
   font-size: 1.5rem;
@@ -744,14 +757,15 @@ body {
   font-size: 1.7rem;
   font-weight: 500;
   color: #484848;
-  margin: 35px 90px 20px 0; }
+  margin: 18px 90px 20px 0; }
 
 .condition__content--small {
   margin-top: 38px;
   line-height: 1.4;
   color: rgba(72, 72, 72, 0.5);
   margin-right: 0;
-  padding-left: 13px;
+  margin-left: -2px;
+  padding-left: 14px;
   border-left: 3px solid #FFC341; }
 
 .condition__list {
@@ -857,7 +871,7 @@ body {
     line-height: 160%; }
   .condition__content--bold {
     font-size: 1.6rem;
-    margin: 23px 0 23px 0; }
+    margin: 8px 0 23px 0; }
   .condition__title {
     text-align: center;
     font-size: 3.2rem; }
@@ -1005,8 +1019,7 @@ body {
   color: white;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
 
-.gallery__caption--1,
-.gallery__caption--2 {
+.gallery__caption--1 {
   padding: 0 40px; }
 
 .gallery__caption--3 {

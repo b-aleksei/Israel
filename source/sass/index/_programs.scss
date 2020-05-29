@@ -32,11 +32,13 @@
 
 .programs__captions li {
   margin-bottom: 4px;
+  display: flex;
 }
 
 .programs__type {
   display: flex;
   position: relative;
+  width: 100%;
   min-height: 68px;
   align-items: center;
   padding: 0 30px 0 22px;
@@ -66,6 +68,7 @@
 
 .programs__captions svg {
   margin-right: 18px;
+  flex-shrink: 0;
 }
 
 .programs__wrap {

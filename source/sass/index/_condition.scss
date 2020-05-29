@@ -32,11 +32,13 @@
 .condition__wrap-content {
   width: 552px;
   margin-left: 106px;
+  display: flex;
+  flex-direction: column;
 }
 
 .condition__title {
   @include header();
-  margin-bottom: 23px;
+  margin-bottom: 10px;
 }
 
 .condition__content {
@@ -49,7 +51,7 @@
   font-size: 1.7rem;
   font-weight: 500;
   color: $black;
-  margin: 35px 90px 20px 0;
+  margin: 18px 90px 20px 0;
 }
 
 .condition__content--small {
@@ -57,7 +59,8 @@
   line-height: 1.4;
   color: $validColor;
   margin-right: 0;
-  padding-left: 13px;
+  margin-left: -2px;
+  padding-left: 14px;
   border-left: 3px solid $yellow;
 }
 
@@ -184,7 +187,7 @@ display: none;
 
   .condition__content--bold {
     font-size: 1.6rem;
-    margin: 23px 0 23px 0;
+    margin: 8px 0 23px 0;
   }
 
   .condition__title {
