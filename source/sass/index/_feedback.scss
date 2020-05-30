@@ -9,6 +9,7 @@
 .feedback__container {
   max-width: 1084px;
   margin-left: 98px;
+  margin-right: 30px;
   overflow-x: hidden;
 }
 
@@ -44,7 +45,7 @@
 .feedback__author {
   margin-top: 40px;
   margin-bottom: 0;
-@include font(24, 1.5, 500);
+  @include font(24, 1.5, 500);
   color: rgba(72, 72, 72, 0.74);
 }
 
@@ -52,6 +53,7 @@
   line-height: 1.4;
   margin-top: 9px;
   margin-bottom: 31px;
+  color: rgba(72, 72, 72, 0.74);
 }
 
 .feedback__program span {
@@ -66,6 +68,10 @@
 
 .feedback__details {
   color: $blue;
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin-bottom: 40px;
 }
 
 .feedback__nav {
@@ -85,6 +91,7 @@
 .feedback__pages span {
   font-size: 1.7rem;
   line-height: 1.5;
+  color: $validColor;
 }
 
 .feedback__delimiter {
@@ -114,10 +121,85 @@
   }
 }
 
-.feedback__btn:last-child::before{
+.feedback__btn:last-child::before {
   transform: rotate(225deg);
 }
 
 .feedback__btn--back {
   margin-left: 28px;
+}
+
+@media (max-width: 1024px) {
+
+  .feedback__container {
+    margin-left: 30px;
+  }
+}
+
+@media (max-width: $mobile) {
+
+  .feedback {
+    margin-top: 52px;
+    background-image: url('../img/bg/watercolor_bg_five_m.png'), url('../img/bg/city_two_m.png');
+    background-position: 100% 65px, 100% 69.4%;
+  }
+
+  .feedback__container {
+    margin: 0 17px;
+  }
+
+  .feedback__title {
+    font-size: 3.2rem;
+    margin-bottom: 24px;
+    padding-left: 0;
+  }
+
+  .feedback__item {
+    position: relative;
+    flex-direction: column;
+  }
+
+  .feedback__wrap-img {
+    width: 240px;
+    margin: auto;
+  }
+
+  .feedback__pages {
+    position: absolute;
+    top: 419px;
+    left: 50%;
+    padding: 0 0 0 8px;
+    transform: translate(-50%);
+  }
+
+  .feedback__author {
+    margin-top: 51px;
+  }
+
+  .feedback__program {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 23px;
+  }
+
+  .feedback__program span {
+    display: block;
+  }
+
+  .feedback__content {
+    font-size: 1.6rem;
+    line-height: 1.62;
+  }
+
+  .feedback__details {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-top: 25px;
+    margin-bottom: 23px;
+  }
+
+  .feedback__nav {
+    margin: 0 0 0 -5px;
+  }
+
 }

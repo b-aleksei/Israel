@@ -1448,6 +1448,7 @@ body {
 .feedback__container {
   max-width: 1084px;
   margin-left: 98px;
+  margin-right: 30px;
   overflow-x: hidden; }
 
 .feedback__title {
@@ -1498,7 +1499,8 @@ body {
 .feedback__program {
   line-height: 1.4;
   margin-top: 9px;
-  margin-bottom: 31px; }
+  margin-bottom: 31px;
+  color: rgba(72, 72, 72, 0.74); }
 
 .feedback__program span {
   color: #1FC0FC;
@@ -1511,7 +1513,11 @@ body {
   color: rgba(72, 72, 72, 0.74); }
 
 .feedback__details {
-  color: #1FC0FC; }
+  color: #1FC0FC;
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin-bottom: 40px; }
 
 .feedback__nav {
   display: -webkit-box;
@@ -1537,7 +1543,8 @@ body {
 
 .feedback__pages span {
   font-size: 1.7rem;
-  line-height: 1.5; }
+  line-height: 1.5;
+  color: rgba(72, 72, 72, 0.5); }
 
 .feedback__delimiter {
   margin-left: 3px;
@@ -1569,6 +1576,56 @@ body {
 
 .feedback__btn--back {
   margin-left: 28px; }
+
+@media (max-width: 1024px) {
+  .feedback__container {
+    margin-left: 30px; } }
+
+@media (max-width: 767px) {
+  .feedback {
+    margin-top: 52px;
+    background-image: url("../img/bg/watercolor_bg_five_m.png"), url("../img/bg/city_two_m.png");
+    background-position: 100% 65px, 100% 69.4%; }
+  .feedback__container {
+    margin: 0 17px; }
+  .feedback__title {
+    font-size: 3.2rem;
+    margin-bottom: 24px;
+    padding-left: 0; }
+  .feedback__item {
+    position: relative;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column; }
+  .feedback__wrap-img {
+    width: 240px;
+    margin: auto; }
+  .feedback__pages {
+    position: absolute;
+    top: 419px;
+    left: 50%;
+    padding: 0 0 0 8px;
+    -webkit-transform: translate(-50%);
+            transform: translate(-50%); }
+  .feedback__author {
+    margin-top: 51px; }
+  .feedback__program {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 23px; }
+  .feedback__program span {
+    display: block; }
+  .feedback__content {
+    font-size: 1.6rem;
+    line-height: 1.62; }
+  .feedback__details {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-top: 25px;
+    margin-bottom: 23px; }
+  .feedback__nav {
+    margin: 0 0 0 -5px; } }
 
 .slider {
   position: relative;
@@ -1623,8 +1680,8 @@ body {
 .slider__list--auto-duration {
   -webkit-transition: translate 2000ms linear;
   transition: translate 2000ms linear;
-  -webkit-transition: translate var(--auto-duration, 2000ms) linear;
-  transition: translate var(--auto-duration, 2000ms) linear; }
+  -webkit-transition: var(--auto-duration, 2000ms) linear;
+  transition: var(--auto-duration, 2000ms) linear; }
 
 .slider__forward[disabled],
 .slider__back[disabled] {
