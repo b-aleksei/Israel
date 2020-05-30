@@ -78,7 +78,7 @@ gulp.task("img", function() {
 });
 
 gulp.task("webp", function () {
-  return gulp.src("source/img/**/*.{png,jpg}", {
+  return gulp.src("source/img/1/*.{png,jpg}", {
     base: "source"
   })
     .pipe(webp({quality: 75}))

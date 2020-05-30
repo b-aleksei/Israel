@@ -10,7 +10,6 @@
 }
 
 .slider__item {
-  //width: 500px;
   flex-shrink: 0;
 }
 
@@ -49,7 +48,8 @@
 }
 
 .slider__list--auto-duration {
-  //transition: var(--auto-duration, 2000ms) linear;
+  transition: translate 2000ms linear;
+  transition: translate var(--auto-duration, 2000ms) linear;
 }
 
 .slider__forward[disabled],
@@ -58,7 +58,3 @@
   cursor: initial;
 }
 
-/*.slider__no-js .slider__back,
-.slider__no-js .slider__forward {
-  display: none;
-}*/
