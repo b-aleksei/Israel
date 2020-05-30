@@ -36,7 +36,7 @@
 .accordion__content {
   height: 0;
   overflow-y: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: height 0.3s ease-in-out;
 }
 
 .accordion__toggle:checked ~ .accordion__content {
@@ -68,6 +68,9 @@
   }
 
   .accordion__toggle:checked ~ .accordion__content {
-    min-height: 110px;
+    margin-top: 15px;
+    margin-bottom: 14px;
+    height: auto;
+    transition: height 500ms ease-in-out;
   }
 }

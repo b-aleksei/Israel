@@ -19,12 +19,11 @@
 }
 
 .faq__item {
-  //min-height: 73px;
   border-bottom: 1px solid rgba(72, 72, 72, 0.2);
 }
 
 .faq__content {
-  margin: 0 0 0 0;
+  margin: 0;
   padding-right: 40px;
   line-height: 1.4;
 }
@@ -38,6 +37,9 @@
   @include font(17, 1.5);
 }
 
+.faq__title--5 {
+  margin-top: 20px;
+}
 
 .faq__title b {
   @include font(28, 1.7, 600);
@@ -67,12 +69,10 @@
 
 @media (max-width: $mobile) {
   .faq {
-    padding-left: 17px;
-    padding-right: 17px;
-    padding-top: 121px;
+    padding: 121px 40px 0 40px;
     background-image: url('../img/bg/bag.png');
     background-repeat: no-repeat;
-    background-position: 0 100%;
+    background-position: -7px 93%;
   }
 
   .faq__header {
@@ -90,10 +90,6 @@
     width: 100%;
   }
 
-  .faq__item {
-    min-height: 66px;
-  }
-
   .faq__content {
     margin: 9px 0 6px 0;
     padding-right: 0;
@@ -102,15 +98,19 @@
   }
 
   .faq__title {
-/*    display: flex;
-    align-items: baseline;*/
     padding-right: 30px;
-    //margin-top: 23px;
+    margin-bottom: 11px;
     font-size: 1.6rem;
     line-height: 1.6;
   }
 
   .faq__title b {
     margin-right: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq {
+    padding: 121px 17px 0 17px;
   }
 }
