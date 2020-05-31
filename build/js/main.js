@@ -1,4 +1,4 @@
-"use strict"; // для поддержки forEach в IE11
+"use strict"; //========пунктир в секции conditions ====================================
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -12,23 +12,79 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-if (window.NodeList && !NodeList.prototype.forEach) {
-  NodeList.prototype.forEach = Array.prototype.forEach;
-}
+(function () {
+  var list = document.querySelector('.condition__list');
+  var firstItem = document.querySelector('.condition__item--1');
+  var lastItem = document.querySelectorAll('.condition__item');
+  lastItem = lastItem[lastItem.length - 1];
+  var heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height');
+  var heightLastItem = getComputedStyle(lastItem).getPropertyValue('height');
+  var heightList = getComputedStyle(list).getPropertyValue('height');
+  var lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
+  list.style.setProperty('--line-dashed', lineHeight + 'px');
+})();
+
+"use strict"; //=========================секция программы==================================================
+
 
 (function () {
-  var onPopupOpener = function onPopupOpener(overlay, classHidden, modalOpeners, buttonsClose) {
-    var doAction = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+  var tabs = document.querySelector('.programs__captions');
+  var initialLeft = tabs.offsetLeft;
+  var isTouch = false;
+  var touch = 'mousedown';
+  var touchMove = 'mousemove';
+  var touchUp = 'mouseup';
 
-    /*
-    Попап открывается посредством удаления класса со св-м display: none
-    * overlay - див с модальным окном(попапом)
-    * classHidden - клас с свойством: display: none
-    * modalOpeners - массив кнопок открытия попапа
-    * buttonClose - кнопка закрытия попапа
-    * buttonCloseOther - дполнителная кнопка закрытия окна
-    .body-lock {overflow-y: scroll; position:fixed;}
-    * */
+  if ('ontouchstart' in window) {
+    isTouch = true;
+    touch = 'touchstart';
+    touchMove = 'touchmove';
+    touchUp = 'touchend';
+  }
+
+  tabs.addEventListener(touch, function (e) {
+    var screen = document.documentElement.clientWidth;
+    var difference = screen - this.offsetWidth;
+    var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
+    var shiftX = x - this.offsetLeft;
+
+    var onMove = function onMove(e) {
+      var xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
+      var left = xMove - shiftX;
+
+      if (left < difference) {
+        left = difference;
+      }
+
+      if (left > initialLeft) {
+        left = initialLeft;
+      }
+
+      tabs.style.left = left + 'px';
+    };
+
+    document.addEventListener(touchMove, onMove);
+
+    var onMouseUp = function onMouseUp() {
+      document.removeEventListener(touchMove, onMove);
+      document.removeEventListener(touchUp, onMouseUp);
+    };
+
+    document.addEventListener(touchUp, onMouseUp);
+  });
+})();
+
+"use strict"; // для поддержки forEach в IE11
+
+
+(function () {
+  var onPopupOpener = function onPopupOpener(obj) {
+    var overlay = obj.overlay,
+        classHidden = obj.classHidden,
+        buttonsOpener = obj.buttonsOpener,
+        buttonsClose = obj.buttonsClose,
+        doAction = obj.doAction,
+        endAction = obj.endAction;
     var body = document.body; // открытие попапа
 
     var openPopup = function openPopup(e) {
@@ -38,7 +94,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
       overlay.classList.remove(classHidden);
       document.addEventListener("keydown", onCloseModalKey);
-      overlay.addEventListener("click", onCloseModalMouse);
+      overlay.addEventListener("mousedown", onCloseModalMouse);
       if (doAction) doAction(); //  для предотвращения скрола
 
       body.dataset.scrollY = self.pageYOffset; // сохраним значение скролла
@@ -68,43 +124,30 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     var removeHandler = function removeHandler() {
       overlay.classList.add(classHidden);
       document.removeEventListener("keydown", onCloseModalKey);
-      overlay.removeEventListener("click", onCloseModalMouse); //  для предовращения скрола
+      overlay.removeEventListener("mousedown", onCloseModalMouse); //  для предовращения скрола
 
       body.classList.remove('body-lock');
       window.scrollTo(0, body.dataset.scrollY);
 
-      if (typeof overlay.endAction === 'function') {
-        overlay.endAction(); // эта функция снаружи что то делает после закрытия окна
+      if (endAction) {
+        endAction(); // если колбэк определен вызываем его, что то сделать после закрытия окна
       }
     }; // навершиваем на каждую кнопку обработчик открытия попапа
 
 
-    if (modalOpeners) {
-      modalOpeners.forEach(function (button) {
+    if (buttonsOpener) {
+      buttonsOpener.forEach(function (button) {
         button.addEventListener("click", openPopup);
       });
     } else openPopup();
   };
 
-  var modalOpeners = document.querySelectorAll("[data-modal-opener]");
-  var classHidden = "modal--call-invisible";
-  var modalCall = document.querySelector("." + classHidden);
-  var modalCallClose = modalCall.querySelectorAll(".modal__close--call");
-  var classHiddenSuccess = "modal--success-invisible";
-  var modalSuccess = document.querySelector("." + classHiddenSuccess);
   var pageForms = document.querySelectorAll('[data-send-form]');
-  var modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
   var storage = {};
-  var form = modalCall.querySelector(".modal__form");
+  var form = document.querySelector(".modal__form");
   var inputsModal = form.querySelectorAll(".modal__input");
   var phone = form.querySelector('.modal__input-phone');
   var name = form.querySelector('.modal__input-name');
-
-  modalCall.endAction = function () {
-    form.removeEventListener("submit", submitForm);
-    form.removeEventListener('focusin', onValidate);
-  };
-
   inputsModal.forEach(function (input) {
     storage[input.name] = localStorage.getItem(input.name);
   });
@@ -113,8 +156,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     inputsModal.forEach(function (input) {
       storage[input.name] = localStorage.setItem(input.name, input.value);
     });
-    modalCall.classList.add(classHidden);
-    onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+    modalCall.overlay.classList.add(modalCall.classHidden);
+    onPopupOpener(modalSuccess);
     e.preventDefault();
   };
 
@@ -133,7 +176,25 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     form.addEventListener("submit", submitForm);
   };
 
-  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction); // ======================валидация телефона===================================================
+  var endAction = function endAction() {
+    form.removeEventListener("submit", submitForm);
+    form.removeEventListener('focusin', onValidate);
+  };
+
+  var modalSuccess = {
+    overlay: document.querySelector(".modal--success-invisible"),
+    classHidden: 'modal--success-invisible',
+    buttonsClose: document.querySelectorAll(".modal__close--success, .modal__ok")
+  };
+  var modalCall = {
+    overlay: document.querySelector(".modal--call-invisible"),
+    classHidden: 'modal--call-invisible',
+    buttonsOpener: document.querySelectorAll("[data-modal-opener]"),
+    buttonsClose: document.querySelectorAll(".modal__close--call"),
+    doAction: doAction,
+    endAction: endAction
+  };
+  onPopupOpener(modalCall); // ======================валидация телефона===================================================
 
   var START_INDEX = 4;
   var CLOSE_BRACE = 6;
@@ -322,68 +383,9 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       e.preventDefault();
     });
   });
-})(); //=========================секция программы==================================================
+})();
 
-
-(function () {
-  var tabs = document.querySelector('.programs__captions');
-  var initialLeft = tabs.offsetLeft;
-  var isTouch = false;
-  var touch = 'mousedown';
-  var touchMove = 'mousemove';
-  var touchUp = 'mouseup';
-
-  if ('ontouchstart' in window) {
-    isTouch = true;
-    touch = 'touchstart';
-    touchMove = 'touchmove';
-    touchUp = 'touchend';
-  }
-
-  tabs.addEventListener(touch, function (e) {
-    var screen = document.documentElement.clientWidth;
-    var difference = screen - this.offsetWidth;
-    var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
-    var shiftX = x - this.offsetLeft;
-
-    var onMove = function onMove(e) {
-      var xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
-      var left = xMove - shiftX;
-
-      if (left < difference) {
-        left = difference;
-      }
-
-      if (left > initialLeft) {
-        left = initialLeft;
-      }
-
-      tabs.style.left = left + 'px';
-    };
-
-    document.addEventListener(touchMove, onMove);
-
-    var onMouseUp = function onMouseUp() {
-      document.removeEventListener(touchMove, onMove);
-      document.removeEventListener(touchUp, onMouseUp);
-    };
-
-    document.addEventListener(touchUp, onMouseUp);
-  });
-})(); //========пунктир в секции conditions ====================================
-
-
-(function () {
-  var list = document.querySelector('.condition__list');
-  var firstItem = document.querySelector('.condition__item--1');
-  var lastItem = document.querySelectorAll('.condition__item');
-  lastItem = lastItem[lastItem.length - 1];
-  var heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height');
-  var heightLastItem = getComputedStyle(lastItem).getPropertyValue('height');
-  var heightList = getComputedStyle(list).getPropertyValue('height');
-  var lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
-  list.style.setProperty('--line-dashed', lineHeight + 'px');
-})(); //================================слайдер===========================
+"use strict"; //================================слайдер===========================
 
 
 (function () {
@@ -431,6 +433,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     if (indicator) {
       window.onresize = function () {
         // обработчик на изменение ширины окна
+        console.log(document.documentElement.clientWidth);
+
         if (document.documentElement.clientWidth >= 767) {
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
           translate = 0;

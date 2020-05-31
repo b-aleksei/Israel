@@ -1,21 +1,81 @@
 "use strict";
-// для поддержки forEach в IE11
-if (window.NodeList && !NodeList.prototype.forEach) {
-  NodeList.prototype.forEach = Array.prototype.forEach;
-}
+//========пунктир в секции conditions ====================================
 
 ( function () {
 
-  let onPopupOpener = function (overlay, classHidden, modalOpeners, buttonsClose, doAction = false) {
-    /*
-    Попап открывается посредством удаления класса со св-м display: none
-    * overlay - див с модальным окном(попапом)
-    * classHidden - клас с свойством: display: none
-    * modalOpeners - массив кнопок открытия попапа
-    * buttonClose - кнопка закрытия попапа
-    * buttonCloseOther - дполнителная кнопка закрытия окна
-    .body-lock {overflow-y: scroll; position:fixed;}
-    * */
+  let list = document.querySelector('.condition__list');
+  let firstItem = document.querySelector('.condition__item--1');
+  let lastItem = document.querySelectorAll('.condition__item');
+  lastItem = lastItem[lastItem.length - 1];
+  let heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height')
+  let heightLastItem = getComputedStyle(lastItem).getPropertyValue('height')
+  let heightList = getComputedStyle(list).getPropertyValue('height')
+  let lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
+  list.style.setProperty('--line-dashed', lineHeight + 'px')
+
+} )();
+
+"use strict";
+//=========================секция программы==================================================
+( function () {
+
+  let tabs = document.querySelector('.programs__captions');
+  let initialLeft = tabs.offsetLeft;
+  let isTouch = false;
+  let touch = 'mousedown';
+  let touchMove = 'mousemove';
+  let touchUp = 'mouseup';
+  if ('ontouchstart' in window) {
+    isTouch = true;
+    touch = 'touchstart';
+    touchMove = 'touchmove';
+    touchUp = 'touchend';
+  }
+
+  tabs.addEventListener(touch, function (e) {
+    let screen = document.documentElement.clientWidth;
+    let difference = screen - this.offsetWidth;
+    let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+    let shiftX = x - this.offsetLeft;
+
+    let onMove = function (e) {
+      let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+      let left = xMove - shiftX;
+      if (left < difference) {
+        left = difference
+      }
+      if (left > initialLeft) {
+        left = initialLeft
+      }
+      tabs.style.left = left + 'px';
+    };
+    document.addEventListener(touchMove, onMove);
+
+    let onMouseUp = function () {
+      document.removeEventListener(touchMove, onMove);
+      document.removeEventListener(touchUp, onMouseUp);
+    };
+    document.addEventListener(touchUp, onMouseUp);
+  });
+
+} )();
+
+"use strict";
+// для поддержки forEach в IE11
+
+
+( function () {
+
+  let onPopupOpener = function (obj) {
+
+    let {
+      overlay, // оверлей с модальным окном
+      classHidden, // класс с dispay: none
+      buttonsOpener, // кнопки открытия окна
+      buttonsClose, // кнопки закрытия окна
+      doAction, // что то сделать при открытии мод. окна
+      endAction // что то сделать при закрытии мод. окна
+  } = obj
 
     let body = document.body
     // открытие попапа
@@ -25,7 +85,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       }
       overlay.classList.remove(classHidden);
       document.addEventListener("keydown", onCloseModalKey);
-      overlay.addEventListener("click", onCloseModalMouse);
+      overlay.addEventListener("mousedown", onCloseModalMouse);
       if (doAction) doAction();
       //  для предотвращения скрола
       body.dataset.scrollY = self.pageYOffset // сохраним значение скролла
@@ -53,42 +113,28 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     let removeHandler = function () {
       overlay.classList.add(classHidden);
       document.removeEventListener("keydown", onCloseModalKey);
-      overlay.removeEventListener("click", onCloseModalMouse);
+      overlay.removeEventListener("mousedown", onCloseModalMouse);
       //  для предовращения скрола
       body.classList.remove('body-lock')
       window.scrollTo(0, body.dataset.scrollY);
-      if (typeof overlay.endAction === 'function') {
-        overlay.endAction() // эта функция снаружи что то делает после закрытия окна
+      if (endAction) {
+        endAction() // если колбэк определен вызываем его, что то сделать после закрытия окна
       }
     }
-
     // навершиваем на каждую кнопку обработчик открытия попапа
-    if (modalOpeners) {
-      modalOpeners.forEach(function (button) {
+    if (buttonsOpener) {
+      buttonsOpener.forEach(function (button) {
         button.addEventListener("click", openPopup)
       })
     } else openPopup()
   }
 
-  let modalOpeners = document.querySelectorAll("[data-modal-opener]");
-  let classHidden = "modal--call-invisible";
-  let modalCall = document.querySelector("." + classHidden);
-  let modalCallClose = modalCall.querySelectorAll(".modal__close--call");
-  let classHiddenSuccess = "modal--success-invisible";
-  let modalSuccess = document.querySelector("." + classHiddenSuccess);
   let pageForms = document.querySelectorAll('[data-send-form]');
-  let modalSuccessClose = modalSuccess.querySelectorAll(".modal__close--success, .modal__ok");
-
   let storage = {};
-  let form = modalCall.querySelector(".modal__form");
+  let form = document.querySelector(".modal__form");
   let inputsModal = form.querySelectorAll(".modal__input");
   let phone = form.querySelector('.modal__input-phone');
   let name = form.querySelector('.modal__input-name');
-
-  modalCall.endAction = function () {
-    form.removeEventListener("submit", submitForm);
-    form.removeEventListener('focusin', onValidate);
-  }
 
   inputsModal.forEach(function (input) {
     storage[input.name] = localStorage.getItem(input.name)
@@ -98,8 +144,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     inputsModal.forEach(function (input) {
       storage[input.name] = localStorage.setItem(input.name, input.value)
     })
-    modalCall.classList.add(classHidden);
-    onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+    modalCall.overlay.classList.add(modalCall.classHidden);
+    onPopupOpener(modalSuccess)
     e.preventDefault();
   }
 
@@ -116,7 +162,27 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     form.addEventListener("submit", submitForm)
   }
 
-  onPopupOpener(modalCall, classHidden, modalOpeners, modalCallClose, doAction);
+  let endAction = function () {
+    form.removeEventListener("submit", submitForm);
+    form.removeEventListener('focusin', onValidate);
+  }
+
+  let modalSuccess = {
+    overlay: document.querySelector(".modal--success-invisible"),
+    classHidden: 'modal--success-invisible',
+    buttonsClose: document.querySelectorAll(".modal__close--success, .modal__ok"),
+  }
+
+  let modalCall = {
+    overlay: document.querySelector(".modal--call-invisible"),
+    classHidden: 'modal--call-invisible',
+    buttonsOpener: document.querySelectorAll("[data-modal-opener]"),
+    buttonsClose: document.querySelectorAll(".modal__close--call"),
+    doAction,
+    endAction
+  }
+
+  onPopupOpener(modalCall);
 
   // ======================валидация телефона===================================================
   const START_INDEX = 4;
@@ -293,68 +359,11 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 } )();
 
-//=========================секция программы==================================================
-( function () {
-
-  let tabs = document.querySelector('.programs__captions');
-  let initialLeft = tabs.offsetLeft;
-  let isTouch = false;
-  let touch = 'mousedown';
-  let touchMove = 'mousemove';
-  let touchUp = 'mouseup';
-  if ('ontouchstart' in window) {
-    isTouch = true;
-    touch = 'touchstart';
-    touchMove = 'touchmove';
-    touchUp = 'touchend';
-  }
-
-  tabs.addEventListener(touch, function (e) {
-    let screen = document.documentElement.clientWidth;
-    let difference = screen - this.offsetWidth;
-    let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
-    let shiftX = x - this.offsetLeft;
-
-    let onMove = function (e) {
-      let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
-      let left = xMove - shiftX;
-      if (left < difference) {
-        left = difference
-      }
-      if (left > initialLeft) {
-        left = initialLeft
-      }
-      tabs.style.left = left + 'px';
-    };
-    document.addEventListener(touchMove, onMove);
-
-    let onMouseUp = function () {
-      document.removeEventListener(touchMove, onMove);
-      document.removeEventListener(touchUp, onMouseUp);
-    };
-    document.addEventListener(touchUp, onMouseUp);
-  });
-
-} )();
-
-//========пунктир в секции conditions ====================================
-
-( function () {
-
-  let list = document.querySelector('.condition__list');
-  let firstItem = document.querySelector('.condition__item--1');
-  let lastItem = document.querySelectorAll('.condition__item');
-  lastItem = lastItem[lastItem.length - 1];
-  let heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height')
-  let heightLastItem = getComputedStyle(lastItem).getPropertyValue('height')
-  let heightList = getComputedStyle(list).getPropertyValue('height')
-  let lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
-  list.style.setProperty('--line-dashed', lineHeight + 'px')
-
-} )();
 
 
-  //================================слайдер===========================
+
+"use strict";
+//================================слайдер===========================
 ( function () {
 
   let sliderGallery = document.querySelector('.gallery__slider');
@@ -418,6 +427,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
     if (indicator) {
       window.onresize = function () { // обработчик на изменение ширины окна
+        console.log(document.documentElement.clientWidth);
         if (document.documentElement.clientWidth >= 767) {
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
           translate = 0
@@ -475,12 +485,12 @@ if (window.NodeList && !NodeList.prototype.forEach) {
           indicatorContainer.children[translate].classList.add('slider__ind-color');
         }
         if (counter) {
-        displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
+          displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
         }
         moveSlide();
         disableButton();
         if (DelayForStart) {
-        startAutoScroll();
+          startAutoScroll();
         }
       };
 

@@ -20,7 +20,7 @@
 }
 
 .gallery__content {
-  width: 756px;
+  max-width: 756px;
   padding: 0 25px 0 17px;
   @include font(17, 1.7);
   color: $blackLight;

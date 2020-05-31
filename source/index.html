@@ -730,9 +730,9 @@
     <p class="modal__content modal__content--call">&nbsp;&nbsp;&nbsp;&nbsp;Оставьте ваши контактные данные, мы свяжемся  с вами в течение рабочего дня и обязательно поможем найти ответ на ваш вопрос! </p>
     <form class="modal__form form" action="#" method="post">
       <label><span class="visually-hidden">Заполните имя</span>
-        <input class="modal__input-name form__input" type="text" name="name" placeholder="имя" pattern="[A-z,А-я]{2,}" required></label>
+        <input class="modal__input-name modal__input form__input" type="text" name="name" placeholder="имя" pattern="[A-z,А-я]{2,}" required></label>
       <label class="modal__label"><span class="visually-hidden">Укажите телефон</span>
-        <input class="modal__input-phone form__input" type="tel" name="phone" pattern="\+7\s\([0-9]{3}\)\s[0-9]{3}\s[0-9]{2}\s[0-9]{2}" placeholder="телефон" required></label>
+        <input class="modal__input-phone modal__input form__input" type="tel" name="phone" pattern="\+7\s\([0-9]{3}\)\s[0-9]{3}\s[0-9]{2}\s[0-9]{2}" placeholder="телефон" required></label>
       <button class="modal__submit" type="submit" aria-label="отправить данные">перезвоните мне</button>
       <input class="modal__check" id="data" type="checkbox" name="data">
       <label class="modal__apply" for="data">Нажимая на кнопку, вы даёте согласие на обработку персональных
@@ -749,7 +749,7 @@
     </svg>
     <h2 class="modal__title">Заявка принята</h2>
     <p class="modal__content modal__content--success">Мы приняли ваши данные и вскоре мы перезвоним вам для уточнения деталей!</p>
-    <button class="modal__submit" type="button" aria-label="Закрыть окно">понятно</button>
+    <button class="modal__submit modal__ok" type="button" aria-label="Закрыть окно">понятно</button>
     <button class="modal__close modal__close--success" type="button" aria-label="Закрыть окно"></button>
   </div>
 </div>
@@ -766,8 +766,7 @@
     </picture>
   </li>
 </template>-->
-<script src="js/polyfill.js"></script>
-<script src="js/picturefill.min.js"></script>
-<script src="js/app.js"></script>
+<script src="js/vendors.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

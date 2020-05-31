@@ -46,7 +46,7 @@
 .detail__btn {
 @include yellowButton(230px, 19px);
   display: flex;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-variant: all-petite-caps;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@
   }
 
   .detail__title {
-    font-size: 40px;
+    font-size: 4rem;
     margin-bottom: 25%;
   }
 

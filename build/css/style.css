@@ -930,7 +930,7 @@ body {
   display: none; }
 
 .gallery__content {
-  width: 756px;
+  max-width: 756px;
   padding: 0 25px 0 17px;
   font-size: 1.7rem;
   line-height: 1.7;
@@ -1203,7 +1203,7 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-variant: all-petite-caps;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -1244,7 +1244,7 @@ body {
     top: 0;
     right: 0; }
   .detail__title {
-    font-size: 40px;
+    font-size: 4rem;
     margin-bottom: 25%; }
   .detail__content {
     width: 400px;
@@ -1937,7 +1937,7 @@ body {
     padding-right: 0;
     background-image: none; }
   .contact__title {
-    font-size: 32px;
+    font-size: 3.2rem;
     text-align: center;
     margin-bottom: 11px; }
   .contact__wrap-content {
@@ -1968,6 +1968,7 @@ body {
     margin: 0 17px 0 15px; }
   .contact__text {
     margin-bottom: 33px;
+    width: 100%;
     max-width: 500px; }
   .contact__bold-text {
     font-size: 1.6rem; } }
@@ -2134,29 +2135,6 @@ body {
 
 .modal__content--success {
   padding-left: 28px; }
-
-.modal__input {
-  border: 2px solid #E3E3E3;
-  border-radius: 80px;
-  width: 360px;
-  height: 59px;
-  padding: 0 39px;
-  font-size: 1.7rem;
-  line-height: 1.2;
-  font-weight: 500;
-  font-variant: small-caps; }
-  .modal__input::-webkit-input-placeholder {
-    opacity: 0.5; }
-  .modal__input::-moz-placeholder {
-    opacity: 0.5; }
-  .modal__input:-ms-input-placeholder {
-    opacity: 0.5; }
-  .modal__input::-ms-input-placeholder {
-    opacity: 0.5; }
-  .modal__input::placeholder {
-    opacity: 0.5; }
-  .modal__input:focus {
-    border-color: #FFC341; }
 
 .modal__input-phone {
   margin-top: 8px;
