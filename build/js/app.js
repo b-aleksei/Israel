@@ -383,192 +383,185 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   var heightList = getComputedStyle(list).getPropertyValue('height');
   var lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
   list.style.setProperty('--line-dashed', lineHeight + 'px');
-})(); //=====================slider===========================================
+})(); //================================слайдер===========================
 
 
 (function () {
-  // let startSlider = function () {
-  var galleryList = document.querySelector('.gallery__list'); // let firstImg = document.querySelector('.gallery__first-img');
-  // let firstImgContent = firstImg.innerHTML;
-  // let template = document.querySelector('template').content;
-  // template.prepend(firstImg);
-  // galleryList.append(template);
-
+  var sliderGallery = document.querySelector('.gallery__slider');
+  var galleryList = sliderGallery.querySelector('.gallery__list');
   galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' + '    <picture>\n' + '      <source type="image/webp" media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">\n' + '      <source media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' + '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' + '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' + '           height="732" alt="фоновое изображение">\n' + '    </picture>\n' + '  </li>');
-  var slider = document.querySelector('.gallery__slider');
-  var buttonForward = slider.querySelector(".slider__forward");
-  var buttonBack = slider.querySelector(".slider__back");
-  var slideContainer = slider.querySelector('.slider__list');
-  var amountSlides = slider.querySelectorAll('.slider__item').length;
-  var indicatorContainer = slider.querySelector('.slider__indicators');
-  var translate = 0;
-  var delaySlide;
-  var intervalSlider;
-  var timer;
-  slider.classList.remove('no-js');
+  var indicatorContainer = sliderGallery.querySelector('.slider__indicators');
+  sliderGallery.classList.remove('no-js'); //=======================================================================
 
-  window.onresize = function () {
-    if (document.documentElement.clientWidth >= 767) {
-      indicatorContainer.children[translate].classList.remove('slider__ind-color');
-      translate = 0;
-      indicatorContainer.children[translate].classList.add('slider__ind-color');
-      slideContainer.style.transform = 'translate(0)';
-      buttonForward.disabled = false;
-      buttonBack.disabled = true;
-    }
+  var sliderFeedback = document.querySelector('.feedback');
+  var displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
+  var displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
+  var autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
+  var objGallery = {
+    slider: document.querySelector('.gallery__slider'),
+    indicator: true
+  };
+  var objFeedback = {
+    slider: document.querySelector('.feedback'),
+    DelayForStart: 5000,
+    timeShowSlide: 4000,
+    counter: true
   };
 
-  for (var i = 0; i < amountSlides; i++) {
-    indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">');
-  }
+  var startSlider = function startSlider(obj) {
+    var slider = obj.slider,
+        DelayForStart = obj.DelayForStart,
+        timeShowSlide = obj.timeShowSlide,
+        counter = obj.counter,
+        indicator = obj.indicator;
+    var buttonForward = slider.querySelector(".slider__forward");
+    var buttonBack = slider.querySelector(".slider__back");
+    var slideContainer = slider.querySelector('.slider__list');
+    var amountSlides = slider.querySelectorAll('.slider__item').length;
+    var translate = 0;
+    var delaySlide;
+    var intervalSlider;
+    var timer; //показ текущего и суммы слайдов
 
-  indicatorContainer.children[translate].classList.add('slider__ind-color');
+    if (counter) {
+      displayTotalSlide.textContent = amountSlides + '';
+      displayCurrentSlide.textContent = translate + 1 + '';
+    }
 
-  if (amountSlides > 1) {
-    var moveSlide = function moveSlide() {
-      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
-    };
+    if (indicator) {
+      window.onresize = function () {
+        // обработчик на изменение ширины окна
+        if (document.documentElement.clientWidth >= 767) {
+          indicatorContainer.children[translate].classList.remove('slider__ind-color');
+          translate = 0;
+          indicatorContainer.children[translate].classList.add('slider__ind-color');
+          slideContainer.style.transform = 'translate(0)';
+          buttonForward.disabled = false;
+          buttonBack.disabled = true;
+        }
+      };
 
-    buttonBack.disabled = true; //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
-
-    var hideArrow = function hideArrow() {
-      // displayCurrentSlide.textContent = translate + 1 + '';
-      if (translate === 0) {
-        buttonBack.disabled = true;
-      } else if (translate === amountSlides - 1) {
-        buttonForward.disabled = true;
-      } else {
-        buttonBack.disabled = buttonForward.disabled = false;
-      }
-    }; // для ручного переключения сладов
-
-
-    var onClickSlider = function onClickSlider() {
-      clearTimeout(timer);
-      clearTimeout(delaySlide);
-      clearInterval(intervalSlider);
-      slideContainer.classList.add('slider__list--click-duration'); // slideContainer.classList.remove('slider__list--auto-duration');
-
-      var forward = this === buttonForward; //==================
-
-      indicatorContainer.children[translate].classList.remove('slider__ind-color'); //===================
-
-      if (forward && translate < amountSlides - 1) {
-        buttonBack.disabled = false;
-        translate += 1;
-      } else if (!forward && translate > 0) {
-        buttonForward.disabled = false;
-        translate -= 1;
-      } //==================
-
-
-      indicatorContainer.children[translate].classList.add('slider__ind-color'); //=======================
-
-      moveSlide();
-      hideArrow(); // startAutoScroll();
-    };
-
-    buttonForward.addEventListener("click", onClickSlider);
-    buttonBack.addEventListener("click", onClickSlider);
-  }
-})();
-
-(function () {
-  //================================для секции feedback===========================
-  // let startSlider = function () {
-  var DELAY_START_SLIDER = 5000;
-  var timeShowSlide = 4000;
-  var slider = document.querySelector('.feedback');
-  var buttonForward = slider.querySelector(".slider__forward");
-  var buttonBack = slider.querySelector(".slider__back");
-  var slideContainer = slider.querySelector('.slider__list');
-  var amountSlides = slider.querySelectorAll('.slider__item').length;
-  var displayCurrentSlide = slider.querySelector('.feedback__current-slides');
-  var displayTotalSlide = slider.querySelector('.feedback__total-slides');
-  var autoDuration = getComputedStyle(slider).getPropertyValue('--auto-duration');
-  autoDuration = parseInt(autoDuration) || 1000;
-
-  if (typeof autoDuration === 'number') {
-    timeShowSlide += autoDuration;
-  }
-
-  var translate = 0;
-  var delaySlide;
-  var intervalSlider;
-  var timer; //показ текущего и суммы слайдов
-
-  displayTotalSlide.textContent = amountSlides + '';
-  displayCurrentSlide.textContent = translate + 1 + '';
-
-  if (amountSlides > 1) {
-    //для автоматической прокрутки слайдов
-    var scrollAuto = function scrollAuto() {
-      hideArrow();
-
-      if (translate === 0) {
-        translate += 1;
-        displayCurrentSlide.textContent = '1';
+      for (var i = 0; i < amountSlides; i++) {
+        // добавляем индикаторы слайдов
+        indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">');
       }
 
-      slideContainer.classList.remove('slider__list--click-duration');
-      slideContainer.classList.add('slider__list--auto-duration');
-      moveSlide();
-      translate -= 1;
-      delaySlide = setTimeout(function () {
+      indicatorContainer.children[translate].classList.add('slider__ind-color');
+    }
+
+    if (amountSlides > 1) {
+      //для автоматической прокрутки слайдов
+      var scrollAuto = function scrollAuto() {
+        slideContainer.classList.remove('slider__list--click-duration');
+
+        if (translate === 0) {
+          disableButton();
+          translate += 1;
+          displayCurrentSlide.textContent = '1';
+          slideContainer.classList.add('slider__list--auto-duration');
+          moveSlide();
+          translate -= 1;
+          delaySlide = setTimeout(appendSlide, autoDuration);
+        }
+
+        if (translate > 0) {
+          while (translate > 0) {
+            translate--;
+            appendSlide();
+          }
+        }
+      };
+
+      // если слайдов больше чем 1
+      buttonBack.disabled = true; // кнопка назад изначально отключена
+
+      var moveSlide = function moveSlide() {
+        // переместить слайд на 100% ширины
+        slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+      }; //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+
+
+      var disableButton = function disableButton() {
+        if (translate === 0) {
+          buttonBack.disabled = true;
+          buttonForward.disabled = false;
+        } else if (translate === amountSlides - 1) {
+          buttonForward.disabled = true;
+        } else {
+          buttonBack.disabled = buttonForward.disabled = false;
+        }
+      }; // для ручного переключения сладов
+
+
+      var onClickSlider = function onClickSlider() {
+        clearTimeout(timer);
+        clearTimeout(delaySlide);
+        clearInterval(intervalSlider);
+        slideContainer.classList.add('slider__list--click-duration');
+        slideContainer.classList.remove('slider__list--auto-duration');
+        var forward = this === buttonForward;
+
+        if (indicator) {
+          // для индикации слайдов
+          indicatorContainer.children[translate].classList.remove('slider__ind-color');
+        }
+
+        if (forward && translate < amountSlides - 1) {
+          buttonBack.disabled = false;
+          translate += 1;
+        } else if (!forward && translate > 0) {
+          buttonForward.disabled = false;
+          translate -= 1;
+        }
+
+        if (indicator) {
+          indicatorContainer.children[translate].classList.add('slider__ind-color');
+        }
+
+        if (counter) {
+          displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
+        }
+
+        moveSlide();
+        disableButton();
+
+        if (DelayForStart) {
+          startAutoScroll();
+        }
+      };
+
+      var appendSlide = function appendSlide() {
+        // переместить первый слайд в конец списка
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
         slideContainer.appendChild(slideContainer.firstElementChild);
-      }, autoDuration);
-    };
+      };
 
-    var moveSlide = function moveSlide() {
-      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
-    };
+      var startAutoScroll = function startAutoScroll() {
+        timer = setTimeout(function () {
+          intervalSlider = setInterval(function () {
+            scrollAuto();
+          }, timeShowSlide || 4000);
+        }, DelayForStart);
+      };
 
-    buttonBack.disabled = true; //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+      buttonForward.addEventListener("click", onClickSlider);
+      buttonBack.addEventListener("click", onClickSlider); // для запуска автоскролла
 
-    var hideArrow = function hideArrow() {
-      if (translate === 0) {
-        buttonBack.disabled = true;
-      } else if (translate === amountSlides - 1) {
-        buttonForward.disabled = true;
-      } else {
-        buttonBack.disabled = buttonForward.disabled = false;
+      if (typeof DelayForStart === 'number') {
+        autoDuration = parseInt(autoDuration) || 1000;
+
+        if (typeof autoDuration === 'number' && typeof timeShowSlide === 'number') {
+          timeShowSlide += autoDuration;
+        }
+
+        startAutoScroll();
       }
-    }; // для ручного переключения сладов
+    }
+  };
 
-
-    var onClickSlider = function onClickSlider() {
-      clearTimeout(timer);
-      clearTimeout(delaySlide);
-      clearInterval(intervalSlider);
-      slideContainer.classList.add('slider__list--click-duration');
-      slideContainer.classList.remove('slider__list--auto-duration');
-      var forward = this === buttonForward;
-
-      if (forward && translate < amountSlides - 1) {
-        buttonBack.disabled = false;
-        translate += 1;
-      } else if (!forward && translate > 0) {
-        buttonForward.disabled = false;
-        translate -= 1;
-      }
-
-      displayCurrentSlide.textContent = translate + 1 + '';
-      moveSlide();
-      hideArrow(); // startAutoScroll();
-    };
-
-    buttonForward.addEventListener("click", onClickSlider);
-    buttonBack.addEventListener("click", onClickSlider);
-
-    var startAutoScroll = function startAutoScroll() {
-      timer = setTimeout(function () {
-        intervalSlider = setInterval(function () {
-          scrollAuto();
-        }, timeShowSlide);
-      }, DELAY_START_SLIDER);
-    }; // startAutoScroll()
-
-  }
+  startSlider(objFeedback);
+  startSlider(objGallery);
+  objFeedback = null;
+  objGallery = null;
 })();

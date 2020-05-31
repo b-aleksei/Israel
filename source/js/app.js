@@ -57,7 +57,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       //  для предовращения скрола
       body.classList.remove('body-lock')
       window.scrollTo(0, body.dataset.scrollY);
-      if(typeof overlay.endAction === 'function') {
+      if (typeof overlay.endAction === 'function') {
         overlay.endAction() // эта функция снаружи что то делает после закрытия окна
       }
     }
@@ -145,8 +145,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
   let pasteValue = function () {
     let ctx = this
-    setTimeout(function() {
-      let value = Array.from(ctx.value).filter(function(item) {
+    setTimeout(function () {
+      let value = Array.from(ctx.value).filter(function (item) {
         return /\d/.test(item)
       });
       value.reverse();
@@ -218,7 +218,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         }
 
         if (e.key === 'Delete' && !IsSelectionTrue) {
-          let index = result.slice(focus).findIndex(function(item) {
+          let index = result.slice(focus).findIndex(function (item) {
             return /\d/.test(item)
           });
           if (~index) {
@@ -261,7 +261,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     if (e.target.name === 'phone') {
       let phone = e.target;
       phone.value = phone.value || storage[phone.name] || initialValue;
-      setTimeout(function() {
+      setTimeout(function () {
         phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
       });
       initialValue = '';
@@ -294,7 +294,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 } )();
 
 //=========================секция программы==================================================
-(function () {
+( function () {
 
   let tabs = document.querySelector('.programs__captions');
   let initialLeft = tabs.offsetLeft;
@@ -312,11 +312,11 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   tabs.addEventListener(touch, function (e) {
     let screen = document.documentElement.clientWidth;
     let difference = screen - this.offsetWidth;
-    let x = (isTouch) ? e.changedTouches[0].clientX : e.clientX;
+    let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
     let shiftX = x - this.offsetLeft;
 
     let onMove = function (e) {
-      let xMove = (isTouch) ? e.changedTouches[0].clientX : e.clientX;
+      let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
       let left = xMove - shiftX;
       if (left < difference) {
         left = difference
@@ -335,11 +335,11 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     document.addEventListener(touchUp, onMouseUp);
   });
 
-})();
+} )();
 
 //========пунктир в секции conditions ====================================
 
-(function () {
+( function () {
 
   let list = document.querySelector('.condition__list');
   let firstItem = document.querySelector('.condition__item--1');
@@ -348,23 +348,17 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   let heightFirstItem = getComputedStyle(firstItem).getPropertyValue('height')
   let heightLastItem = getComputedStyle(lastItem).getPropertyValue('height')
   let heightList = getComputedStyle(list).getPropertyValue('height')
-  let lineHeight = parseInt(heightList) - parseInt(heightFirstItem)/2 - parseInt(heightLastItem)/2;
+  let lineHeight = parseInt(heightList) - parseInt(heightFirstItem) / 2 - parseInt(heightLastItem) / 2;
   list.style.setProperty('--line-dashed', lineHeight + 'px')
 
-})();
+} )();
 
 
-//=====================slider===========================================
+  //================================слайдер===========================
 ( function () {
 
-  // let startSlider = function () {
-
-  let galleryList = document.querySelector('.gallery__list');
-  // let firstImg = document.querySelector('.gallery__first-img');
-  // let firstImgContent = firstImg.innerHTML;
-  // let template = document.querySelector('template').content;
-  // template.prepend(firstImg);
-  // galleryList.append(template);
+  let sliderGallery = document.querySelector('.gallery__slider');
+  let galleryList = sliderGallery.querySelector('.gallery__list');
   galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' +
     '    <picture>\n' +
     '      <source type="image/webp" media="(max-width: 767px)"\n' +
@@ -376,184 +370,172 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     '           height="732" alt="фоновое изображение">\n' +
     '    </picture>\n' +
     '  </li>')
+  let indicatorContainer = sliderGallery.querySelector('.slider__indicators');
+  sliderGallery.classList.remove('no-js');
+  //=======================================================================
+  let sliderFeedback = document.querySelector('.feedback');
+  let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
+  let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
+  let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
 
-  let slider = document.querySelector('.gallery__slider');
-  let buttonForward = slider.querySelector(".slider__forward");
-  let buttonBack = slider.querySelector(".slider__back");
-  let slideContainer = slider.querySelector('.slider__list');
-  let amountSlides = slider.querySelectorAll('.slider__item').length;
-  let indicatorContainer = slider.querySelector('.slider__indicators');
 
-  let translate = 0;
-  let delaySlide;
-  let intervalSlider;
-  let timer;
-
-  slider.classList.remove('no-js')
-
-  window.onresize = function () {
-    if (document.documentElement.clientWidth >= 767) {
-      indicatorContainer.children[translate].classList.remove('slider__ind-color');
-      translate = 0
-      indicatorContainer.children[translate].classList.add('slider__ind-color');
-      slideContainer.style.transform = 'translate(0)';
-      buttonForward.disabled = false;
-      buttonBack.disabled = true;
-    }
+  let objGallery = {
+    slider: document.querySelector('.gallery__slider'),
+    indicator: true
   }
 
-  for (let i = 0; i < amountSlides; i++) {
-    indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
-  }
-  indicatorContainer.children[translate].classList.add('slider__ind-color');
-
-  if (amountSlides > 1) {
-
-    let moveSlide = function () {
-      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
-    }
-
-    buttonBack.disabled = true;
-    //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
-    let hideArrow = function () {
-      // displayCurrentSlide.textContent = translate + 1 + '';
-      if (translate === 0) {
-        buttonBack.disabled = true;
-      } else if (translate === amountSlides - 1) {
-        buttonForward.disabled = true;
-      } else {
-        buttonBack.disabled = buttonForward.disabled = false;
-      }
-    };
-    // для ручного переключения сладов
-    let onClickSlider = function () {
-      clearTimeout(timer);
-      clearTimeout(delaySlide);
-      clearInterval(intervalSlider);
-      slideContainer.classList.add('slider__list--click-duration');
-      // slideContainer.classList.remove('slider__list--auto-duration');
-      let forward = this === buttonForward;
-      //==================
-      indicatorContainer.children[translate].classList.remove('slider__ind-color');
-      //===================
-      if (forward && translate < amountSlides - 1) {
-        buttonBack.disabled = false;
-        translate += 1;
-      } else if (!forward && translate > 0) {
-        buttonForward.disabled = false;
-        translate -= 1;
-      }
-      //==================
-      indicatorContainer.children[translate].classList.add('slider__ind-color');
-      //=======================
-      moveSlide();
-      hideArrow();
-      // startAutoScroll();
-    };
-
-    buttonForward.addEventListener("click", onClickSlider);
-    buttonBack.addEventListener("click", onClickSlider);
-
+  let objFeedback = {
+    slider: document.querySelector('.feedback'),
+    DelayForStart: 5000,
+    timeShowSlide: 4000,
+    counter: true,
   }
 
-} )();
+  let startSlider = function (obj) {
 
-(function () {
-  //================================для секции feedback===========================
-  // let startSlider = function () {
+    let {
+      slider,
+      DelayForStart,
+      timeShowSlide,
+      counter,
+      indicator
+    } = obj
 
-  const DELAY_START_SLIDER = 5000;
-  let timeShowSlide = 4000;
-  let slider = document.querySelector('.feedback');
-  let buttonForward = slider.querySelector(".slider__forward");
-  let buttonBack = slider.querySelector(".slider__back");
-  let slideContainer = slider.querySelector('.slider__list');
-  let amountSlides = slider.querySelectorAll('.slider__item').length;
+    let buttonForward = slider.querySelector(".slider__forward");
+    let buttonBack = slider.querySelector(".slider__back");
+    let slideContainer = slider.querySelector('.slider__list');
+    let amountSlides = slider.querySelectorAll('.slider__item').length;
+    let translate = 0;
+    let delaySlide;
+    let intervalSlider;
+    let timer;
 
-  let displayCurrentSlide =slider.querySelector('.feedback__current-slides');
-  let displayTotalSlide =slider.querySelector('.feedback__total-slides');
-  let autoDuration = getComputedStyle(slider).getPropertyValue('--auto-duration');
-  autoDuration = parseInt(autoDuration) || 1000;
-  if (typeof autoDuration === 'number') {
-    timeShowSlide += autoDuration
-  }
-
-  let translate = 0;
-  let delaySlide;
-  let intervalSlider;
-  let timer;
-  //показ текущего и суммы слайдов
-  displayTotalSlide.textContent = amountSlides + '';
-  displayCurrentSlide.textContent = translate + 1 + '';
-
-  if (amountSlides > 1) {
-
-    let moveSlide = function () {
-      slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
-    }
-
-    buttonBack.disabled = true;
-    //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
-    let hideArrow = function () {
-      if (translate === 0) {
-        buttonBack.disabled = true;
-      } else if (translate === amountSlides - 1) {
-        buttonForward.disabled = true;
-      } else {
-        buttonBack.disabled = buttonForward.disabled = false;
-      }
-    };
-    // для ручного переключения сладов
-    let onClickSlider = function () {
-      clearTimeout(timer);
-      clearTimeout(delaySlide);
-      clearInterval(intervalSlider);
-      slideContainer.classList.add('slider__list--click-duration');
-      slideContainer.classList.remove('slider__list--auto-duration');
-      let forward = this === buttonForward;
-      if (forward && translate < amountSlides - 1) {
-        buttonBack.disabled = false;
-        translate += 1;
-      } else if (!forward && translate > 0) {
-        buttonForward.disabled = false;
-        translate -= 1;
-      }
+    //показ текущего и суммы слайдов
+    if (counter) {
+      displayTotalSlide.textContent = amountSlides + '';
       displayCurrentSlide.textContent = translate + 1 + '';
-      moveSlide();
-      hideArrow();
-      // startAutoScroll();
-    };
+    }
 
-    buttonForward.addEventListener("click", onClickSlider);
-    buttonBack.addEventListener("click", onClickSlider);
-
-    //для автоматической прокрутки слайдов
-    function scrollAuto() {
-      hideArrow();
-      if (translate === 0) {
-        translate += 1;
-        displayCurrentSlide.textContent = '1';
+    if (indicator) {
+      window.onresize = function () { // обработчик на изменение ширины окна
+        if (document.documentElement.clientWidth >= 767) {
+          indicatorContainer.children[translate].classList.remove('slider__ind-color');
+          translate = 0
+          indicatorContainer.children[translate].classList.add('slider__ind-color');
+          slideContainer.style.transform = 'translate(0)';
+          buttonForward.disabled = false;
+          buttonBack.disabled = true;
+        }
       }
-      slideContainer.classList.remove('slider__list--click-duration');
-      slideContainer.classList.add('slider__list--auto-duration');
-      moveSlide();
-      translate -= 1;
-      delaySlide = setTimeout(function () {
+
+      for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
+        indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
+      }
+      indicatorContainer.children[translate].classList.add('slider__ind-color');
+    }
+
+
+    if (amountSlides > 1) { // если слайдов больше чем 1
+
+      buttonBack.disabled = true; // кнопка назад изначально отключена
+
+      let moveSlide = function () { // переместить слайд на 100% ширины
+        slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+      }
+      //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+      let disableButton = function () {
+        if (translate === 0) {
+          buttonBack.disabled = true;
+          buttonForward.disabled = false;
+        } else if (translate === amountSlides - 1) {
+          buttonForward.disabled = true;
+        } else {
+          buttonBack.disabled = buttonForward.disabled = false;
+        }
+      };
+      // для ручного переключения сладов
+      let onClickSlider = function () {
+        clearTimeout(timer);
+        clearTimeout(delaySlide);
+        clearInterval(intervalSlider);
+        slideContainer.classList.add('slider__list--click-duration');
+        slideContainer.classList.remove('slider__list--auto-duration');
+        let forward = this === buttonForward;
+        if (indicator) { // для индикации слайдов
+          indicatorContainer.children[translate].classList.remove('slider__ind-color');
+        }
+        if (forward && translate < amountSlides - 1) {
+          buttonBack.disabled = false;
+          translate += 1;
+        } else if (!forward && translate > 0) {
+          buttonForward.disabled = false;
+          translate -= 1;
+        }
+        if (indicator) {
+          indicatorContainer.children[translate].classList.add('slider__ind-color');
+        }
+        if (counter) {
+        displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
+        }
+        moveSlide();
+        disableButton();
+        if (DelayForStart) {
+        startAutoScroll();
+        }
+      };
+
+      let appendSlide = function () { // переместить первый слайд в конец списка
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
         slideContainer.appendChild(slideContainer.firstElementChild);
-      }, autoDuration)
-    }
+      }
 
-    let startAutoScroll = function () {
-      timer = setTimeout(function () {
-        intervalSlider = setInterval(function () {
-          scrollAuto();
-        }, timeShowSlide);
-      }, DELAY_START_SLIDER)
-    };
-    // startAutoScroll()
+      //для автоматической прокрутки слайдов
+      function scrollAuto() {
+        slideContainer.classList.remove('slider__list--click-duration');
+        if (translate === 0) {
+          disableButton();
+          translate += 1;
+          displayCurrentSlide.textContent = '1';
+          slideContainer.classList.add('slider__list--auto-duration');
+          moveSlide();
+          translate -= 1;
+          delaySlide = setTimeout(appendSlide, autoDuration)
+        }
+        if (translate > 0) {
+          while (translate > 0) {
+            translate--
+            appendSlide()
+          }
+        }
+      }
+
+      let startAutoScroll = function () {
+        timer = setTimeout(function () {
+          intervalSlider = setInterval(function () {
+            scrollAuto();
+          }, timeShowSlide || 4000);
+        }, DelayForStart)
+      };
+
+      buttonForward.addEventListener("click", onClickSlider);
+      buttonBack.addEventListener("click", onClickSlider);
+
+      // для запуска автоскролла
+      if (typeof DelayForStart === 'number') {
+        autoDuration = parseInt(autoDuration) || 1000;
+        if (typeof autoDuration === 'number' && typeof timeShowSlide === 'number') {
+          timeShowSlide += autoDuration
+        }
+        startAutoScroll()
+      }
+    }
   }
 
-})();
+  startSlider(objFeedback);
+  startSlider(objGallery);
+  objFeedback = null;
+  objGallery = null;
+
+} )();
 
