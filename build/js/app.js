@@ -97,8 +97,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   var storage = {};
   var form = modalCall.querySelector(".modal__form");
   var inputsModal = form.querySelectorAll(".modal__input");
-  var phone = form.querySelector('.modal__input--phone');
-  var name = form.querySelector('.modal__input--name');
+  var phone = form.querySelector('.modal__input-phone');
+  var name = form.querySelector('.modal__input-name');
 
   modalCall.endAction = function () {
     form.removeEventListener("submit", submitForm);
@@ -517,7 +517,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       delaySlide = setTimeout(function () {
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
-        slideContainer.append(slideContainer.firstElementChild);
+        slideContainer.appendChild(slideContainer.firstElementChild);
       }, autoDuration);
     };
 
@@ -556,8 +556,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
       displayCurrentSlide.textContent = translate + 1 + '';
       moveSlide();
-      hideArrow();
-      startAutoScroll();
+      hideArrow(); // startAutoScroll();
     };
 
     buttonForward.addEventListener("click", onClickSlider);
@@ -569,8 +568,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
           scrollAuto();
         }, timeShowSlide);
       }, DELAY_START_SLIDER);
-    };
+    }; // startAutoScroll()
 
-    startAutoScroll();
   }
 })();

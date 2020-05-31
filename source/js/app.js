@@ -82,8 +82,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   let storage = {};
   let form = modalCall.querySelector(".modal__form");
   let inputsModal = form.querySelectorAll(".modal__input");
-  let phone = form.querySelector('.modal__input--phone');
-  let name = form.querySelector('.modal__input--name');
+  let phone = form.querySelector('.modal__input-phone');
+  let name = form.querySelector('.modal__input-name');
 
   modalCall.endAction = function () {
     form.removeEventListener("submit", submitForm);
@@ -521,7 +521,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       displayCurrentSlide.textContent = translate + 1 + '';
       moveSlide();
       hideArrow();
-      startAutoScroll();
+      // startAutoScroll();
     };
 
     buttonForward.addEventListener("click", onClickSlider);
@@ -541,7 +541,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       delaySlide = setTimeout(function () {
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
-        slideContainer.append(slideContainer.firstElementChild);
+        slideContainer.appendChild(slideContainer.firstElementChild);
       }, autoDuration)
     }
 
@@ -552,7 +552,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         }, timeShowSlide);
       }, DELAY_START_SLIDER)
     };
-    startAutoScroll()
+    // startAutoScroll()
   }
 
 })();

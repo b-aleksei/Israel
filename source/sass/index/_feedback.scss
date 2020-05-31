@@ -46,14 +46,14 @@
   margin-top: 40px;
   margin-bottom: 0;
   @include font(24, 1.5, 500);
-  color: rgba(72, 72, 72, 0.74);
+  color: $blackLighter;
 }
 
 .feedback__program {
   line-height: 1.4;
   margin-top: 9px;
   margin-bottom: 31px;
-  color: rgba(72, 72, 72, 0.74);
+  color: $blackLighter;
 }
 
 .feedback__program span {
@@ -63,7 +63,7 @@
 
 .feedback__content {
   @include font(17, 1.7);
-  color: rgba(72, 72, 72, 0.74);
+  color: $blackLighter;
 }
 
 .feedback__details {
@@ -75,11 +75,13 @@
 }
 
 .feedback__nav {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: -31px;
   margin-left: 404px;
+  z-index: 2;
 }
 
 .feedback__pages {
@@ -111,7 +113,7 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
+    left: 2px;
     width: 12px;
     height: 12px;
     border: 2px solid $validColor;
@@ -199,7 +201,9 @@
   }
 
   .feedback__nav {
+    position: static;
     margin: 0 0 0 -5px;
+    justify-content: flex-start;
   }
 
 }

@@ -72,7 +72,7 @@
   }
 }
 
-.modal__input--phone {
+.modal__input-phone {
   margin-top: 8px;
   margin-bottom: 24px;
 }
@@ -80,7 +80,6 @@
 .modal__submit {
   @include yellowButton();
   margin: 0 auto 17px auto;
-
 }
 
 .modal__check {
@@ -116,11 +115,6 @@
   border-bottom: 2px solid $yellow;
   border-left: 2px solid $yellow;
   transform: rotate(-45deg);
-}
-
-.modal__ok {
-  @include yellowButton();
-  margin: 0 auto 17px auto;
 }
 
 .modal__close {

@@ -48,9 +48,9 @@
 }
 
 .slider__list--auto-duration {
-  transition: translate 2000ms linear;
+  transition: 1000ms linear;
   //transition: translate var(--auto-duration, 2000ms) linear;
-  transition: var(--auto-duration, 2000ms) linear;
+  transition: var(--auto-duration, 1000ms) linear;
 }
 
 .slider__forward[disabled],

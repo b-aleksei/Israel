@@ -1,0 +1,17 @@
+.form__input {
+  border: 2px solid #E3E3E3;
+  border-radius: 80px;
+  width: 360px;
+  height: 59px;
+  padding: 0 39px;
+  @include font(17, 1.2, 500);
+  font-variant: small-caps;
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: $yellow;
+  }
+}
