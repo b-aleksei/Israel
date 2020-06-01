@@ -235,16 +235,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
 
-  var selectValue = function selectValue() {
-    startSelection = this.selectionStart;
-    endSelection = this.selectionEnd; // console.log('selectHandlerStart',startSelection);
-    // console.log('selectHandlerEnd',endSelection);
-  };
-
   var enterValue = function enterValue(e) {
-    var IsSelectionTrue = startSelection !== endSelection;
+    startSelection = this.selectionStart;
+    endSelection = this.selectionEnd;
+    var IsSelection = startSelection !== endSelection;
 
     if (!e.ctrlKey) {
+      // всегда начинать с первого символа в скобках
       focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
     }
 
@@ -255,7 +252,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (!isControlKey && !e.ctrlKey) {
       e.preventDefault();
 
-      if (IsSelectionTrue && this.selectionStart !== this.selectionEnd) {
+      if (IsSelection) {
         var _result;
 
         var clearData = pattern.slice(startSelection, endSelection);
@@ -278,7 +275,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         focus = index === CLOSE_BRACE ? CLOSE_BRACE + 2 : separator - index === 1 ? index + 1 : index;
       } else {
         if (e.key === 'Backspace') {
-          if (!IsSelectionTrue && result[focus - 1] !== '(') {
+          if (!IsSelection && result[focus - 1] !== '(') {
             var insert;
 
             switch (result[this.selectionStart - 1]) {
@@ -299,8 +296,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }
 
-        if (e.key === 'Delete' && !IsSelectionTrue) {
-          // console.log('Delete');
+        if (e.key === 'Delete' && !IsSelection) {
           var _index = result.slice(focus).findIndex(function (item) {
             return /\d/.test(item);
           });
@@ -325,7 +321,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var deleteHandler = function deleteHandler(e) {
     if (e.target === phone) {
       phone.removeEventListener('paste', pasteValue);
-      phone.removeEventListener('select', selectValue);
       phone.removeEventListener('keydown', enterValue);
     }
 
@@ -350,8 +345,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       initialValue = '';
 
       _phone.addEventListener('paste', pasteValue);
-
-      _phone.addEventListener('select', selectValue);
 
       _phone.addEventListener('keydown', enterValue);
     }

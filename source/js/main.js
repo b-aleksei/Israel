@@ -221,16 +221,11 @@
     })
   };
 
-  let selectValue = function () {
+  let enterValue = function (e) {
     startSelection = this.selectionStart;
     endSelection = this.selectionEnd;
-    // console.log('selectHandlerStart',startSelection);
-    // console.log('selectHandlerEnd',endSelection);
-  };
-
-  let enterValue = function (e) {
-    let IsSelectionTrue = startSelection !== endSelection;
-    if (!e.ctrlKey) {
+    let IsSelection = startSelection !== endSelection;
+    if (!e.ctrlKey) { // всегда начинать с первого символа в скобках
       focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
     }
 
@@ -240,7 +235,7 @@
 
     if (!isControlKey && !e.ctrlKey) {
       e.preventDefault();
-      if (IsSelectionTrue && this.selectionStart !== this.selectionEnd) {
+      if (IsSelection) {
         let clearData = pattern.slice(startSelection, endSelection);
         result.splice(startSelection, endSelection - startSelection, ...clearData);
       }
@@ -259,7 +254,7 @@
 
       } else {
         if (e.key === 'Backspace') {
-          if (!IsSelectionTrue && result[focus - 1] !== '(') {
+          if (!IsSelection && result[focus - 1] !== '(') {
             let insert;
             switch (result[this.selectionStart - 1]) {
               case ' ' :
@@ -277,8 +272,7 @@
           }
         }
 
-        if (e.key === 'Delete' && !IsSelectionTrue) {
-          // console.log('Delete');
+        if (e.key === 'Delete' && !IsSelection) {
           let index = result.slice(focus).findIndex(function (item) {
             return /\d/.test(item)
           });
@@ -289,7 +283,6 @@
       }
 
       this.value = result.join('');
-
       this.selectionStart = this.selectionEnd = focus + 1;
 
       if (!/\d/.test(e.key)) {
@@ -303,7 +296,6 @@
   let deleteHandler = function (e) {
     if (e.target === phone) {
       phone.removeEventListener('paste', pasteValue);
-      phone.removeEventListener('select', selectValue);
       phone.removeEventListener('keydown', enterValue);
     }
 
@@ -326,7 +318,6 @@
       });
       initialValue = '';
       phone.addEventListener('paste', pasteValue);
-      phone.addEventListener('select', selectValue);
       phone.addEventListener('keydown', enterValue);
     }
 
