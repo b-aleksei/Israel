@@ -186,11 +186,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     doAction: doAction,
     endAction: endAction
   };
-  openClosePopup(modalCall); // modalCall = null
-  // ======================валидация телефона===================================================
+  openClosePopup(modalCall); // ======================валидация телефона===================================================
 
   var START_INDEX = 4;
-  var CLOSE_BRACE = 6;
+  var CLOSE_BRACE = 6; // индекс перед закрывающей скобкой
+
   var FIRST_NUMBER = "7";
   var marker = '_';
   var sep = ' ';
@@ -200,7 +200,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var pattern = ['+', FIRST_NUMBER, ' ', '(', marker, marker, marker, ')', ' ', marker, marker, marker, sep, marker, marker, sep, marker, marker];
   var controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
   var result = pattern.slice();
-  var focus;
+  var focus = null;
   var initialValue = pattern.join('');
 
   var checkValidity = function checkValidity(inp) {
@@ -241,8 +241,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var IsSelection = startSelection !== endSelection;
 
     if (!e.ctrlKey) {
-      // всегда начинать с первого символа в скобках
-      focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
+      // всегда начинать с первого символа в скобках кроме комбинаций с ctrl
+      focus = startSelection < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
     }
 
     var isControlKey = controlKeys.some(function (key) {
@@ -261,14 +261,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       if (/\d/.test(e.key) && focus < result.length) {
+        // если число то в ближайший маркер записываем его
         var index = result.indexOf(marker);
         var separator = result.indexOf(sep, this.selectionStart);
 
         if (index === -1) {
-          for (var i = this.selectionStart; i < result.length; i++) {
-            index = i;
-            if (/\d/.test(result[i])) break;
-          }
+          // если все заполнено то перезаписываем последующий
+          index = this.selectionStart > START_INDEX ? this.selectionStart : START_INDEX;
         }
 
         result[index] = e.key;
@@ -276,6 +275,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } else {
         if (e.key === 'Backspace') {
           if (!IsSelection && result[focus - 1] !== '(') {
+            console.log('true');
             var insert;
 
             switch (result[this.selectionStart - 1]) {
@@ -341,6 +341,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       _phone.value = _phone.value || storage[_phone.name] || initialValue;
       setTimeout(function () {
         _phone.selectionStart = _phone.selectionEnd = focus || START_INDEX;
+        console.log(focus);
       });
       initialValue = '';
 

@@ -113,10 +113,9 @@
   }
 
   openClosePopup(modalCall);
-  // modalCall = null
   // ======================валидация телефона===================================================
   const START_INDEX = 4;
-  const CLOSE_BRACE = 6;
+  const CLOSE_BRACE = 6; // индекс перед закрывающей скобкой
   const FIRST_NUMBER = "7";
   let marker = '_';
   let sep = ' ';
@@ -126,7 +125,7 @@
   let pattern = ['+', FIRST_NUMBER, ' ', '(', marker, marker, marker, ')', ' ', marker, marker, marker, sep, marker, marker, sep, marker, marker];
   let controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
   let result = pattern.slice();
-  let focus;
+  let focus = null;
   let initialValue = pattern.join('');
 
   let checkValidity = function (inp) {
@@ -163,8 +162,8 @@
     startSelection = this.selectionStart;
     endSelection = this.selectionEnd;
     let IsSelection = startSelection !== endSelection;
-    if (!e.ctrlKey) { // всегда начинать с первого символа в скобках
-      focus = this.selectionStart < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
+    if (!e.ctrlKey) { // всегда начинать с первого символа в скобках кроме комбинаций с ctrl
+      focus = startSelection < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
     }
 
     let isControlKey = controlKeys.some(function (key) {
@@ -177,15 +176,12 @@
         let clearData = pattern.slice(startSelection, endSelection);
         result.splice(startSelection, endSelection - startSelection, ...clearData);
       }
-      if (/\d/.test(e.key) && focus < result.length) {
+      if (/\d/.test(e.key) && focus < result.length) { // если число то в ближайший маркер записываем его
         let index = result.indexOf(marker);
         let separator = result.indexOf(sep, this.selectionStart);
 
-        if (index === -1) {
-          for (let i = this.selectionStart; i < result.length; i++) {
-            index = i;
-            if (/\d/.test(result[i])) break;
-          }
+        if (index === -1) { // если все заполнено то перезаписываем последующий
+          index = this.selectionStart > START_INDEX ? this.selectionStart : START_INDEX
         }
         result[index] = e.key;
         focus = ( index === CLOSE_BRACE ) ? CLOSE_BRACE + 2 : ( separator - index === 1 ) ? index + 1 : index;
@@ -193,6 +189,7 @@
       } else {
         if (e.key === 'Backspace') {
           if (!IsSelection && result[focus - 1] !== '(') {
+            console.log('true');
             let insert;
             switch (result[this.selectionStart - 1]) {
               case ' ' :
@@ -253,6 +250,7 @@
       phone.value = phone.value || storage[phone.name] || initialValue;
       setTimeout(function () {
         phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
+        console.log(focus);
       });
       initialValue = '';
       phone.addEventListener('paste', pasteValue);
