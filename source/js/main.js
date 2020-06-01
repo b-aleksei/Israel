@@ -62,7 +62,7 @@
 
 "use strict";
 
-( function () {
+// ( function () {
 
   let pageForms = document.querySelectorAll('[data-send-form]');
   let storage = {};
@@ -243,7 +243,15 @@
         let separator = result.indexOf(sep, this.selectionStart);
 
         if (index === -1) { // если все заполнено то перезаписываем последующий
-          index = this.selectionStart > START_INDEX ? this.selectionStart : START_INDEX
+          if (this.selectionStart < START_INDEX) {
+            index = START_INDEX
+          } else {
+            for (let i = this.selectionStart; i < result.length; i++) {
+              index = i;
+              if (/\d/.test(result[i])) break;
+            }
+          }
+          console.log(index);
         }
         result[index] = e.key;
         focus = ( index === CLOSE_BRACE ) ? CLOSE_BRACE + 2 : ( separator - index === 1 ) ? index + 1 : index;
@@ -285,6 +293,10 @@
       if (!/\d/.test(e.key)) {
         this.selectionStart = this.selectionEnd = focus;
       }
+    }
+
+    if (e.ctrlKey && e.code === 'KeyX') {
+      console.log('true');
     }
     checkValidity(this);
   };
@@ -350,7 +362,7 @@
     result = storage['phone'].split('')
   }
 
-} )();
+// } )();
 
 
 

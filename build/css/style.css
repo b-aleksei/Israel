@@ -1737,6 +1737,7 @@ body {
     border-color: #FFC341; }
 
 .contact {
+  position: relative;
   max-width: 1366px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1745,10 +1746,18 @@ body {
       flex-wrap: wrap;
   margin: auto;
   padding-top: 70px;
-  padding-left: 110px;
-  background-image: url("../img/bg/watercolor_Bg_six.png");
-  background-repeat: no-repeat;
-  background-position: 0 12px; }
+  padding-left: 110px; }
+  .contact::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1366px;
+    height: 811px;
+    background-image: url("../img/bg/watercolor_Bg_six.png");
+    background-repeat: no-repeat;
+    background-position: 0 12px;
+    z-index: -1; }
 
 .contact__wrap-content {
   max-width: 520px;
