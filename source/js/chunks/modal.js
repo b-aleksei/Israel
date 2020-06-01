@@ -1,6 +1,6 @@
 "use strict";
 
-// ( function () {
+( function () {
 
   let pageForms = document.querySelectorAll('[data-send-form]');
   let storage = {};
@@ -113,6 +113,7 @@
   }
 
   openClosePopup(modalCall);
+
   // ======================валидация телефона===================================================
   const START_INDEX = 4;
   const CLOSE_BRACE = 6; // индекс перед закрывающей скобкой
@@ -159,8 +160,15 @@
   };
 
   let enterValue = function (e) {
+
     startSelection = this.selectionStart;
     endSelection = this.selectionEnd;
+
+    let clearData = function () { // если было выделение очистить выделенное
+      let arr = pattern.slice(startSelection, endSelection);
+    result.splice(startSelection, endSelection - startSelection, ...arr);
+    }
+
     let IsSelection = startSelection !== endSelection;
     if (!e.ctrlKey) { // всегда начинать с первого символа в скобках кроме комбинаций с ctrl
       focus = startSelection < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
@@ -171,10 +179,9 @@
     })
 
     if (!isControlKey && !e.ctrlKey) {
-      e.preventDefault();
+
       if (IsSelection) {
-        let clearData = pattern.slice(startSelection, endSelection);
-        result.splice(startSelection, endSelection - startSelection, ...clearData);
+        clearData()
       }
       if (/\d/.test(e.key) && focus < result.length) { // если число то в ближайший маркер записываем его
         let index = result.indexOf(marker);
@@ -189,7 +196,6 @@
               if (/\d/.test(result[i])) break;
             }
           }
-          console.log(index);
         }
         result[index] = e.key;
         focus = ( index === CLOSE_BRACE ) ? CLOSE_BRACE + 2 : ( separator - index === 1 ) ? index + 1 : index;
@@ -197,7 +203,6 @@
       } else {
         if (e.key === 'Backspace') {
           if (!IsSelection && result[focus - 1] !== '(') {
-            console.log('true');
             let insert;
             switch (result[this.selectionStart - 1]) {
               case ' ' :
@@ -231,10 +236,11 @@
       if (!/\d/.test(e.key)) {
         this.selectionStart = this.selectionEnd = focus;
       }
+      e.preventDefault();
     }
 
     if (e.ctrlKey && e.code === 'KeyX') {
-      console.log('true');
+      clearData()
     }
     checkValidity(this);
   };
@@ -262,7 +268,6 @@
       phone.value = phone.value || storage[phone.name] || initialValue;
       setTimeout(function () {
         phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
-        console.log(focus);
       });
       initialValue = '';
       phone.addEventListener('paste', pasteValue);
@@ -300,7 +305,7 @@
     result = storage['phone'].split('')
   }
 
-// } )();
+} )();
 
 
 

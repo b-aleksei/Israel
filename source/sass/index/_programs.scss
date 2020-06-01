@@ -37,6 +37,7 @@
 
 .programs__type {
   display: flex;
+  flex-wrap: wrap;
   position: relative;
   width: 100%;
   min-height: 68px;
@@ -45,16 +46,17 @@
   @include font(15, 1.2);
   color: $blackLight;
   cursor: pointer;
+  word-break: break-word;
 
   &::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    border-top: 34px solid white;
-    border-right: none;
-    border-bottom: 34px solid white;
-    border-left: 30px solid transparent;
+    bottom: 0;
+    width: 34px;
+    background: linear-gradient(-45deg, white 24px, transparent 24px),
+    linear-gradient(-135deg, white 24px, transparent 24px);
   }
 
   &:hover {
@@ -194,7 +196,7 @@
   .programs__captions {
     position: relative;
     display: flex;
-    width: 765px;
+    width: 770px;
     flex-shrink: initial;
   }
 
