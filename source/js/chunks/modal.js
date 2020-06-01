@@ -286,11 +286,15 @@
 
   // всем инпутам ставим значение из localStorage
   inputs.forEach(function (input) {
+    input.parentElement.classList.remove('invalid')
     let value = storage[input.name] = localStorage.getItem(input.name)
     if (value) {
       input.value = value
     }
   })
+  if (storage['phone']) {
+    result = storage['phone'].split('')
+  }
 
 } )();
 

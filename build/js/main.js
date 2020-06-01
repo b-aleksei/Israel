@@ -376,12 +376,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   }); // всем инпутам ставим значение из localStorage
 
   inputs.forEach(function (input) {
+    input.parentElement.classList.remove('invalid');
     var value = storage[input.name] = localStorage.getItem(input.name);
 
     if (value) {
       input.value = value;
     }
   });
+
+  if (storage['phone']) {
+    result = storage['phone'].split('');
+  }
 })();
 
 "use strict"; //================================слайдер===========================
