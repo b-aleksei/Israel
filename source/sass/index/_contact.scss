@@ -115,6 +115,10 @@
   @include yellowButton(216px)
 }
 
+.contact__label.invalid::before {
+  top: -19px;
+}
+
 @media (max-width: $tabletMax) {
 
   .contact {
@@ -170,6 +174,10 @@
   .contact__submit {
     width: 265px;
     margin-top: 17px;
+  }
+
+  .contact__label--phone.invalid::before {
+    top: 62px;
   }
 }
 

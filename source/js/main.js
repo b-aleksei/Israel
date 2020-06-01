@@ -224,6 +224,8 @@
   let selectValue = function () {
     startSelection = this.selectionStart;
     endSelection = this.selectionEnd;
+    // console.log('selectHandlerStart',startSelection);
+    // console.log('selectHandlerEnd',endSelection);
   };
 
   let enterValue = function (e) {
@@ -276,6 +278,7 @@
         }
 
         if (e.key === 'Delete' && !IsSelectionTrue) {
+          // console.log('Delete');
           let index = result.slice(focus).findIndex(function (item) {
             return /\d/.test(item)
           });

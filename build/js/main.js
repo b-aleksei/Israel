@@ -237,7 +237,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var selectValue = function selectValue() {
     startSelection = this.selectionStart;
-    endSelection = this.selectionEnd;
+    endSelection = this.selectionEnd; // console.log('selectHandlerStart',startSelection);
+    // console.log('selectHandlerEnd',endSelection);
   };
 
   var enterValue = function enterValue(e) {
@@ -299,6 +300,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         if (e.key === 'Delete' && !IsSelectionTrue) {
+          // console.log('Delete');
           var _index = result.slice(focus).findIndex(function (item) {
             return /\d/.test(item);
           });

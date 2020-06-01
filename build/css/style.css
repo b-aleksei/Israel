@@ -1876,6 +1876,9 @@ body {
   word-break: break-word;
   cursor: pointer; }
 
+.contact__label.invalid::before {
+  top: -19px; }
+
 @media (max-width: 1365px) {
   .contact {
     -webkit-box-orient: vertical;
@@ -1930,7 +1933,9 @@ body {
     margin-bottom: 8px; }
   .contact__submit {
     width: 265px;
-    margin-top: 17px; } }
+    margin-top: 17px; }
+  .contact__label--phone.invalid::before {
+    top: 62px; } }
 
 @media (max-width: 767px) {
   .contact {
