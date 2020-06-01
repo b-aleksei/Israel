@@ -200,6 +200,7 @@ body {
   margin: auto; }
 
 .about__title {
+  position: relative;
   font-family: "Montserrat", "Arial", sans-serif;
   font-weight: 600;
   color: #1FC0FC;
@@ -209,7 +210,8 @@ body {
   line-height: 1.2;
   margin-top: -11px;
   margin-bottom: 26px;
-  text-align: center; }
+  text-align: center;
+  z-index: 2; }
 
 .about__content {
   padding: 0 91px;

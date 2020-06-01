@@ -1,19 +1,26 @@
 "use strict";
-// для поддержки forEach в IE11
-
 
 ( function () {
 
-  let onPopupOpener = function (obj) {
+  let pageForms = document.querySelectorAll('[data-send-form]');
+  let storage = {};
+  let form = document.querySelector(".modal__form");
+  let inputsModal = form.querySelectorAll(".modal__input");
+  let phone = form.querySelector('.modal__input-phone');
+  let name = form.querySelector('.modal__input-name');
+  let contactName = document.querySelector('.contact__input--name');
+  let inputs = document.querySelectorAll('input:not([type=checkbox])');
+
+  let openClosePopup = function (obj) {
 
     let {
       overlay, // оверлей с модальным окном
       classHidden, // класс с dispay: none
-      buttonsOpener, // кнопки открытия окна
-      buttonsClose, // кнопки закрытия окна
+      buttonsOpener, // кнопки открытия окна(массив)
+      buttonsClose, // кнопки закрытия окна(массив)
       doAction, // что то сделать при открытии мод. окна
       endAction // что то сделать при закрытии мод. окна
-  } = obj
+    } = obj
 
     let body = document.body
     // открытие попапа
@@ -30,7 +37,6 @@
       body.classList.add('body-lock')
       body.style.top = body.dataset.scrollY + 'px'
     }
-
 //  Обработчик на оверлее для закрытия попапа по клику на нем или на соотв. кнопки
     let onCloseModalMouse = function (e) {
       e.stopPropagation();
@@ -67,23 +73,13 @@
     } else openPopup()
   }
 
-  let pageForms = document.querySelectorAll('[data-send-form]');
-  let storage = {};
-  let form = document.querySelector(".modal__form");
-  let inputsModal = form.querySelectorAll(".modal__input");
-  let phone = form.querySelector('.modal__input-phone');
-  let name = form.querySelector('.modal__input-name');
-
-  inputsModal.forEach(function (input) {
-    storage[input.name] = localStorage.getItem(input.name)
-  })
 
   let submitForm = function (e) {
     inputsModal.forEach(function (input) {
       storage[input.name] = localStorage.setItem(input.name, input.value)
     })
     modalCall.overlay.classList.add(modalCall.classHidden);
-    onPopupOpener(modalSuccess)
+    openClosePopup(modalSuccess)
     e.preventDefault();
   }
 
@@ -91,10 +87,6 @@
     form.addEventListener('focusin', onValidate);
     name.focus();
     inputsModal.forEach(function (input) {
-      let value = storage[input.name]
-      if (value) {
-        input.value = value
-      }
       input.parentElement.classList.remove('invalid');
     })
     form.addEventListener("submit", submitForm)
@@ -120,8 +112,8 @@
     endAction
   }
 
-  onPopupOpener(modalCall);
-
+  openClosePopup(modalCall);
+  // modalCall = null
   // ======================валидация телефона===================================================
   const START_INDEX = 4;
   const CLOSE_BRACE = 6;
@@ -251,15 +243,14 @@
     }
 
     if (e.target === name) {
-      name.removeEventListener('input', checkInputName);
+      name.removeEventListener('input', checkContactName);
     }
     form.removeEventListener('focusout', deleteHandler);
   }
 
-  let checkInputName = function () {
-    checkValidity(name)
+  let checkContactName = function () {
+    checkValidity(contactName)
   }
-
 
   let onValidate = function (e) {
     if (e.target.name === 'phone') {
@@ -276,24 +267,30 @@
 
     if (e.target.name === 'name') {
       let name = e.target;
-      name.value = storage[name.name] || name.value;
-      name.addEventListener('input', checkInputName);
+      name.addEventListener('input', checkContactName);
     }
     this.addEventListener('focusout', deleteHandler);
   }
 
   // валидация форм на главной странице
   pageForms.forEach(function (form) {
-    let inputs = form.querySelectorAll('input:not([type=checkbox])');
     form.addEventListener('focusin', onValidate);
     form.addEventListener('submit', function (e) {
       inputs.forEach(function (input) {
         storage[input.name] = localStorage.setItem(input.name, input.value)
       })
-      onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+      openClosePopup(modalSuccess);
       e.preventDefault();
     });
   });
+
+  // всем инпутам ставим значение из localStorage
+  inputs.forEach(function (input) {
+    let value = storage[input.name] = localStorage.getItem(input.name)
+    if (value) {
+      input.value = value
+    }
+  })
 
 } )();
 

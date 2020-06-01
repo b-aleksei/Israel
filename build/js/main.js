@@ -74,11 +74,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   });
 })();
 
-"use strict"; // для поддержки forEach в IE11
-
+"use strict";
 
 (function () {
-  var onPopupOpener = function onPopupOpener(obj) {
+  var pageForms = document.querySelectorAll('[data-send-form]');
+  var storage = {};
+  var form = document.querySelector(".modal__form");
+  var inputsModal = form.querySelectorAll(".modal__input");
+  var phone = form.querySelector('.modal__input-phone');
+  var name = form.querySelector('.modal__input-name');
+  var contactName = document.querySelector('.contact__input--name');
+  var inputs = document.querySelectorAll('input:not([type=checkbox])');
+
+  var openClosePopup = function openClosePopup(obj) {
     var overlay = obj.overlay,
         classHidden = obj.classHidden,
         buttonsOpener = obj.buttonsOpener,
@@ -142,22 +150,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } else openPopup();
   };
 
-  var pageForms = document.querySelectorAll('[data-send-form]');
-  var storage = {};
-  var form = document.querySelector(".modal__form");
-  var inputsModal = form.querySelectorAll(".modal__input");
-  var phone = form.querySelector('.modal__input-phone');
-  var name = form.querySelector('.modal__input-name');
-  inputsModal.forEach(function (input) {
-    storage[input.name] = localStorage.getItem(input.name);
-  });
-
   var submitForm = function submitForm(e) {
     inputsModal.forEach(function (input) {
       storage[input.name] = localStorage.setItem(input.name, input.value);
     });
     modalCall.overlay.classList.add(modalCall.classHidden);
-    onPopupOpener(modalSuccess);
+    openClosePopup(modalSuccess);
     e.preventDefault();
   };
 
@@ -165,12 +163,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     form.addEventListener('focusin', onValidate);
     name.focus();
     inputsModal.forEach(function (input) {
-      var value = storage[input.name];
-
-      if (value) {
-        input.value = value;
-      }
-
       input.parentElement.classList.remove('invalid');
     });
     form.addEventListener("submit", submitForm);
@@ -194,7 +186,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     doAction: doAction,
     endAction: endAction
   };
-  onPopupOpener(modalCall); // ======================валидация телефона===================================================
+  openClosePopup(modalCall); // modalCall = null
+  // ======================валидация телефона===================================================
 
   var START_INDEX = 4;
   var CLOSE_BRACE = 6;
@@ -335,14 +328,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (e.target === name) {
-      name.removeEventListener('input', checkInputName);
+      name.removeEventListener('input', checkContactName);
     }
 
     form.removeEventListener('focusout', deleteHandler);
   };
 
-  var checkInputName = function checkInputName() {
-    checkValidity(name);
+  var checkContactName = function checkContactName() {
+    checkValidity(contactName);
   };
 
   var onValidate = function onValidate(e) {
@@ -363,9 +356,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (e.target.name === 'name') {
       var _name = e.target;
-      _name.value = storage[_name.name] || _name.value;
 
-      _name.addEventListener('input', checkInputName);
+      _name.addEventListener('input', checkContactName);
     }
 
     this.addEventListener('focusout', deleteHandler);
@@ -373,15 +365,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   pageForms.forEach(function (form) {
-    var inputs = form.querySelectorAll('input:not([type=checkbox])');
     form.addEventListener('focusin', onValidate);
     form.addEventListener('submit', function (e) {
       inputs.forEach(function (input) {
         storage[input.name] = localStorage.setItem(input.name, input.value);
       });
-      onPopupOpener(modalSuccess, classHiddenSuccess, '', modalSuccessClose);
+      openClosePopup(modalSuccess);
       e.preventDefault();
     });
+  }); // всем инпутам ставим значение из localStorage
+
+  inputs.forEach(function (input) {
+    var value = storage[input.name] = localStorage.getItem(input.name);
+
+    if (value) {
+      input.value = value;
+    }
   });
 })();
 
@@ -433,8 +432,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (indicator) {
       window.onresize = function () {
         // обработчик на изменение ширины окна
-        console.log(document.documentElement.clientWidth);
-
         if (document.documentElement.clientWidth >= 767) {
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
           translate = 0;

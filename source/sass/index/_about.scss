@@ -10,10 +10,12 @@
 }
 
 .about__title {
+  position: relative;
 @include header();
   margin-top: -11px;
   margin-bottom: 26px;
   text-align: center;
+  z-index: 2;
 }
 
 .about__content {
