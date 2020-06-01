@@ -115,7 +115,7 @@
   @include yellowButton(216px)
 }
 
-@media (max-width: 1365px) {
+@media (max-width: $tabletMax) {
 
   .contact {
     flex-direction: column;
@@ -196,7 +196,7 @@
 
   .contact__city {
     width: 100%;
-    margin-left: 10px;
+    margin-left: 5px;
   }
 
   .contact__content {
@@ -229,7 +229,6 @@
 
   .contact__text {
     margin-bottom: 33px;
-    width: 100%;
     max-width: 500px;
   }
 

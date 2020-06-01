@@ -57,7 +57,7 @@
   height: auto;
 }
 
-@media (max-width: 1365px) {
+@media (max-width: $tabletMax) {
   .faq {
     padding-left: 30px;
   }

@@ -63,7 +63,6 @@
 
     if (indicator) {
       window.onresize = function () { // обработчик на изменение ширины окна
-        console.log(document.documentElement.clientWidth);
         if (document.documentElement.clientWidth >= 767) {
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
           translate = 0

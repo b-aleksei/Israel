@@ -131,7 +131,7 @@
   }
 
 
-@media (max-width: 1365px) {
+@media (max-width: $tabletMax) {
   .condition {
     justify-content: space-around;
   }

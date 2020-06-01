@@ -1946,7 +1946,7 @@ body {
     padding-right: 17px; }
   .contact__city {
     width: 100%;
-    margin-left: 10px; }
+    margin-left: 5px; }
   .contact__content {
     font-size: 1.6rem;
     line-height: 1.62;
@@ -1968,7 +1968,6 @@ body {
     margin: 0 17px 0 15px; }
   .contact__text {
     margin-bottom: 33px;
-    width: 100%;
     max-width: 500px; }
   .contact__bold-text {
     font-size: 1.6rem; } }
