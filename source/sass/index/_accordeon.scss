@@ -5,7 +5,16 @@
 }
 
 .accordion__toggle {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
 }
 
 .accordion__title {
@@ -44,6 +53,10 @@
   margin-bottom: 31px;
   height: auto;
   transition: height 500ms ease-in-out;
+}
+
+.accordion__toggle:focus + label {
+  outline: 1px dashed $black;
 }
 
 .accordion__toggle:checked + label {

@@ -391,7 +391,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 (function () {
   var sliderGallery = document.querySelector('.gallery__slider');
   var galleryList = sliderGallery.querySelector('.gallery__list');
-  galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' + '    <picture>\n' + '      <source type="image/webp" media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">\n' + '      <source media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' + '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' + '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' + '           height="732" alt="фоновое изображение">\n' + '    </picture>\n' + '  </li>');
+  galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' + '    <picture>\n' + '      <source type="image/webp" media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">\n' + '      <source media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' + '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' + '      <!-- 1x: 482; 2x 964px -->' + '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' + '           height="732" alt="фоновое изображение">\n' + '    </picture>\n' + '  </li>');
   var indicatorContainer = sliderGallery.querySelector('.slider__indicators');
   sliderGallery.classList.remove('no-js'); //=======================================================================
 
@@ -399,15 +399,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   var displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   var autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
+  var links = document.querySelectorAll('.feedback__details');
   var objGallery = {
     slider: document.querySelector('.gallery__slider'),
     indicator: true
   };
   var objFeedback = {
     slider: document.querySelector('.feedback'),
-    DelayForStart: 5000,
-    timeShowSlide: 4000,
-    counter: true
+    // DelayForStart: 5000,
+    // timeShowSlide: 4000,
+    counter: true,
+    tabIndex: true
   };
 
   var startSlider = function startSlider(obj) {
@@ -415,7 +417,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         DelayForStart = obj.DelayForStart,
         timeShowSlide = obj.timeShowSlide,
         counter = obj.counter,
-        indicator = obj.indicator;
+        indicator = obj.indicator,
+        tabIndex = obj.tabIndex;
     var buttonForward = slider.querySelector(".slider__forward");
     var buttonBack = slider.querySelector(".slider__back");
     var slideContainer = slider.querySelector('.slider__list');
@@ -442,6 +445,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           buttonBack.disabled = true;
         }
       };
+      /*     if(tabIndex) {
+             links.children[translate].tabIndex = 0;
+           }*/
+
 
       for (var i = 0; i < amountSlides; i++) {
         // добавляем индикаторы слайдов
@@ -508,6 +515,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
         }
 
+        if (tabIndex) {
+          links[translate].tabIndex = -1;
+        }
+
         if (forward && translate < amountSlides - 1) {
           buttonBack.disabled = false;
           translate += 1;
@@ -518,6 +529,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (indicator) {
           indicatorContainer.children[translate].classList.add('slider__ind-color');
+        }
+
+        if (tabIndex) {
+          links[translate].tabIndex = 0;
         }
 
         if (counter) {

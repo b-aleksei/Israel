@@ -334,7 +334,17 @@ body {
   margin-bottom: 67px; }
 
 .programs__toggle {
-  display: none; }
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-clip-path: inset(100%);
+          clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden; }
 
 .programs__block {
   display: -webkit-box;
@@ -446,6 +456,13 @@ body {
   font-variant: small-caps;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   color: white; }
+
+#share:focus ~ .programs__block .programs__type--share,
+#academy:focus ~ .programs__block .programs__type--academy,
+#stage:focus ~ .programs__block .programs__type--stage,
+#voluntary:focus ~ .programs__block .programs__type--voluntary,
+#religious:focus ~ .programs__block .programs__type--religious {
+  outline: 1px dashed #484848; }
 
 #share:checked ~ .programs__block .programs__content {
   -webkit-transform: translate(0%);
@@ -1388,7 +1405,17 @@ body {
   list-style: none; }
 
 .accordion__toggle {
-  display: none; }
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-clip-path: inset(100%);
+          clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden; }
 
 .accordion__title {
   position: relative;
@@ -1424,6 +1451,9 @@ body {
   height: auto;
   -webkit-transition: height 500ms ease-in-out;
   transition: height 500ms ease-in-out; }
+
+.accordion__toggle:focus + label {
+  outline: 1px dashed #484848; }
 
 .accordion__toggle:checked + label::before {
   -webkit-transform: translate(4px, 8px) rotate(45deg);

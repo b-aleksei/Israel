@@ -17,7 +17,16 @@
 }
 
 .programs__toggle {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
 }
 
 .programs__block {
@@ -119,6 +128,14 @@
   font-variant: small-caps;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   color: white;
+}
+
+#share:focus ~ .programs__block .programs__type--share,
+#academy:focus ~ .programs__block .programs__type--academy,
+#stage:focus ~ .programs__block .programs__type--stage,
+#voluntary:focus ~ .programs__block .programs__type--voluntary,
+#religious:focus ~ .programs__block .programs__type--religious {
+  outline: 1px dashed $black;
 }
 
 #share:checked ~ .programs__block .programs__content {

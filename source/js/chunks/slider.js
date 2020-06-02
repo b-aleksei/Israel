@@ -11,6 +11,7 @@
     '      <source media="(max-width: 767px)"\n' +
     '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' +
     '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' +
+    '      <!-- 1x: 482; 2x 964px -->' +
     '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' +
     '           height="732" alt="фоновое изображение">\n' +
     '    </picture>\n' +
@@ -22,7 +23,7 @@
   let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
-
+  let links = document.querySelectorAll('.feedback__details');
 
   let objGallery = {
     slider: document.querySelector('.gallery__slider'),
@@ -31,9 +32,10 @@
 
   let objFeedback = {
     slider: document.querySelector('.feedback'),
-    DelayForStart: 5000,
-    timeShowSlide: 4000,
+    // DelayForStart: 5000,
+    // timeShowSlide: 4000,
     counter: true,
+    tabIndex: true
   }
 
   let startSlider = function (obj) {
@@ -43,7 +45,8 @@
       DelayForStart,
       timeShowSlide,
       counter,
-      indicator
+      indicator,
+      tabIndex
     } = obj
 
     let buttonForward = slider.querySelector(".slider__forward");
@@ -72,6 +75,10 @@
           buttonBack.disabled = true;
         }
       }
+
+ /*     if(tabIndex) {
+        links.children[translate].tabIndex = 0;
+      }*/
 
       for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
         indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
@@ -109,6 +116,9 @@
         if (indicator) { // для индикации слайдов
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
         }
+        if(tabIndex) {
+          links[translate].tabIndex = -1;
+        }
         if (forward && translate < amountSlides - 1) {
           buttonBack.disabled = false;
           translate += 1;
@@ -118,6 +128,9 @@
         }
         if (indicator) {
           indicatorContainer.children[translate].classList.add('slider__ind-color');
+        }
+        if(tabIndex) {
+          links[translate].tabIndex = 0;
         }
         if (counter) {
           displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
