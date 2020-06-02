@@ -399,15 +399,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   var displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   var autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
-  var links = document.querySelectorAll('.feedback__details');
+  var listFeedback = sliderFeedback.querySelector('.feedback__list');
   var objGallery = {
     slider: document.querySelector('.gallery__slider'),
     indicator: true
   };
   var objFeedback = {
     slider: document.querySelector('.feedback'),
-    // DelayForStart: 5000,
-    // timeShowSlide: 4000,
+    DelayForStart: 5000,
+    timeShowSlide: 6000,
     counter: true,
     tabIndex: true
   };
@@ -445,10 +445,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           buttonBack.disabled = true;
         }
       };
-      /*     if(tabIndex) {
-             links.children[translate].tabIndex = 0;
-           }*/
-
 
       for (var i = 0; i < amountSlides; i++) {
         // добавляем индикаторы слайдов
@@ -458,12 +454,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       indicatorContainer.children[translate].classList.add('slider__ind-color');
     }
 
+    var getFeedbackLink = function getFeedbackLink() {
+      // вспомогательная функция, ищет элемент
+      return listFeedback.children[translate].querySelector('.feedback__details');
+    };
+
     if (amountSlides > 1) {
       //для автоматической прокрутки слайдов
       var scrollAuto = function scrollAuto() {
         slideContainer.classList.remove('slider__list--click-duration');
 
         if (translate === 0) {
+          if (tabIndex) {
+            getFeedbackLink().tabIndex = -1;
+          }
+
           disableButton();
           translate += 1;
           displayCurrentSlide.textContent = '1';
@@ -471,13 +476,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           moveSlide();
           translate -= 1;
           delaySlide = setTimeout(appendSlide, autoDuration);
-        }
-
-        if (translate > 0) {
-          while (translate > 0) {
-            translate--;
-            appendSlide();
-          }
         }
       };
 
@@ -516,7 +514,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         if (tabIndex) {
-          links[translate].tabIndex = -1;
+          // для отключения перехода на непереключеный слайд
+          getFeedbackLink().tabIndex = -1;
         }
 
         if (forward && translate < amountSlides - 1) {
@@ -532,7 +531,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         if (tabIndex) {
-          links[translate].tabIndex = 0;
+          getFeedbackLink().tabIndex = 0;
         }
 
         if (counter) {
@@ -541,10 +540,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         moveSlide();
         disableButton();
-
-        if (DelayForStart) {
-          startAutoScroll();
-        }
       };
 
       var appendSlide = function appendSlide() {
@@ -552,6 +547,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
         slideContainer.appendChild(slideContainer.firstElementChild);
+
+        if (tabIndex && translate === 0) {
+          // для отключения перехода на непереключеный слайд
+          getFeedbackLink().tabIndex = 0;
+        }
       };
 
       var startAutoScroll = function startAutoScroll() {

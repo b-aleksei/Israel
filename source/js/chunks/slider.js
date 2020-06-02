@@ -23,7 +23,9 @@
   let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
-  let links = document.querySelectorAll('.feedback__details');
+  let listFeedback = sliderFeedback.querySelector('.feedback__list');
+
+
 
   let objGallery = {
     slider: document.querySelector('.gallery__slider'),
@@ -32,8 +34,8 @@
 
   let objFeedback = {
     slider: document.querySelector('.feedback'),
-    // DelayForStart: 5000,
-    // timeShowSlide: 4000,
+    DelayForStart: 5000,
+    timeShowSlide: 6000,
     counter: true,
     tabIndex: true
   }
@@ -41,12 +43,12 @@
   let startSlider = function (obj) {
 
     let {
-      slider,
-      DelayForStart,
-      timeShowSlide,
-      counter,
-      indicator,
-      tabIndex
+      slider, // DOM элемент слайдера
+      DelayForStart, // через сколько времени запустить автоскролл(мс)
+      timeShowSlide, // время показа слада
+      counter, // нужен ли счетчик слайдов
+      indicator, // нужен ли индикатор слайдов
+      tabIndex // нужно ли отключать фокус на неактивных слайдах
     } = obj
 
     let buttonForward = slider.querySelector(".slider__forward");
@@ -75,15 +77,14 @@
           buttonBack.disabled = true;
         }
       }
-
- /*     if(tabIndex) {
-        links.children[translate].tabIndex = 0;
-      }*/
-
       for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
         indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
       }
       indicatorContainer.children[translate].classList.add('slider__ind-color');
+    }
+
+    let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
+      return listFeedback.children[translate].querySelector('.feedback__details');
     }
 
 
@@ -116,8 +117,8 @@
         if (indicator) { // для индикации слайдов
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
         }
-        if(tabIndex) {
-          links[translate].tabIndex = -1;
+        if(tabIndex) { // для отключения перехода на непереключеный слайд
+          getFeedbackLink().tabIndex = -1;
         }
         if (forward && translate < amountSlides - 1) {
           buttonBack.disabled = false;
@@ -130,28 +131,31 @@
           indicatorContainer.children[translate].classList.add('slider__ind-color');
         }
         if(tabIndex) {
-          links[translate].tabIndex = 0;
+          getFeedbackLink().tabIndex = 0;
         }
         if (counter) {
           displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
         }
         moveSlide();
         disableButton();
-        if (DelayForStart) {
-          startAutoScroll();
-        }
       };
 
       let appendSlide = function () { // переместить первый слайд в конец списка
         slideContainer.classList.remove('slider__list--auto-duration');
         moveSlide();
         slideContainer.appendChild(slideContainer.firstElementChild);
+        if(tabIndex && translate === 0) { // для отключения перехода на непереключеный слайд
+          getFeedbackLink().tabIndex = 0;
+        }
       }
 
       //для автоматической прокрутки слайдов
       function scrollAuto() {
         slideContainer.classList.remove('slider__list--click-duration');
         if (translate === 0) {
+          if(tabIndex) {
+            getFeedbackLink().tabIndex = -1;
+          }
           disableButton();
           translate += 1;
           displayCurrentSlide.textContent = '1';
@@ -159,12 +163,6 @@
           moveSlide();
           translate -= 1;
           delaySlide = setTimeout(appendSlide, autoDuration)
-        }
-        if (translate > 0) {
-          while (translate > 0) {
-            translate--
-            appendSlide()
-          }
         }
       }
 
