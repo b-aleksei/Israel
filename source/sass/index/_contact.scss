@@ -121,10 +121,16 @@
 
 .contact__input {
   width: 250px;
+
+  &:focus,
+  &:hover {
+    border-color: $yellow;
+    outline: none;
+  }
 }
 
 .contact__submit {
-  @include yellowButton(216px)
+  @include yellowButton(216px);
 }
 
 .contact__label.invalid::before {

@@ -122,6 +122,10 @@
     border-right: none;
     transform: rotate(45deg);
   }
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .feedback__btn:last-child::before {

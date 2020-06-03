@@ -64,10 +64,6 @@
   margin: 0 auto 17px auto;
 }
 
-.modal__check {
-  display: none;
-}
-
 .modal__apply {
   position: relative;
   display: block;
@@ -84,6 +80,13 @@
     width: 15px;
     height: 15px;
     border: 2px solid $yellow;
+  }
+}
+
+.modal__apply.invalid {
+
+  &::before {
+    border: 2px solid $errorColor;
   }
 }
 

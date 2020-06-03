@@ -50,10 +50,11 @@
   let pageForms = document.querySelectorAll('[data-send-form]');
   let storage = {};
   let form = document.querySelector(".modal__form");
-  let inputsModal = form.querySelectorAll(".modal__input");
+  let inputsModal = form.querySelectorAll("input");
   let phone = form.querySelector('.modal__input-phone');
   let name = form.querySelector('.modal__input-name');
-  let contactName = document.querySelector('.contact__input--name');
+  let checkBox = form.querySelector('.modal__check');
+  let checkBoxApply = form.querySelector('.modal__apply');
   let inputs = document.querySelectorAll('input:not([type=checkbox])');
 
   let openClosePopup = function (obj) {
@@ -130,6 +131,8 @@
 
   let doAction = function () {
     form.addEventListener('focusin', onValidate);
+    checkBoxApply.classList.remove('invalid')
+    checkValidity.call(checkBox)
     name.focus();
     inputsModal.forEach(function (input) {
       input.parentElement.classList.remove('invalid');
@@ -204,22 +207,34 @@
   };
 
   let checkValidity = function () {
-    if (!this.validity.valid) {
-      this.parentElement.classList.remove('valid')
-      this.parentElement.classList.add('invalid')
-    } else {
-      this.parentElement.classList.remove('invalid')
-      this.parentElement.classList.add('valid')
+    if (this.name === 'accept' && !this.validity.valid) {
+      checkBoxApply.classList.add('invalid')
+    }
+    else if (this.name === 'accept' && this.validity.valid) {
+      checkBoxApply.classList.remove('invalid')
+    }
+    else {
+      if (!this.validity.valid) {
+        this.parentElement.classList.remove('valid')
+        this.parentElement.classList.add('invalid')
+      } else {
+        this.parentElement.classList.remove('invalid')
+        this.parentElement.classList.add('valid')
+      }
     }
   };
-
+// обработчик события focus на форме
   let onValidate = function (e) {
-    if (e.target.name === 'phone' ) {
+    if (e.target.name === 'phone') {
       e.target.addEventListener('keydown', enterPhoneValue);
     }
 
     if (e.target.name === 'name') {
       e.target.addEventListener('input', checkValidity);
+    }
+
+    if (e.target.name === 'accept') {
+      e.target.addEventListener('change', checkValidity);
     }
     this.addEventListener('focusout', deleteHandler);
   }
@@ -230,6 +245,10 @@
     }
     if (e.target.name === 'name') {
       name.removeEventListener('input', checkValidity);
+    }
+
+    if (e.target.name === 'accept') {
+      e.target.removeEventListener('change', checkValidity);
     }
     form.removeEventListener('focusout', deleteHandler);
   }
@@ -249,6 +268,7 @@
   // всем инпутам ставим значение из localStorage
   inputs.forEach(function (input) {
     input.parentElement.classList.remove('invalid')
+    input.parentElement.classList.remove('valid')
     input.value = storage[input.name] = localStorage.getItem(input.name)
   })
 

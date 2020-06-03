@@ -268,6 +268,8 @@ body {
     border-right: none;
     border-bottom: 10px solid transparent;
     border-left: 18px solid #1FC0FC; }
+  .about__play:focus {
+    outline: none; }
   .about__play:hover::before {
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); }
@@ -457,13 +459,6 @@ body {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   color: white; }
 
-#share:focus ~ .programs__block .programs__type--share,
-#academy:focus ~ .programs__block .programs__type--academy,
-#stage:focus ~ .programs__block .programs__type--stage,
-#voluntary:focus ~ .programs__block .programs__type--voluntary,
-#religious:focus ~ .programs__block .programs__type--religious {
-  outline: 1px dashed #484848; }
-
 #share:checked ~ .programs__block .programs__content {
   -webkit-transform: translate(0%);
           transform: translate(0%); }
@@ -626,8 +621,9 @@ body {
     opacity: 0.5; }
   .trip__input::placeholder {
     opacity: 0.5; }
-  .trip__input:focus {
-    border-color: #FFC341; }
+  .trip__input:focus, .trip__input:hover {
+    border-color: #FFC341;
+    outline: none; }
 
 .trip__submit {
   position: relative;
@@ -636,7 +632,7 @@ body {
   padding: 20px 20px;
   text-align: center;
   text-decoration: none;
-  background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%);
+  background: linear-gradient(142.39deg, #FFC341 20.46%, #FFD701 65.31%);
   border: none;
   border-radius: 80px;
   text-transform: uppercase;
@@ -650,6 +646,11 @@ body {
   cursor: pointer;
   margin-left: -46px;
   z-index: 1; }
+  .trip__submit:hover, .trip__submit:focus {
+    outline: none;
+    background: linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
+  .trip__submit:active {
+    background: radial-gradient(150% 119.49% at 50% 50.85%, rgba(0, 0, 0, 0) 30.67%, rgba(3, 3, 3, 0.24) 100%), linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
 
 .trip__label.invalid::before {
   top: -20px; }
@@ -1211,7 +1212,7 @@ body {
   padding: 19px 20px;
   text-align: center;
   text-decoration: none;
-  background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%);
+  background: linear-gradient(142.39deg, #FFC341 20.46%, #FFD701 65.31%);
   border: none;
   border-radius: 80px;
   text-transform: uppercase;
@@ -1235,6 +1236,13 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
   cursor: pointer; }
+  .detail__btn:hover, .detail__btn:focus {
+    outline: none;
+    background: linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
+  .detail__btn:active {
+    background: radial-gradient(150% 119.49% at 50% 50.85%, rgba(0, 0, 0, 0) 30.67%, rgba(3, 3, 3, 0.24) 100%), linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
+  .detail__btn:focus {
+    outline: none; }
 
 .detail__btn svg {
   -ms-flex-negative: 0;
@@ -1452,9 +1460,6 @@ body {
   -webkit-transition: height 500ms ease-in-out;
   transition: height 500ms ease-in-out; }
 
-.accordion__toggle:focus + label {
-  outline: 1px dashed #484848; }
-
 .accordion__toggle:checked + label::before {
   -webkit-transform: translate(4px, 8px) rotate(45deg);
           transform: translate(4px, 8px) rotate(45deg); }
@@ -1608,6 +1613,8 @@ body {
     border-right: none;
     -webkit-transform: rotate(45deg);
             transform: rotate(45deg); }
+  .feedback__btn:focus {
+    outline: none; }
 
 .feedback__btn:last-child::before {
   -webkit-transform: rotate(225deg);
@@ -1768,8 +1775,9 @@ body {
     opacity: 0.5; }
   .form__input::placeholder {
     opacity: 0.5; }
-  .form__input:focus {
-    border-color: #FFC341; }
+  .form__input:focus, .form__input:hover {
+    border-color: #FFC341;
+    outline: none; }
 
 .contact {
   position: relative;
@@ -1901,6 +1909,9 @@ body {
 
 .contact__input {
   width: 250px; }
+  .contact__input:focus, .contact__input:hover {
+    border-color: #FFC341;
+    outline: none; }
 
 .contact__submit {
   display: block;
@@ -1908,7 +1919,7 @@ body {
   padding: 20px 20px;
   text-align: center;
   text-decoration: none;
-  background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%);
+  background: linear-gradient(142.39deg, #FFC341 20.46%, #FFD701 65.31%);
   border: none;
   border-radius: 80px;
   text-transform: uppercase;
@@ -1920,6 +1931,11 @@ body {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   word-break: break-word;
   cursor: pointer; }
+  .contact__submit:hover, .contact__submit:focus {
+    outline: none;
+    background: linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
+  .contact__submit:active {
+    background: radial-gradient(150% 119.49% at 50% 50.85%, rgba(0, 0, 0, 0) 30.67%, rgba(3, 3, 3, 0.24) 100%), linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
 
 .contact__label.invalid::before {
   top: -19px; }
@@ -2197,7 +2213,7 @@ body {
   padding: 20px 20px;
   text-align: center;
   text-decoration: none;
-  background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%);
+  background: linear-gradient(142.39deg, #FFC341 20.46%, #FFD701 65.31%);
   border: none;
   border-radius: 80px;
   text-transform: uppercase;
@@ -2210,9 +2226,11 @@ body {
   word-break: break-word;
   cursor: pointer;
   margin: 0 auto 17px auto; }
-
-.modal__check {
-  display: none; }
+  .modal__submit:hover, .modal__submit:focus {
+    outline: none;
+    background: linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
+  .modal__submit:active {
+    background: radial-gradient(150% 119.49% at 50% 50.85%, rgba(0, 0, 0, 0) 30.67%, rgba(3, 3, 3, 0.24) 100%), linear-gradient(143.55deg, #FFC341 -50.3%, #FFD701 63.1%); }
 
 .modal__apply {
   position: relative;
@@ -2231,6 +2249,9 @@ body {
     width: 15px;
     height: 15px;
     border: 2px solid #FFC341; }
+
+.modal__apply.invalid::before {
+  border: 2px solid rgba(255, 0, 0, 0.5); }
 
 .modal__check:checked + label::after {
   content: '';

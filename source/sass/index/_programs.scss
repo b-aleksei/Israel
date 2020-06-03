@@ -130,14 +130,6 @@
   color: white;
 }
 
-#share:focus ~ .programs__block .programs__type--share,
-#academy:focus ~ .programs__block .programs__type--academy,
-#stage:focus ~ .programs__block .programs__type--stage,
-#voluntary:focus ~ .programs__block .programs__type--voluntary,
-#religious:focus ~ .programs__block .programs__type--religious {
-  outline: 1px dashed $black;
-}
-
 #share:checked ~ .programs__block .programs__content {
   transform: translate(0%);
 }

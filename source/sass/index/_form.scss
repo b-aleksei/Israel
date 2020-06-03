@@ -11,8 +11,10 @@
     opacity: 0.5;
   }
 
-  &:focus {
+  &:focus,
+  &:hover {
     border-color: $yellow;
+    outline: none;
   }
 }
 

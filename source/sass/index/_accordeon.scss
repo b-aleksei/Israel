@@ -55,10 +55,6 @@
   transition: height 500ms ease-in-out;
 }
 
-.accordion__toggle:focus + label {
-  outline: 1px dashed $black;
-}
-
 .accordion__toggle:checked + label {
 
   &::before {

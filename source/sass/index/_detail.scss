@@ -51,6 +51,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .detail__btn svg {
