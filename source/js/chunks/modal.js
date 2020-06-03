@@ -115,170 +115,78 @@
   openClosePopup(modalCall);
 
   // ======================валидация телефона===================================================
+
   const START_INDEX = 4;
-  const CLOSE_BRACE = 6; // индекс перед закрывающей скобкой
-  const FIRST_NUMBER = "7";
-  let marker = '_';
-  let sep = ' ';
-  let startSelection = 0;
-  let endSelection = 0;
-  let pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', sep, '9', '9', sep, '9', '9'];
-  let pattern = ['+', FIRST_NUMBER, ' ', '(', marker, marker, marker, ')', ' ', marker, marker, marker, sep, marker, marker, sep, marker, marker];
+  const FIRST_NUMBER = '7';
+  let substrateThree = '___';
+  let substrateTwo = '__';
+  let delimiter = ' ';
+  let regExp = /^7? ?\(?(\d{0,3})\)? ?(\d{0,3})-?(\d{0,2})-?(\d{0,2})/;
+  let regE = /7.*/
+  let pln = /(?:\d\D*)$/g; // позиция последней цифры
   let controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
-  let result = pattern.slice();
-  let focus = null;
-  let initialValue = pattern.join('');
 
-  let checkValidity = function (inp) {
-    if (!inp.validity.valid) {
-      inp.parentElement.classList.remove('valid')
-      inp.parentElement.classList.add('invalid')
-    } else {
-      inp.parentElement.classList.remove('invalid')
-      inp.parentElement.classList.add('valid')
-    }
-  };
 
-  let pasteValue = function () {
-    let ctx = this
-    setTimeout(function () {
-      let value = Array.from(ctx.value).filter(function (item) {
-        return /\d/.test(item)
-      });
-      value.reverse();
-      let pattern = pastePattern.slice();
-      for (let i = 0; i < pattern.length; i++) {
-        if (pattern[i] !== '9') continue;
-        pattern[i] = value.pop() || marker;
-      }
-      pattern[1] = FIRST_NUMBER;
-      result = pattern;
-      ctx.value = pattern.join('');
-      startSelection = endSelection = 0;
-      checkValidity(ctx);
-    })
-  };
-
-  let enterValue = function (e) {
-
-    startSelection = this.selectionStart;
-    endSelection = this.selectionEnd;
-
-    let clearData = function () { // если было выделение очистить выделенное
-      let arr = pattern.slice(startSelection, endSelection);
-    result.splice(startSelection, endSelection - startSelection, ...arr);
-    }
-
-    let IsSelection = startSelection !== endSelection;
-    if (!e.ctrlKey) { // всегда начинать с первого символа в скобках кроме комбинаций с ctrl
-      focus = startSelection < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
-    }
+  let enterPhoneValue = function (e) {
 
     let isControlKey = controlKeys.some(function (key) {
       return e.key === key
     })
 
-    if (!isControlKey && !e.ctrlKey) {
+    if (!e.ctrlKey && !isControlKey) {
 
-      if (IsSelection) {
-        clearData()
-      }
-      if (/\d/.test(e.key) && focus < result.length) { // если число то в ближайший маркер записываем его
-        let index = result.indexOf(marker);
-        let separator = result.indexOf(sep, this.selectionStart);
-
-        if (index === -1) { // если все заполнено то перезаписываем последующий
-          if (this.selectionStart < START_INDEX) {
-            index = START_INDEX
-          } else {
-            for (let i = this.selectionStart; i < result.length; i++) {
-              index = i;
-              if (/\d/.test(result[i])) break;
-            }
-          }
+      let cursor = this.selectionStart = this.selectionEnd
+      setTimeout(() => {
+        let number = this.value.match(regE) || [FIRST_NUMBER]
+        let arr = Array.from(number[0])
+        let str = arr.filter(item => /\d/.test(item))
+        str = str.join('').slice(0, 11)
+        this.value = str.replace(regExp, (m, p1, p2, p3, p4) => {
+          return '+' + FIRST_NUMBER + ' (' + ( p1 + substrateThree ).slice(0, substrateThree.length) + ') '
+            + ( p2 + substrateThree ).slice(0, substrateThree.length) + delimiter
+            + ( p3 + substrateTwo ).slice(0, substrateTwo.length) + delimiter
+            + ( p4 + substrateTwo ).slice(0, substrateTwo.length);
+        });
+        // управление курсором
+        let search = this.value.search(pln);
+        this.selectionStart = this.selectionEnd = ( e.key === 'Delete' ) ? cursor : search + 1;
+        if (cursor < START_INDEX) {
+          this.selectionStart = this.selectionEnd = START_INDEX
         }
-        result[index] = e.key;
-        focus = ( index === CLOSE_BRACE ) ? CLOSE_BRACE + 2 : ( separator - index === 1 ) ? index + 1 : index;
-
-      } else {
-        if (e.key === 'Backspace') {
-          if (!IsSelection && result[focus - 1] !== '(') {
-            let insert;
-            switch (result[this.selectionStart - 1]) {
-              case ' ' :
-                insert = ' ';
-                break;
-              case ')' :
-                insert = ')';
-                break;
-              default :
-                insert = marker;
-            }
-
-            result.splice(this.selectionStart - 1, 1, insert);
-            focus -= 1
-          }
-        }
-
-        if (e.key === 'Delete' && !IsSelection) {
-          let index = result.slice(focus).findIndex(function (item) {
-            return /\d/.test(item)
-          });
-          if (~index) {
-            result[focus + index] = marker;
-          }
-        }
-      }
-
-      this.value = result.join('');
-      this.selectionStart = this.selectionEnd = focus + 1;
-
-      if (!/\d/.test(e.key)) {
-        this.selectionStart = this.selectionEnd = focus;
-      }
-      e.preventDefault();
+        checkValidity.call(this)
+      }, 1)
     }
-
-    if (e.ctrlKey && e.code === 'KeyX') {
-      clearData()
-    }
-    checkValidity(this);
   };
 
-
-  let deleteHandler = function (e) {
-    if (e.target === phone) {
-      phone.removeEventListener('paste', pasteValue);
-      phone.removeEventListener('keydown', enterValue);
+  let checkValidity = function () {
+    if (!this.validity.valid) {
+      this.parentElement.classList.remove('valid')
+      this.parentElement.classList.add('invalid')
+    } else {
+      this.parentElement.classList.remove('invalid')
+      this.parentElement.classList.add('valid')
     }
-
-    if (e.target === name) {
-      name.removeEventListener('input', checkContactName);
-    }
-    form.removeEventListener('focusout', deleteHandler);
-  }
-
-  let checkContactName = function () {
-    checkValidity(contactName)
-  }
+  };
 
   let onValidate = function (e) {
-    if (e.target.name === 'phone') {
-      let phone = e.target;
-      phone.value = phone.value || storage[phone.name] || initialValue;
-      setTimeout(function () {
-        phone.selectionStart = phone.selectionEnd = focus || START_INDEX;
-      });
-      initialValue = '';
-      phone.addEventListener('paste', pasteValue);
-      phone.addEventListener('keydown', enterValue);
+    if (e.target.name === 'phone' ) {
+      e.target.addEventListener('keydown', enterPhoneValue);
     }
 
     if (e.target.name === 'name') {
-      let name = e.target;
-      name.addEventListener('input', checkContactName);
+      e.target.addEventListener('input', checkValidity);
     }
     this.addEventListener('focusout', deleteHandler);
+  }
+
+  let deleteHandler = function (e) {
+    if (e.target.name === 'phone') {
+      phone.removeEventListener('keydown', enterPhoneValue);
+    }
+    if (e.target.name === 'name') {
+      name.removeEventListener('input', checkValidity);
+    }
+    form.removeEventListener('focusout', deleteHandler);
   }
 
   // валидация форм на главной странице
@@ -296,14 +204,8 @@
   // всем инпутам ставим значение из localStorage
   inputs.forEach(function (input) {
     input.parentElement.classList.remove('invalid')
-    let value = storage[input.name] = localStorage.getItem(input.name)
-    if (value) {
-      input.value = value
-    }
+    input.value = storage[input.name] = localStorage.getItem(input.name)
   })
-  if (storage['phone']) {
-    result = storage['phone'].split('')
-  }
 
 } )();
 

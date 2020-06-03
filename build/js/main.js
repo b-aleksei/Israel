@@ -1,17 +1,5 @@
 "use strict"; //=========================секция программы==================================================
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 (function () {
   var tabs = document.querySelector('.programs__captions');
   var initialLeft = tabs.offsetLeft;
@@ -174,189 +162,81 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   openClosePopup(modalCall); // ======================валидация телефона===================================================
 
   var START_INDEX = 4;
-  var CLOSE_BRACE = 6; // индекс перед закрывающей скобкой
+  var FIRST_NUMBER = '7';
+  var substrateThree = '___';
+  var substrateTwo = '__';
+  var delimiter = ' ';
+  var regExp = /^7? ?\(?(\d{0,3})\)? ?(\d{0,3})-?(\d{0,2})-?(\d{0,2})/;
+  var regE = /7.*/;
+  var pln = /(?:\d\D*)$/g; // позиция последней цифры
 
-  var FIRST_NUMBER = "7";
-  var marker = '_';
-  var sep = ' ';
-  var startSelection = 0;
-  var endSelection = 0;
-  var pastePattern = ['+', '9', ' ', '(', '9', '9', '9', ')', ' ', '9', '9', '9', sep, '9', '9', sep, '9', '9'];
-  var pattern = ['+', FIRST_NUMBER, ' ', '(', marker, marker, marker, ')', ' ', marker, marker, marker, sep, marker, marker, sep, marker, marker];
   var controlKeys = ["Tab", "ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"];
-  var result = pattern.slice();
-  var focus = null;
-  var initialValue = pattern.join('');
 
-  var checkValidity = function checkValidity(inp) {
-    if (!inp.validity.valid) {
-      inp.parentElement.classList.remove('valid');
-      inp.parentElement.classList.add('invalid');
-    } else {
-      inp.parentElement.classList.remove('invalid');
-      inp.parentElement.classList.add('valid');
-    }
-  };
-
-  var pasteValue = function pasteValue() {
-    var ctx = this;
-    setTimeout(function () {
-      var value = Array.from(ctx.value).filter(function (item) {
-        return /\d/.test(item);
-      });
-      value.reverse();
-      var pattern = pastePattern.slice();
-
-      for (var i = 0; i < pattern.length; i++) {
-        if (pattern[i] !== '9') continue;
-        pattern[i] = value.pop() || marker;
-      }
-
-      pattern[1] = FIRST_NUMBER;
-      result = pattern;
-      ctx.value = pattern.join('');
-      startSelection = endSelection = 0;
-      checkValidity(ctx);
-    });
-  };
-
-  var enterValue = function enterValue(e) {
-    startSelection = this.selectionStart;
-    endSelection = this.selectionEnd;
-
-    var clearData = function clearData() {
-      var _result;
-
-      // если было выделение очистить выделенное
-      var arr = pattern.slice(startSelection, endSelection);
-
-      (_result = result).splice.apply(_result, [startSelection, endSelection - startSelection].concat(_toConsumableArray(arr)));
-    };
-
-    var IsSelection = startSelection !== endSelection;
-
-    if (!e.ctrlKey) {
-      // всегда начинать с первого символа в скобках кроме комбинаций с ctrl
-      focus = startSelection < START_INDEX ? this.selectionStart = START_INDEX : this.selectionStart;
-    }
+  var enterPhoneValue = function enterPhoneValue(e) {
+    var _this = this;
 
     var isControlKey = controlKeys.some(function (key) {
       return e.key === key;
     });
 
-    if (!isControlKey && !e.ctrlKey) {
-      if (IsSelection) {
-        clearData();
-      }
+    if (!e.ctrlKey && !isControlKey) {
+      var cursor = this.selectionStart = this.selectionEnd;
+      setTimeout(function () {
+        var number = _this.value.match(regE) || [FIRST_NUMBER];
+        var arr = Array.from(number[0]);
+        var str = arr.filter(function (item) {
+          return /\d/.test(item);
+        });
+        str = str.join('').slice(0, 11);
+        _this.value = str.replace(regExp, function (m, p1, p2, p3, p4) {
+          return '+' + FIRST_NUMBER + ' (' + (p1 + substrateThree).slice(0, substrateThree.length) + ') ' + (p2 + substrateThree).slice(0, substrateThree.length) + delimiter + (p3 + substrateTwo).slice(0, substrateTwo.length) + delimiter + (p4 + substrateTwo).slice(0, substrateTwo.length);
+        }); // управление курсором
 
-      if (/\d/.test(e.key) && focus < result.length) {
-        // если число то в ближайший маркер записываем его
-        var index = result.indexOf(marker);
-        var separator = result.indexOf(sep, this.selectionStart);
+        var search = _this.value.search(pln);
 
-        if (index === -1) {
-          // если все заполнено то перезаписываем последующий
-          if (this.selectionStart < START_INDEX) {
-            index = START_INDEX;
-          } else {
-            for (var i = this.selectionStart; i < result.length; i++) {
-              index = i;
-              if (/\d/.test(result[i])) break;
-            }
-          }
+        _this.selectionStart = _this.selectionEnd = e.key === 'Delete' ? cursor : search + 1;
+
+        if (cursor < START_INDEX) {
+          _this.selectionStart = _this.selectionEnd = START_INDEX;
         }
 
-        result[index] = e.key;
-        focus = index === CLOSE_BRACE ? CLOSE_BRACE + 2 : separator - index === 1 ? index + 1 : index;
-      } else {
-        if (e.key === 'Backspace') {
-          if (!IsSelection && result[focus - 1] !== '(') {
-            var insert;
-
-            switch (result[this.selectionStart - 1]) {
-              case ' ':
-                insert = ' ';
-                break;
-
-              case ')':
-                insert = ')';
-                break;
-
-              default:
-                insert = marker;
-            }
-
-            result.splice(this.selectionStart - 1, 1, insert);
-            focus -= 1;
-          }
-        }
-
-        if (e.key === 'Delete' && !IsSelection) {
-          var _index = result.slice(focus).findIndex(function (item) {
-            return /\d/.test(item);
-          });
-
-          if (~_index) {
-            result[focus + _index] = marker;
-          }
-        }
-      }
-
-      this.value = result.join('');
-      this.selectionStart = this.selectionEnd = focus + 1;
-
-      if (!/\d/.test(e.key)) {
-        this.selectionStart = this.selectionEnd = focus;
-      }
-
-      e.preventDefault();
+        checkValidity.call(_this);
+      }, 1);
     }
-
-    if (e.ctrlKey && e.code === 'KeyX') {
-      clearData();
-    }
-
-    checkValidity(this);
   };
 
-  var deleteHandler = function deleteHandler(e) {
-    if (e.target === phone) {
-      phone.removeEventListener('paste', pasteValue);
-      phone.removeEventListener('keydown', enterValue);
+  var checkValidity = function checkValidity() {
+    if (!this.validity.valid) {
+      this.parentElement.classList.remove('valid');
+      this.parentElement.classList.add('invalid');
+    } else {
+      this.parentElement.classList.remove('invalid');
+      this.parentElement.classList.add('valid');
     }
-
-    if (e.target === name) {
-      name.removeEventListener('input', checkContactName);
-    }
-
-    form.removeEventListener('focusout', deleteHandler);
-  };
-
-  var checkContactName = function checkContactName() {
-    checkValidity(contactName);
   };
 
   var onValidate = function onValidate(e) {
     if (e.target.name === 'phone') {
-      var _phone = e.target;
-      _phone.value = _phone.value || storage[_phone.name] || initialValue;
-      setTimeout(function () {
-        _phone.selectionStart = _phone.selectionEnd = focus || START_INDEX;
-      });
-      initialValue = '';
-
-      _phone.addEventListener('paste', pasteValue);
-
-      _phone.addEventListener('keydown', enterValue);
+      e.target.addEventListener('keydown', enterPhoneValue);
     }
 
     if (e.target.name === 'name') {
-      var _name = e.target;
-
-      _name.addEventListener('input', checkContactName);
+      e.target.addEventListener('input', checkValidity);
     }
 
     this.addEventListener('focusout', deleteHandler);
+  };
+
+  var deleteHandler = function deleteHandler(e) {
+    if (e.target.name === 'phone') {
+      phone.removeEventListener('keydown', enterPhoneValue);
+    }
+
+    if (e.target.name === 'name') {
+      name.removeEventListener('input', checkValidity);
+    }
+
+    form.removeEventListener('focusout', deleteHandler);
   }; // валидация форм на главной странице
 
 
@@ -373,16 +253,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   inputs.forEach(function (input) {
     input.parentElement.classList.remove('invalid');
-    var value = storage[input.name] = localStorage.getItem(input.name);
-
-    if (value) {
-      input.value = value;
-    }
+    input.value = storage[input.name] = localStorage.getItem(input.name);
   });
-
-  if (storage['phone']) {
-    result = storage['phone'].split('');
-  }
 })();
 
 "use strict"; //================================слайдер===========================
