@@ -1421,6 +1421,8 @@ body {
     margin-bottom: 11px;
     font-size: 1.6rem;
     line-height: 1.6; }
+  .faq__title--6 {
+    padding-right: 32px; }
   .faq__title b {
     margin-right: 9px; } }
 
@@ -1527,6 +1529,7 @@ body {
   text-align: center; }
 
 .feedback__list {
+  position: relative;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -1745,8 +1748,8 @@ body {
   background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%); }
 
 .slider__list--click-duration {
-  -webkit-transition: 100ms ease-in-out;
-  transition: 100ms ease-in-out; }
+  -webkit-transition: 600ms ease-in-out;
+  transition: 600ms ease-in-out; }
 
 .slider__list--auto-duration {
   -webkit-transition: 1000ms linear;

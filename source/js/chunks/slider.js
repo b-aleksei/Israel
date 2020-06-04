@@ -1,6 +1,15 @@
-"use strict";
 //================================слайдер===========================
-( function () {
+window.onresize = function () { // обработчик на изменение ширины окна
+  if (document.documentElement.clientWidth <= 767) {
+    mobileVersion()
+  } else {
+    desktopVersion()
+  }
+}
+
+"use strict";
+
+(function () {
 
   let sliderGallery = document.querySelector('.gallery__slider');
   let galleryList = sliderGallery.querySelector('.gallery__list');
@@ -15,8 +24,9 @@
     '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' +
     '           height="732" alt="фоновое изображение">\n' +
     '    </picture>\n' +
+    '<p class="gallery__caption gallery__caption--1">Экскурсии по Израилю <br>и знакомство с его историей</p>\n' +
     '  </li>');
-  let amountSlides = galleryList.querySelectorAll('.slider__item').length;
+  let amountGallarySlides = galleryList.childElementCount;
   let indicatorContainer = sliderGallery.querySelector('.slider__indicators');
   //=======================================================================
   let sliderFeedback = document.querySelector('.feedback');
@@ -24,10 +34,30 @@
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
   let listFeedback = sliderFeedback.querySelector('.feedback__list');
-  let currentSlide = 0;
-  let transition = 300;
+  let totalFeedbackSlides = listFeedback.childElementCount;
 
-  let initialLeft = galleryList.offsetLeft;
+  let gallary = {
+    slider: galleryList,
+    transition: 300,
+    indicator: true
+  };
+
+  let feedbackMobile = {
+    slider: listFeedback,
+    transition: 400,
+    counter: true
+  };
+
+  let feedbackDesktop = {
+    slider: sliderFeedback,
+    DelayForStart: 5000,
+    timeShowSlide: 6000,
+    counter: true,
+    tabIndex: true,
+    buttonForward: sliderFeedback.querySelector(".slider__forward"),
+    buttonBack: sliderFeedback.querySelector(".slider__back")
+  }
+
   let isTouch = false;
   let touch = 'mousedown';
   let touchMove = 'mousemove';
@@ -40,107 +70,108 @@
   }
 
   sliderGallery.classList.remove('no-js');
+// добавляем индикаторы слайдов
+  while (amountGallarySlides--) {
+    indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
+  }
+  indicatorContainer.children[0].classList.add('slider__ind-color');
+  displayTotalSlide.textContent = totalFeedbackSlides + '';
+  displayCurrentSlide.textContent = '1';
 
-  let startSlider = function (slider) {
+  let startSwype = function (obj) {
+
+    let {
+      slider,
+      transition,
+      counter,
+      indicator
+    } = obj
+
+    let currentSlide = 0;
+    let left = 0;
+    let initialLeft = slider.offsetLeft;
 
     slider.addEventListener(touch, function (e) {
-      // let screen = document.documentElement.clientWidth;
+
       let itemWidth = this.offsetWidth;
-      let containerWidth = itemWidth * (this.children.length)
-      let difference = itemWidth - containerWidth;
-      let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+      let containerWidth = itemWidth * this.children.length;
+      let availibleWidth = itemWidth - containerWidth;
+      let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
       let shiftX = x - this.offsetLeft;
       let ctx = this;
-      let left;
-      let relativeLeft;
+      let relativeLeft = 0;
 
       let onMove = function (e) {
-        galleryList.style.transition = ''
-        let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+        ctx.style.transition = '';
+        let xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
         left = xMove - shiftX;
-        if (left < difference) {
-          left = difference
+
+        if (left < availibleWidth) {
+          left = availibleWidth;
         }
+
         if (left > initialLeft) {
-          left = initialLeft
+          left = initialLeft;
         }
 
         ctx.style.left = left + 'px';
         relativeLeft = left % itemWidth;
       };
-      document.addEventListener(touchMove, onMove);
+
 
       let autoTranslate = function () {
-        galleryList.style.transition = transition + 'ms ease-in-out';
-        indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
-        // если переместили больше чем на половину слайда сдвигаем до конца автоматически
-        if (relativeLeft <= itemWidth * (-50 / 100)) {
-          left += -itemWidth - relativeLeft
-        } else {
-          left -= relativeLeft
+        ctx.style.transition = transition + 'ms ease-in-out';
+
+        if (indicator) {
+          indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
         }
+
+        if (counter) {
+          displayCurrentSlide.textContent = 1 + currentSlide + '';
+        }
+        // если переместили больше чем на половину слайда сдвигаем до конца автоматически
+        if (relativeLeft <= itemWidth * ( -50 / 100 )) {
+          left += -itemWidth - relativeLeft;
+        } else {
+          left -= relativeLeft;
+        }
+
         ctx.style.left = left + 'px';
-        currentSlide = Math.abs(left / itemWidth);
-        indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
-      }
+        currentSlide = Math.round(Math.abs(left / itemWidth));
+
+        if (indicator) {
+          indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
+        }
+
+        if (counter) {
+          displayCurrentSlide.textContent = 1 + currentSlide + '';
+        }
+      };
 
       let onMouseUp = function () {
-        autoTranslate()
+        autoTranslate();
         document.removeEventListener(touchMove, onMove);
         document.removeEventListener(touchUp, onMouseUp);
       };
+
+      document.addEventListener(touchMove, onMove);
       document.addEventListener(touchUp, onMouseUp);
     });
-  }
+  };
 
-  startSlider(galleryList)
-  startSlider(listFeedback)
-
-
-
-
-/*    window.onresize = function () { // обработчик на изменение ширины окна
-      if (document.documentElement.clientWidth >= 767) {
-        indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
-        currentSlide = 0
-        indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
-        // slideContainer.style.transform = 'translate(0)';
-      }
-    }*/
-    for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
-      indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
-    }
-    indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
-
-
-/*
-
-  let objGallery = {
-    slider: document.querySelector('.gallery__slider'),
-    indicator: true
-  }
-
-  let objFeedback = {
-    slider: document.querySelector('.feedback'),
-    DelayForStart: 5000,
-    timeShowSlide: 6000,
-    counter: true,
-    tabIndex: true
-  }
+  //==================================================================================
 
   let startSlider = function (obj) {
 
     let {
       slider, // DOM элемент слайдера
-      DelayForStart, // через сколько времени запустить автоскролл(мс)
-      timeShowSlide, // время показа слада
       counter, // нужен ли счетчик слайдов
       indicator, // нужен ли индикатор слайдов
-      tabIndex // нужно ли отключать фокус на неактивных слайдах
+      tabIndex, // нужно ли отключать фокус на неактивных слайдах
+      buttonForward,
+      buttonBack
     } = obj
 
-    let buttonForward = slider.querySelector(".slider__forward");
-    let buttonBack = slider.querySelector(".slider__back");
     let slideContainer = slider.querySelector('.slider__list');
     let amountSlides = slider.querySelectorAll('.slider__item').length;
     let translate = 0;
@@ -154,27 +185,9 @@
       displayCurrentSlide.textContent = translate + 1 + '';
     }
 
-    if (indicator) {
-      window.onresize = function () { // обработчик на изменение ширины окна
-        if (document.documentElement.clientWidth >= 767) {
-          indicatorContainer.children[translate].classList.remove('slider__ind-color');
-          translate = 0
-          indicatorContainer.children[translate].classList.add('slider__ind-color');
-          slideContainer.style.transform = 'translate(0)';
-          buttonForward.disabled = false;
-          buttonBack.disabled = true;
-        }
-      }
-      for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
-        indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
-      }
-      indicatorContainer.children[translate].classList.add('slider__ind-color');
-    }
-
     let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
       return listFeedback.children[translate].querySelector('.feedback__details');
     }
-
 
     if (amountSlides > 1) { // если слайдов больше чем 1
 
@@ -200,12 +213,11 @@
         clearTimeout(delaySlide);
         clearInterval(intervalSlider);
         slideContainer.classList.add('slider__list--click-duration');
-        slideContainer.classList.remove('slider__list--auto-duration');
         let forward = this === buttonForward;
         if (indicator) { // для индикации слайдов
           indicatorContainer.children[translate].classList.remove('slider__ind-color');
         }
-        if(tabIndex) { // для отключения перехода на непереключеный слайд
+        if (tabIndex) { // для отключения перехода на непереключеный слайд
           getFeedbackLink().tabIndex = -1;
         }
         if (forward && translate < amountSlides - 1) {
@@ -218,7 +230,7 @@
         if (indicator) {
           indicatorContainer.children[translate].classList.add('slider__ind-color');
         }
-        if(tabIndex) {
+        if (tabIndex) {
           getFeedbackLink().tabIndex = 0;
         }
         if (counter) {
@@ -228,59 +240,37 @@
         disableButton();
       };
 
-      let appendSlide = function () { // переместить первый слайд в конец списка
-        slideContainer.classList.remove('slider__list--auto-duration');
-        moveSlide();
-        slideContainer.appendChild(slideContainer.firstElementChild);
-        if(tabIndex && translate === 0) { // для отключения перехода на непереключеный слайд
-          getFeedbackLink().tabIndex = 0;
-        }
-      }
-
-      //для автоматической прокрутки слайдов
-      function scrollAuto() {
-        slideContainer.classList.remove('slider__list--click-duration');
-        if (translate === 0) {
-          if(tabIndex) {
-            getFeedbackLink().tabIndex = -1;
-          }
-          disableButton();
-          translate += 1;
-          displayCurrentSlide.textContent = '1';
-          slideContainer.classList.add('slider__list--auto-duration');
-          moveSlide();
-          translate -= 1;
-          delaySlide = setTimeout(appendSlide, autoDuration)
-        }
-      }
-
-      let startAutoScroll = function () {
-        timer = setTimeout(function () {
-          intervalSlider = setInterval(function () {
-            scrollAuto();
-          }, timeShowSlide || 4000);
-        }, DelayForStart)
-      };
-
       buttonForward.addEventListener("click", onClickSlider);
       buttonBack.addEventListener("click", onClickSlider);
-
-      // для запуска автоскролла
-      if (typeof DelayForStart === 'number') {
-        autoDuration = parseInt(autoDuration) || 1000;
-        if (typeof autoDuration === 'number' && typeof timeShowSlide === 'number') {
-          timeShowSlide += autoDuration
-        }
-        startAutoScroll()
-      }
     }
   }
 
-  startSlider(objFeedback);
-  startSlider(objGallery);
-  objFeedback = null;
-  objGallery = null;
-*/
+  window.mobileVersion = function () {
+    startSwype(gallary);
+    listFeedback.classList.remove('slider__list--click-duration');
+    listFeedback.style.transform = 'translate(0)';
+    listFeedback.style.left = 0;
+    displayCurrentSlide.textContent = '1';
+    feedbackDesktop.buttonBack.disabled = true;
+    feedbackDesktop.buttonForward.disabled = true;
+    startSwype(feedbackMobile);
+  }
 
-} )();
+  window.desktopVersion = function () {
+    listFeedback.style.left = 0;
+    startSlider(feedbackDesktop);
+    feedbackDesktop.buttonForward.disabled = false;
+  }
+
+
+  if (document.documentElement.clientWidth <= 767) {
+    startSwype(gallary);
+    startSwype(feedbackMobile);
+  }
+
+  if (document.documentElement.clientWidth > 767) {
+    startSlider(feedbackDesktop);
+  }
+
+})();
 
