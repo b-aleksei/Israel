@@ -70,10 +70,7 @@ window.onresize = function () { // обработчик на изменение 
     touch = 'touchstart';
     touchMove = 'touchmove';
     touchUp = 'touchend';
-    console.log('isTouch = true');
   }
-
-  console.log(touchMove);
 
   sliderGallery.classList.remove('no-js');
 // добавляем индикаторы слайдов
