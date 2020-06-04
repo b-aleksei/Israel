@@ -183,7 +183,8 @@
   }
 
   .gallery__list {
-     width: 100%;
+    position: relative;
+    width: 100%;
     margin: 0;
     flex-wrap: nowrap;
     padding-bottom: 30px;
@@ -221,7 +222,7 @@
 
   .gallery__item {
     order: 1;
-    width: 288px;
+    width: 100%;
   }
 
   .gallery__item--1 {

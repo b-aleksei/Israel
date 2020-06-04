@@ -15,17 +15,105 @@
     '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' +
     '           height="732" alt="фоновое изображение">\n' +
     '    </picture>\n' +
-    '  </li>')
+    '  </li>');
+  let amountSlides = galleryList.querySelectorAll('.slider__item').length;
   let indicatorContainer = sliderGallery.querySelector('.slider__indicators');
-  sliderGallery.classList.remove('no-js');
   //=======================================================================
   let sliderFeedback = document.querySelector('.feedback');
   let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
   let listFeedback = sliderFeedback.querySelector('.feedback__list');
+  let currentSlide = 0;
+  let transition = 300;
+
+  let initialLeft = galleryList.offsetLeft;
+  let isTouch = false;
+  let touch = 'mousedown';
+  let touchMove = 'mousemove';
+  let touchUp = 'mouseup';
+  if ('ontouchstart' in window) {
+    isTouch = true;
+    touch = 'touchstart';
+    touchMove = 'touchmove';
+    touchUp = 'touchend';
+  }
+
+  sliderGallery.classList.remove('no-js');
+
+  let startSlider = function (slider) {
+
+    slider.addEventListener(touch, function (e) {
+      // let screen = document.documentElement.clientWidth;
+      let itemWidth = this.offsetWidth;
+      let containerWidth = itemWidth * (this.children.length)
+      let difference = itemWidth - containerWidth;
+      let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+      let shiftX = x - this.offsetLeft;
+      let ctx = this;
+      let left;
+      let relativeLeft;
+
+      let onMove = function (e) {
+        galleryList.style.transition = ''
+        let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
+        left = xMove - shiftX;
+        if (left < difference) {
+          left = difference
+        }
+        if (left > initialLeft) {
+          left = initialLeft
+        }
+
+        ctx.style.left = left + 'px';
+        relativeLeft = left % itemWidth;
+      };
+      document.addEventListener(touchMove, onMove);
+
+      let autoTranslate = function () {
+        galleryList.style.transition = transition + 'ms ease-in-out';
+        indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
+        // если переместили больше чем на половину слайда сдвигаем до конца автоматически
+        if (relativeLeft <= itemWidth * (-50 / 100)) {
+          left += -itemWidth - relativeLeft
+        } else {
+          left -= relativeLeft
+        }
+        ctx.style.left = left + 'px';
+        currentSlide = Math.abs(left / itemWidth);
+        indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
+      }
+
+      let onMouseUp = function () {
+        autoTranslate()
+        document.removeEventListener(touchMove, onMove);
+        document.removeEventListener(touchUp, onMouseUp);
+      };
+      document.addEventListener(touchUp, onMouseUp);
+    });
+  }
+
+  startSlider(galleryList)
+  startSlider(listFeedback)
 
 
+
+
+/*    window.onresize = function () { // обработчик на изменение ширины окна
+      if (document.documentElement.clientWidth >= 767) {
+        indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
+        currentSlide = 0
+        indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
+        // slideContainer.style.transform = 'translate(0)';
+      }
+    }*/
+    for (let i = 0; i < amountSlides; i++) { // добавляем индикаторы слайдов
+      indicatorContainer.insertAdjacentHTML("beforeend", '<span class="slider__ind">')
+    }
+    indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
+
+
+/*
 
   let objGallery = {
     slider: document.querySelector('.gallery__slider'),
@@ -192,6 +280,7 @@
   startSlider(objGallery);
   objFeedback = null;
   objGallery = null;
+*/
 
 } )();
 

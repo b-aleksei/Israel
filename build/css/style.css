@@ -1118,6 +1118,7 @@ body {
     margin: 0;
     width: 288px; }
   .gallery__list {
+    position: relative;
     width: 100%;
     margin: 0;
     -ms-flex-wrap: nowrap;
@@ -1147,7 +1148,7 @@ body {
     -webkit-box-ordinal-group: 2;
         -ms-flex-order: 1;
             order: 1;
-    width: 288px; }
+    width: 100%; }
   .gallery__item--1 {
     -webkit-box-ordinal-group: 1;
         -ms-flex-order: 0;
@@ -1744,8 +1745,8 @@ body {
   background: linear-gradient(108.42deg, #FFC341 20.46%, #FFD701 65.31%); }
 
 .slider__list--click-duration {
-  -webkit-transition: 600ms ease-in-out;
-  transition: 600ms ease-in-out; }
+  -webkit-transition: 100ms ease-in-out;
+  transition: 100ms ease-in-out; }
 
 .slider__list--auto-duration {
   -webkit-transition: 1000ms linear;

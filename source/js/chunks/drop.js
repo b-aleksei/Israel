@@ -20,6 +20,7 @@
     let difference = screen - this.offsetWidth;
     let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
     let shiftX = x - this.offsetLeft;
+    let ctx = this;
 
     let onMove = function (e) {
       let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
@@ -30,7 +31,7 @@
       if (left > initialLeft) {
         left = initialLeft
       }
-      tabs.style.left = left + 'px';
+      ctx.style.left = left + 'px';
     };
     document.addEventListener(touchMove, onMove);
 
