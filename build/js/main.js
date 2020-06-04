@@ -17,7 +17,7 @@
 
   tabs.addEventListener(touch, function (e) {
     var screen = document.documentElement.clientWidth;
-    var difference = screen - this.offsetWidth;
+    var leftEdge = screen - this.offsetWidth;
     var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
     var shiftX = x - this.offsetLeft;
     var ctx = this;
@@ -26,8 +26,8 @@
       var xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
       var left = xMove - shiftX;
 
-      if (left < difference) {
-        left = difference;
+      if (left < leftEdge) {
+        left = leftEdge;
       }
 
       if (left > initialLeft) {
@@ -306,12 +306,12 @@ window.onresize = function () {
   var galleryList = sliderGallery.querySelector('.gallery__list');
   galleryList.insertAdjacentHTML("beforeend", '  <li class="gallery__item gallery__item--1 slider__item">\n' + '    <picture>\n' + '      <source type="image/webp" media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.webp 1x, img/mobile/1_m@2x.webp 2x">\n' + '      <source media="(max-width: 767px)"\n' + '              srcset="img/mobile/1_m@1x.jpg 1x, img/mobile/1_m@2x.jpg 2x">\n' + '      <source type="image/webp" srcset="img/desktop/1@1x.webp 1x, img/desktop/1@2x.webp 2x">\n' + '      <!-- 1x: 482; 2x 964px -->' + '      <img src="img/desktop/1@1x.png" srcset="img/desktop/1@2x.png 2x" width="482"\n' + '           height="732" alt="фоновое изображение">\n' + '    </picture>\n' + '<p class="gallery__caption gallery__caption--1">Экскурсии по Израилю <br>и знакомство с его историей</p>\n' + '  </li>');
   var amountGallarySlides = galleryList.childElementCount;
-  var indicatorContainer = sliderGallery.querySelector('.slider__indicators'); //=======================================================================
-
+  var indicatorContainer = sliderGallery.querySelector('.slider__indicators');
+  var leftEdgeGallary;
+  var tabs = document.querySelector('.programs__captions');
   var sliderFeedback = document.querySelector('.feedback');
   var displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   var displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
-  var autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
   var listFeedback = sliderFeedback.querySelector('.feedback__list');
   var totalFeedbackSlides = listFeedback.childElementCount;
   var gallary = {
@@ -343,8 +343,10 @@ window.onresize = function () {
     touch = 'touchstart';
     touchMove = 'touchmove';
     touchUp = 'touchend';
+    console.log('isTouch = true');
   }
 
+  console.log(touchMove);
   sliderGallery.classList.remove('no-js'); // добавляем индикаторы слайдов
 
   while (amountGallarySlides--) {
@@ -363,10 +365,13 @@ window.onresize = function () {
     var currentSlide = 0;
     var left = 0;
     var initialLeft = slider.offsetLeft;
+    slider.querySelectorAll('img').forEach(function (img) {
+      return img.draggable = false;
+    });
     slider.addEventListener(touch, function (e) {
       var itemWidth = this.offsetWidth;
-      var containerWidth = itemWidth * this.children.length;
-      var availibleWidth = itemWidth - containerWidth;
+      var containerWidth = itemWidth * this.childElementCount;
+      var leftEdge = itemWidth - containerWidth;
       var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
       var shiftX = x - this.offsetLeft;
       var ctx = this;
@@ -377,8 +382,8 @@ window.onresize = function () {
         var xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
         left = xMove - shiftX;
 
-        if (left < availibleWidth) {
-          left = availibleWidth;
+        if (left < leftEdge) {
+          left = leftEdge;
         }
 
         if (left > initialLeft) {

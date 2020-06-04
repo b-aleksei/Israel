@@ -17,7 +17,7 @@
 
   tabs.addEventListener(touch, function (e) {
     let screen = document.documentElement.clientWidth;
-    let difference = screen - this.offsetWidth;
+    let leftEdge = screen - this.offsetWidth;
     let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
     let shiftX = x - this.offsetLeft;
     let ctx = this;
@@ -25,8 +25,8 @@
     let onMove = function (e) {
       let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
       let left = xMove - shiftX;
-      if (left < difference) {
-        left = difference
+      if (left < leftEdge) {
+        left = leftEdge
       }
       if (left > initialLeft) {
         left = initialLeft
@@ -328,13 +328,16 @@ window.onresize = function () { // обработчик на изменение 
     '  </li>');
   let amountGallarySlides = galleryList.childElementCount;
   let indicatorContainer = sliderGallery.querySelector('.slider__indicators');
-  //=======================================================================
+  let leftEdgeGallary ;
+
+
+  let tabs = document.querySelector('.programs__captions');
   let sliderFeedback = document.querySelector('.feedback');
   let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
-  let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
   let listFeedback = sliderFeedback.querySelector('.feedback__list');
   let totalFeedbackSlides = listFeedback.childElementCount;
+
 
   let gallary = {
     slider: galleryList,
@@ -367,7 +370,10 @@ window.onresize = function () { // обработчик на изменение 
     touch = 'touchstart';
     touchMove = 'touchmove';
     touchUp = 'touchend';
+    console.log('isTouch = true');
   }
+
+  console.log(touchMove);
 
   sliderGallery.classList.remove('no-js');
 // добавляем индикаторы слайдов
@@ -391,11 +397,13 @@ window.onresize = function () { // обработчик на изменение 
     let left = 0;
     let initialLeft = slider.offsetLeft;
 
+    slider.querySelectorAll('img').forEach(img => img.draggable = false)
+
     slider.addEventListener(touch, function (e) {
 
       let itemWidth = this.offsetWidth;
-      let containerWidth = itemWidth * this.children.length;
-      let availibleWidth = itemWidth - containerWidth;
+      let containerWidth = itemWidth * this.childElementCount;
+      let leftEdge = itemWidth - containerWidth;
       let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
       let shiftX = x - this.offsetLeft;
       let ctx = this;
@@ -406,8 +414,8 @@ window.onresize = function () { // обработчик на изменение 
         let xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
         left = xMove - shiftX;
 
-        if (left < availibleWidth) {
-          left = availibleWidth;
+        if (left < leftEdge) {
+          left = leftEdge;
         }
 
         if (left > initialLeft) {

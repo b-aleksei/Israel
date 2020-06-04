@@ -17,7 +17,7 @@
 
   tabs.addEventListener(touch, function (e) {
     let screen = document.documentElement.clientWidth;
-    let difference = screen - this.offsetWidth;
+    let leftEdge = screen - this.offsetWidth;
     let x = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
     let shiftX = x - this.offsetLeft;
     let ctx = this;
@@ -25,8 +25,8 @@
     let onMove = function (e) {
       let xMove = ( isTouch ) ? e.changedTouches[0].clientX : e.clientX;
       let left = xMove - shiftX;
-      if (left < difference) {
-        left = difference
+      if (left < leftEdge) {
+        left = leftEdge
       }
       if (left > initialLeft) {
         left = initialLeft
