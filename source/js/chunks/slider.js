@@ -178,17 +178,8 @@ window.onresize = function () { // обработчик на изменение 
     } = obj
 
     let slideContainer = slider.querySelector('.slider__list');
-    let amountSlides = slider.querySelectorAll('.slider__item').length;
+    let amountSlides = slideContainer.childElementCount;
     let translate = 0;
-    let delaySlide;
-    let intervalSlider;
-    let timer;
-
-    //показ текущего и суммы слайдов
-    if (counter) {
-      displayTotalSlide.textContent = amountSlides + '';
-      displayCurrentSlide.textContent = translate + 1 + '';
-    }
 
     let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
       return listFeedback.children[translate].querySelector('.feedback__details');
@@ -214,9 +205,6 @@ window.onresize = function () { // обработчик на изменение 
       };
       // для ручного переключения сладов
       let onClickSlider = function () {
-        clearTimeout(timer);
-        clearTimeout(delaySlide);
-        clearInterval(intervalSlider);
         slideContainer.classList.add('slider__list--click-duration');
         let forward = this === buttonForward;
         if (indicator) { // для индикации слайдов

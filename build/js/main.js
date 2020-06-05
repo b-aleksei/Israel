@@ -343,10 +343,8 @@ window.onresize = function () {
     touch = 'touchstart';
     touchMove = 'touchmove';
     touchUp = 'touchend';
-    console.log('isTouch = true');
   }
 
-  console.log(touchMove);
   sliderGallery.classList.remove('no-js'); // добавляем индикаторы слайдов
 
   while (amountGallarySlides--) {
@@ -444,16 +442,8 @@ window.onresize = function () {
         buttonForward = obj.buttonForward,
         buttonBack = obj.buttonBack;
     var slideContainer = slider.querySelector('.slider__list');
-    var amountSlides = slider.querySelectorAll('.slider__item').length;
+    var amountSlides = slideContainer.childElementCount;
     var translate = 0;
-    var delaySlide;
-    var intervalSlider;
-    var timer; //показ текущего и суммы слайдов
-
-    if (counter) {
-      displayTotalSlide.textContent = amountSlides + '';
-      displayCurrentSlide.textContent = translate + 1 + '';
-    }
 
     var getFeedbackLink = function getFeedbackLink() {
       // вспомогательная функция, ищет элемент
@@ -483,9 +473,6 @@ window.onresize = function () {
 
 
       var onClickSlider = function onClickSlider() {
-        clearTimeout(timer);
-        clearTimeout(delaySlide);
-        clearInterval(intervalSlider);
         slideContainer.classList.add('slider__list--click-duration');
         var forward = this === buttonForward;
 
