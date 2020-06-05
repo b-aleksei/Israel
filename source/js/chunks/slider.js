@@ -28,49 +28,13 @@ window.onresize = function () { // обработчик на изменение 
     '  </li>');
   let amountGallarySlides = galleryList.childElementCount;
   let indicatorContainer = sliderGallery.querySelector('.slider__indicators');
-  let leftEdgeGallary ;
-
 
   let tabs = document.querySelector('.programs__captions');
   let sliderFeedback = document.querySelector('.feedback');
   let displayCurrentSlide = sliderFeedback.querySelector('.feedback__current-slides');
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
-  let listFeedback = sliderFeedback.querySelector('.feedback__list');
-  let totalFeedbackSlides = listFeedback.childElementCount;
-
-
-  let gallary = {
-    slider: galleryList,
-    transition: 300,
-    indicator: true
-  };
-
-  let feedbackMobile = {
-    slider: listFeedback,
-    transition: 400,
-    counter: true
-  };
-
-  let feedbackDesktop = {
-    slider: sliderFeedback,
-    DelayForStart: 5000,
-    timeShowSlide: 6000,
-    counter: true,
-    tabIndex: true,
-    buttonForward: sliderFeedback.querySelector(".slider__forward"),
-    buttonBack: sliderFeedback.querySelector(".slider__back")
-  }
-
-  let isTouch = false;
-  let touch = 'mousedown';
-  let touchMove = 'mousemove';
-  let touchUp = 'mouseup';
-  if ('ontouchstart' in window) {
-    isTouch = true;
-    touch = 'touchstart';
-    touchMove = 'touchmove';
-    touchUp = 'touchend';
-  }
+  let feedbackList = sliderFeedback.querySelector('.feedback__list');
+  let totalFeedbackSlides = feedbackList.childElementCount;
 
   sliderGallery.classList.remove('no-js');
 // добавляем индикаторы слайдов
@@ -81,188 +45,239 @@ window.onresize = function () { // обработчик на изменение 
   displayTotalSlide.textContent = totalFeedbackSlides + '';
   displayCurrentSlide.textContent = '1';
 
-  let startSwype = function (obj) {
+  class Slider {
 
-    let {
-      slider,
-      transition,
-      counter,
-      indicator
-    } = obj
+    swype; // DOM элемент (тег <UL>)
+    slider; // DOM элемент (тег <UL>)
+    transition = 0; // плавный доезд слайда
+    autoTranslate = false; // автодоезд слайда
+    counter = null; // текущий слайд
+    indicators = null; // контейнер индикаторов
+    tabIndex = null;
+    slideWidth; // ширина одного слайда
+    leftEdge; //до какого значения left двигать влево
+    rightEdge; //до какого значения left двигать вправо
+    buttonForward;
+    buttonBack
 
-    let currentSlide = 0;
-    let left = 0;
-    let initialLeft = slider.offsetLeft;
+    startSwype() {
 
-    slider.querySelectorAll('img').forEach(img => img.draggable = false)
+      let { // деструктуризация чтобы не писать this
+        swype,
+        transition,
+        counter,
+        indicators,
+      } = this
 
-    slider.addEventListener(touch, function (e) {
-
-      let itemWidth = this.offsetWidth;
-      let containerWidth = itemWidth * this.childElementCount;
-      let leftEdge = itemWidth - containerWidth;
-      let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
-      let shiftX = x - this.offsetLeft;
-      let ctx = this;
-      let relativeLeft = 0;
-
-      let onMove = function (e) {
-        ctx.style.transition = '';
-        let xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
-        left = xMove - shiftX;
-
-        if (left < leftEdge) {
-          left = leftEdge;
-        }
-
-        if (left > initialLeft) {
-          left = initialLeft;
-        }
-
-        ctx.style.left = left + 'px';
-        relativeLeft = left % itemWidth;
-      };
-
-
-      let autoTranslate = function () {
-        ctx.style.transition = transition + 'ms ease-in-out';
-
-        if (indicator) {
-          indicatorContainer.children[currentSlide].classList.remove('slider__ind-color');
-        }
-
-        if (counter) {
-          displayCurrentSlide.textContent = 1 + currentSlide + '';
-        }
-        // если переместили больше чем на половину слайда сдвигаем до конца автоматически
-        if (relativeLeft <= itemWidth * ( -50 / 100 )) {
-          left += -itemWidth - relativeLeft;
-        } else {
-          left -= relativeLeft;
-        }
-
-        ctx.style.left = left + 'px';
-        currentSlide = Math.round(Math.abs(left / itemWidth));
-
-        if (indicator) {
-          indicatorContainer.children[currentSlide].classList.add('slider__ind-color');
-        }
-
-        if (counter) {
-          displayCurrentSlide.textContent = 1 + currentSlide + '';
-        }
-      };
-
-      let onMouseUp = function () {
-        autoTranslate();
-        document.removeEventListener(touchMove, onMove);
-        document.removeEventListener(touchUp, onMouseUp);
-      };
-
-      document.addEventListener(touchMove, onMove);
-      document.addEventListener(touchUp, onMouseUp);
-    });
-  };
-
-  //==================================================================================
-
-  let startSlider = function (obj) {
-
-    let {
-      slider, // DOM элемент слайдера
-      counter, // нужен ли счетчик слайдов
-      indicator, // нужен ли индикатор слайдов
-      tabIndex, // нужно ли отключать фокус на неактивных слайдах
-      buttonForward,
-      buttonBack
-    } = obj
-
-    let slideContainer = slider.querySelector('.slider__list');
-    let amountSlides = slideContainer.childElementCount;
-    let translate = 0;
-
-    let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
-      return listFeedback.children[translate].querySelector('.feedback__details');
-    }
-
-    if (amountSlides > 1) { // если слайдов больше чем 1
-
-      buttonBack.disabled = true; // кнопка назад изначально отключена
-
-      let moveSlide = function () { // переместить слайд на 100% ширины
-        slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+      let isTouch = false;
+      let touch = 'mousedown';
+      let touchMove = 'mousemove';
+      let touchUp = 'mouseup';
+      if ('ontouchstart' in window) {
+        isTouch = true;
+        touch = 'touchstart';
+        touchMove = 'touchmove';
+        touchUp = 'touchend';
       }
-      //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
-      let disableButton = function () {
-        if (translate === 0) {
-          buttonBack.disabled = true;
-          buttonForward.disabled = false;
-        } else if (translate === amountSlides - 1) {
-          buttonForward.disabled = true;
-        } else {
-          buttonBack.disabled = buttonForward.disabled = false;
-        }
-      };
-      // для ручного переключения сладов
-      let onClickSlider = function () {
-        slideContainer.classList.add('slider__list--click-duration');
-        let forward = this === buttonForward;
-        if (indicator) { // для индикации слайдов
-          indicatorContainer.children[translate].classList.remove('slider__ind-color');
-        }
-        if (tabIndex) { // для отключения перехода на непереключеный слайд
-          getFeedbackLink().tabIndex = -1;
-        }
-        if (forward && translate < amountSlides - 1) {
-          buttonBack.disabled = false;
-          translate += 1;
-        } else if (!forward && translate > 0) {
-          buttonForward.disabled = false;
-          translate -= 1;
-        }
-        if (indicator) {
-          indicatorContainer.children[translate].classList.add('slider__ind-color');
-        }
-        if (tabIndex) {
-          getFeedbackLink().tabIndex = 0;
-        }
-        if (counter) {
-          displayCurrentSlide.textContent = translate + 1 + ''; // для вывода текущего слайда
-        }
-        moveSlide();
-        disableButton();
-      };
 
-      buttonForward.addEventListener("click", onClickSlider);
-      buttonBack.addEventListener("click", onClickSlider);
+      let currentSlide = 0;
+      let left = 0;
+      let slideWidth = this.slideWidth || swype.offsetWidth;
+      let leftEdge = this.leftEdge || swype.slideWidth - swype.slideWidth * swype.childElementCount;
+      let rightEdge = this.rightEdge || swype.offsetLeft;
+
+      swype.querySelectorAll('img').forEach(img => img.draggable = false)
+
+      swype.addEventListener(touch, e => {
+
+        let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
+        let shiftX = x - swype.offsetLeft;
+        let relativeLeft = 0;
+
+        let onMove = e => {
+          swype.style.transition = '';
+          let xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
+          left = xMove - shiftX;
+
+          if (left < leftEdge) {
+            left = leftEdge;
+          }
+
+          if (left > rightEdge) {
+            left = rightEdge;
+          }
+
+          swype.style.left = left + 'px';
+          relativeLeft = left % slideWidth;
+        };
+
+        let onMouseUp = () => {
+
+          if (this.autoTranslate) {
+
+            swype.style.transition = transition + 'ms ease-in-out';
+
+            if (indicators) {
+              indicators.children[currentSlide].classList.remove('slider__ind-color');
+            }
+
+            if (counter) {
+              counter.textContent = 1 + currentSlide + '';
+            }
+            // если переместили больше чем на половину слайда сдвигаем до конца автоматически
+            if (relativeLeft <= slideWidth * ( -50 / 100 )) {
+              left += -slideWidth - relativeLeft;
+            } else {
+              left -= relativeLeft;
+            }
+
+            swype.style.left = left + 'px';
+            currentSlide = Math.round(Math.abs(left / slideWidth));
+
+            if (indicators) {
+              indicators.children[currentSlide].classList.add('slider__ind-color');
+            }
+
+            if (counter) {
+              counter.textContent = 1 + currentSlide + '';
+            }
+          }
+          document.removeEventListener(touchMove, onMove);
+          document.removeEventListener(touchUp, onMouseUp);
+        };
+
+        document.addEventListener(touchMove, onMove);
+        document.addEventListener(touchUp, onMouseUp);
+      });
     }
+
+    startSlider() {
+
+      let {
+        slider, // DOM элемент слайдера
+        counter, // текущий слайд
+        indicators, //индикатор слайдов
+        tabIndex, // нужно ли отключать фокус на неактивных слайдах
+        buttonForward,
+        buttonBack
+      } = this
+
+      let slideContainer = slider.querySelector('.slider__list');
+      let amountSlides = slideContainer.childElementCount;
+      let translate = 0;
+
+      let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
+        return slideContainer.children[translate].querySelector('.feedback__details');
+      }
+
+      if (amountSlides > 1) { // если слайдов больше чем 1
+
+        buttonBack.disabled = true; // кнопка назад изначально отключена
+
+        let moveSlide = function () { // переместить слайд на 100% ширины
+          slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
+        }
+        //при просмотре последнего/первого слайда функция отключает/включает соответсвующие кнопки
+        let disableButton = function () {
+          if (translate === 0) {
+            buttonBack.disabled = true;
+            buttonForward.disabled = false;
+          } else if (translate === amountSlides - 1) {
+            buttonForward.disabled = true;
+          } else {
+            buttonBack.disabled = buttonForward.disabled = false;
+          }
+        };
+        // для ручного переключения сладов
+        let onClickSlider = function () {
+          slideContainer.classList.add('slider__list--click-duration');
+          let forward = this === buttonForward;
+
+          if (indicators) { // для индикации слайдов
+            indicators.children[translate].classList.remove('slider__ind-color');
+          }
+          if (tabIndex) { // для отключения перехода на непереключеный слайд
+            getFeedbackLink().tabIndex = -1;
+          }
+          if (forward && translate < amountSlides - 1) {
+            buttonBack.disabled = false;
+            translate += 1;
+          } else if (!forward && translate > 0) {
+            buttonForward.disabled = false;
+            translate -= 1;
+          }
+          if (indicators) {
+            indicators.children[translate].classList.add('slider__ind-color');
+          }
+          if (tabIndex) {
+            getFeedbackLink().tabIndex = 0;
+          }
+          if (counter) {
+            counter.textContent = translate + 1 + ''; // для вывода текущего слайда
+          }
+          moveSlide();
+          disableButton();
+        };
+
+        buttonForward.addEventListener("click", onClickSlider);
+        buttonBack.addEventListener("click", onClickSlider);
+      }
+    }
+
   }
 
+  class Gallery extends Slider {
+    swype = galleryList;
+    transition = 300;
+    autoTranslate = true;
+    indicators = indicatorContainer; // контейнер индикаторов
+  }
+
+  class Feedback extends Slider {
+    swype = feedbackList;
+    slider = sliderFeedback;
+    counter = displayCurrentSlide; // текущий слайд
+    buttonForward = this.slider.querySelector(".slider__forward");
+    buttonBack = this.slider.querySelector(".slider__back")
+    transition = 400;
+    autoTranslate = true;
+    tabIndex = true;
+  }
+
+  class Program extends Slider {
+    swype = tabs;
+    leftEdge = document.documentElement.clientWidth - this.swype.offsetWidth;
+  }
+
+  let feedback = new Feedback()
+  let gallary = new Gallery()
+  new Program().startSwype()
+
   window.mobileVersion = function () {
-    startSwype(gallary);
-    listFeedback.classList.remove('slider__list--click-duration');
-    listFeedback.style.transform = 'translate(0)';
-    listFeedback.style.left = 0;
+    gallary.startSwype()
+    feedbackList.classList.remove('slider__list--click-duration');
+    feedbackList.style.transform = 'translate(0)';
+    feedbackList.style.left = 0;
     displayCurrentSlide.textContent = '1';
-    feedbackDesktop.buttonBack.disabled = true;
-    feedbackDesktop.buttonForward.disabled = true;
-    startSwype(feedbackMobile);
+    feedback.buttonBack.disabled = true;
+    feedback.buttonForward.disabled = true;
+    feedback.startSwype()
   }
 
   window.desktopVersion = function () {
-    listFeedback.style.left = 0;
-    startSlider(feedbackDesktop);
-    feedbackDesktop.buttonForward.disabled = false;
+    feedbackList.style.left = 0;
+    feedback.startSlider()
+    feedback.buttonForward.disabled = false;
   }
 
 
   if (document.documentElement.clientWidth <= 767) {
-    startSwype(gallary);
-    startSwype(feedbackMobile);
+    gallary.startSwype()
+    feedback.startSwype()
   }
 
   if (document.documentElement.clientWidth > 767) {
-    startSlider(feedbackDesktop);
+    feedback.startSlider()
   }
 
 })();

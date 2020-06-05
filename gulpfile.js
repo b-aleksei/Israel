@@ -40,7 +40,8 @@ gulp.task('concat', function() {
 gulp.task('babel', () =>
   gulp.src('source/js/main.js')
     .pipe(babel({
-      presets: ['@babel/env']
+      presets: ['@babel/env'],
+      plugins: ["@babel/plugin-proposal-class-properties"]
       // presets: ["@babel/preset-es2015"]
     }))
     .pipe(gulp.dest('build/js'))
