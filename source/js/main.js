@@ -297,7 +297,7 @@ window.onresize = function () { // обработчик на изменение 
   }
   indicatorContainer.children[0].classList.add('slider__ind-color');
   displayTotalSlide.textContent = totalFeedbackSlides + '';
-  displayCurrentSlide.textContent = '1';
+
 
   class Slider {
 
@@ -316,7 +316,7 @@ window.onresize = function () { // обработчик на изменение 
 
     startSwype() {
 
-      let { // деструктуризация чтобы не писать this
+      let {
         swype,
         transition,
         counter,
@@ -426,7 +426,13 @@ window.onresize = function () { // обработчик на изменение 
 
       if (amountSlides > 1) { // если слайдов больше чем 1
 
-        buttonBack.disabled = true; // кнопка назад изначально отключена
+        if (translate === 0) {
+        buttonBack.disabled = true;
+        }
+
+        if (counter) {
+          displayCurrentSlide.textContent = translate + 1 + '';
+        }
 
         let moveSlide = function () { // переместить слайд на 100% ширины
           slideContainer.style.transform = 'translate(' + translate * -100 + '%)';
@@ -477,7 +483,6 @@ window.onresize = function () { // обработчик на изменение 
         buttonBack.addEventListener("click", onClickSlider);
       }
     }
-
   }
 
   class Gallery extends Slider {
@@ -520,8 +525,9 @@ window.onresize = function () { // обработчик на изменение 
 
   window.desktopVersion = function () {
     feedbackList.style.left = 0;
-    feedback.startSlider()
+    feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
+    feedback.startSlider()
   }
 
 

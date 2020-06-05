@@ -295,7 +295,6 @@ window.onresize = function () {
 
   indicatorContainer.children[0].classList.add('slider__ind-color');
   displayTotalSlide.textContent = totalFeedbackSlides + '';
-  displayCurrentSlide.textContent = '1';
 
   var Slider = /*#__PURE__*/function () {
     function Slider() {
@@ -436,7 +435,13 @@ window.onresize = function () {
 
         if (amountSlides > 1) {
           // если слайдов больше чем 1
-          buttonBack.disabled = true; // кнопка назад изначально отключена
+          if (translate === 0) {
+            buttonBack.disabled = true;
+          }
+
+          if (counter) {
+            displayCurrentSlide.textContent = translate + 1 + '';
+          }
 
           var moveSlide = function moveSlide() {
             // переместить слайд на 100% ширины
@@ -615,8 +620,9 @@ window.onresize = function () {
 
   window.desktopVersion = function () {
     feedbackList.style.left = 0;
-    feedback.startSlider();
+    feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
+    feedback.startSlider();
   };
 
   if (document.documentElement.clientWidth <= 767) {
