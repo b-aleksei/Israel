@@ -264,12 +264,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 })(); //================================слайдер===========================
 
 
+window.userMethods = {
+  isDesktop: true
+};
+
 window.onresize = function () {
   // обработчик на изменение ширины окна
   if (document.documentElement.clientWidth <= 767) {
-    mobileVersion();
-  } else {
-    desktopVersion();
+    if (userMethods.isDesktop) {}
+
+    userMethods.removeOnMousedown();
+    userMethods.mobileVersion();
+    userMethods.isDesktop = false;
+  }
+
+  if (document.documentElement.clientWidth > 767) {
+    if (!userMethods.isDesktop) {
+      userMethods.desktopVersion();
+    }
+
+    userMethods.isDesktop = true;
   }
 };
 
@@ -287,6 +301,7 @@ window.onresize = function () {
   var displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   var feedbackList = sliderFeedback.querySelector('.feedback__list');
   var totalFeedbackSlides = feedbackList.childElementCount;
+  var autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
   sliderGallery.classList.remove('no-js'); // добавляем индикаторы слайдов
 
   while (amountGallarySlides--) {
@@ -295,6 +310,7 @@ window.onresize = function () {
 
   indicatorContainer.children[0].classList.add('slider__ind-color');
   displayTotalSlide.textContent = totalFeedbackSlides + '';
+  displayCurrentSlide.textContent = '1';
 
   var Slider = /*#__PURE__*/function () {
     function Slider() {
@@ -304,15 +320,13 @@ window.onresize = function () {
 
       _defineProperty(this, "slider", void 0);
 
-      _defineProperty(this, "transition", 0);
-
       _defineProperty(this, "autoTranslate", false);
 
-      _defineProperty(this, "counter", null);
+      _defineProperty(this, "counter", void 0);
 
-      _defineProperty(this, "indicators", null);
+      _defineProperty(this, "indicators", void 0);
 
-      _defineProperty(this, "tabIndex", null);
+      _defineProperty(this, "tabIndex", false);
 
       _defineProperty(this, "slideWidth", void 0);
 
@@ -323,17 +337,26 @@ window.onresize = function () {
       _defineProperty(this, "buttonForward", void 0);
 
       _defineProperty(this, "buttonBack", void 0);
+
+      _defineProperty(this, "DelayBeforeStart", void 0);
+
+      _defineProperty(this, "timeShowSlide", void 0);
     }
 
     _createClass(Slider, [{
       key: "startSwype",
+      // время показа слайда
       value: function startSwype() {
         var _this2 = this;
 
         var swype = this.swype,
-            transition = this.transition,
             counter = this.counter,
             indicators = this.indicators;
+        var slideWidth = this.slideWidth || swype.offsetWidth;
+        var leftEdge = this.leftEdge || slideWidth - slideWidth * swype.childElementCount;
+        var rightEdge = this.rightEdge || swype.offsetLeft;
+        var currentSlide = 0;
+        var left = 0;
         var isTouch = false;
         var touch = 'mousedown';
         var touchMove = 'mousemove';
@@ -346,21 +369,17 @@ window.onresize = function () {
           touchUp = 'touchend';
         }
 
-        var currentSlide = 0;
-        var left = 0;
-        var slideWidth = this.slideWidth || swype.offsetWidth;
-        var leftEdge = this.leftEdge || swype.slideWidth - swype.slideWidth * swype.childElementCount;
-        var rightEdge = this.rightEdge || swype.offsetLeft;
         swype.querySelectorAll('img').forEach(function (img) {
           return img.draggable = false;
         });
-        swype.addEventListener(touch, function (e) {
+
+        var onMousedown = function onMousedown(e) {
           var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
           var shiftX = x - swype.offsetLeft;
           var relativeLeft = 0;
 
           var onMove = function onMove(e) {
-            swype.style.transition = '';
+            swype.classList.remove('slider__list--swype');
             var xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
             left = xMove - shiftX;
 
@@ -378,7 +397,7 @@ window.onresize = function () {
 
           var onMouseUp = function onMouseUp() {
             if (_this2.autoTranslate) {
-              swype.style.transition = transition + 'ms ease-in-out';
+              swype.classList.add('slider__list--swype');
 
               if (indicators) {
                 indicators.children[currentSlide].classList.remove('slider__ind-color');
@@ -413,7 +432,13 @@ window.onresize = function () {
 
           document.addEventListener(touchMove, onMove);
           document.addEventListener(touchUp, onMouseUp);
-        });
+        };
+
+        swype.addEventListener(touch, onMousedown);
+
+        window.userMethods.removeOnMousedown = function () {
+          return feedbackList.removeEventListener(touch, onMousedown);
+        };
       }
     }, {
       key: "startSlider",
@@ -422,11 +447,14 @@ window.onresize = function () {
             counter = this.counter,
             indicators = this.indicators,
             tabIndex = this.tabIndex,
+            DelayBeforeStart = this.DelayBeforeStart,
             buttonForward = this.buttonForward,
             buttonBack = this.buttonBack;
+        var timeShowSlide = this.timeShowSlide || 4000;
         var slideContainer = slider.querySelector('.slider__list');
         var amountSlides = slideContainer.childElementCount;
         var translate = 0;
+        var delaySlide, intervalSlider, timer;
 
         var getFeedbackLink = function getFeedbackLink() {
           // вспомогательная функция, ищет элемент
@@ -440,7 +468,7 @@ window.onresize = function () {
           }
 
           if (counter) {
-            displayCurrentSlide.textContent = translate + 1 + '';
+            counter.textContent = translate + 1 + '';
           }
 
           var moveSlide = function moveSlide() {
@@ -462,6 +490,7 @@ window.onresize = function () {
 
 
           var onClickSlider = function onClickSlider() {
+            stopAutoScroll();
             slideContainer.classList.add('slider__list--click-duration');
             var forward = this === buttonForward;
 
@@ -497,10 +526,77 @@ window.onresize = function () {
 
             moveSlide();
             disableButton();
+          }; //для автоматической прокрутки слайдов
+
+
+          var scrollAuto = function scrollAuto() {
+            slideContainer.classList.remove('slider__list--click-duration');
+
+            if (translate === 0) {
+              if (tabIndex) {
+                getFeedbackLink().tabIndex = -1;
+              }
+
+              disableButton();
+              translate += 1;
+
+              if (counter) {
+                counter.textContent = '1';
+              }
+
+              slideContainer.classList.add('slider__list--auto-duration');
+              moveSlide();
+              translate -= 1;
+              delaySlide = setTimeout(appendSlide, autoDuration);
+            }
           };
+
+          var appendSlide = function appendSlide() {
+            // переместить первый слайд в конец списка
+            slideContainer.classList.remove('slider__list--auto-duration');
+            moveSlide();
+            slideContainer.appendChild(slideContainer.firstElementChild);
+
+            if (tabIndex && translate === 0) {
+              // для отключения перехода на непереключеный слайд
+              getFeedbackLink().tabIndex = 0;
+            }
+          };
+
+          var startAutoScroll = function startAutoScroll() {
+            timer = setTimeout(function () {
+              intervalSlider = setInterval(function () {
+                scrollAuto();
+              }, timeShowSlide);
+            }, DelayBeforeStart);
+          };
+
+          var stopAutoScroll = function stopAutoScroll() {
+            clearTimeout(timer);
+            clearTimeout(delaySlide);
+            clearInterval(intervalSlider);
+            slideContainer.classList.remove('slider__list--auto-duration');
+          }; // для запуска автоскролла
+
+
+          if (typeof DelayBeforeStart === 'number') {
+            autoDuration = parseInt(autoDuration) || 1000;
+
+            if (typeof autoDuration === 'number' && typeof timeShowSlide === 'number') {
+              timeShowSlide += autoDuration;
+            }
+
+            startAutoScroll();
+          }
 
           buttonForward.addEventListener("click", onClickSlider);
           buttonBack.addEventListener("click", onClickSlider);
+          window.userMethods.stopAutoScroll = stopAutoScroll;
+
+          window.userMethods.removeOnClick = function () {
+            buttonForward.removeEventListener("click", onClickSlider);
+            buttonBack.removeEventListener("click", onClickSlider);
+          };
         }
       }
     }]);
@@ -525,8 +621,6 @@ window.onresize = function () {
       _this3 = _super.call.apply(_super, [this].concat(args));
 
       _defineProperty(_assertThisInitialized(_this3), "swype", galleryList);
-
-      _defineProperty(_assertThisInitialized(_this3), "transition", 300);
 
       _defineProperty(_assertThisInitialized(_this3), "autoTranslate", true);
 
@@ -565,11 +659,11 @@ window.onresize = function () {
 
       _defineProperty(_assertThisInitialized(_this4), "buttonBack", _this4.slider.querySelector(".slider__back"));
 
-      _defineProperty(_assertThisInitialized(_this4), "transition", 400);
-
       _defineProperty(_assertThisInitialized(_this4), "autoTranslate", true);
 
       _defineProperty(_assertThisInitialized(_this4), "tabIndex", true);
+
+      _defineProperty(_assertThisInitialized(_this4), "DelayBeforeStart", 3000);
 
       return _this4;
     }
@@ -607,18 +701,21 @@ window.onresize = function () {
   var gallary = new Gallery();
   new Program().startSwype();
 
-  window.mobileVersion = function () {
+  window.userMethods.mobileVersion = function () {
+    userMethods.removeOnClick();
+    userMethods.stopAutoScroll();
     gallary.startSwype();
     feedbackList.classList.remove('slider__list--click-duration');
     feedbackList.style.transform = 'translate(0)';
     feedbackList.style.left = 0;
     displayCurrentSlide.textContent = '1';
-    feedback.buttonBack.disabled = true;
-    feedback.buttonForward.disabled = true;
+    feedback.buttonBack.disabled = false;
     feedback.startSwype();
   };
 
-  window.desktopVersion = function () {
+  window.userMethods.desktopVersion = function () {
+    feedbackList.classList.remove('slider__list--swype');
+    userMethods.removeOnMousedown();
     feedbackList.style.left = 0;
     feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
@@ -626,6 +723,7 @@ window.onresize = function () {
   };
 
   if (document.documentElement.clientWidth <= 767) {
+    userMethods.isDesktop = false;
     gallary.startSwype();
     feedback.startSwype();
   }

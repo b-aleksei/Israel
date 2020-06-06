@@ -43,6 +43,10 @@
   background: $gradient;
 }
 
+.slider__list--swype {
+  transition: 400ms ease-in-out;
+}
+
 .slider__list--click-duration {
   transition: 600ms ease-in-out;
 }

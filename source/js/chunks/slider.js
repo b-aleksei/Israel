@@ -1,15 +1,29 @@
 //================================слайдер===========================
+window.userMethods = {
+  isDesktop: true
+}
+
 window.onresize = function () { // обработчик на изменение ширины окна
+
   if (document.documentElement.clientWidth <= 767) {
-    mobileVersion()
-  } else {
-    desktopVersion()
+    if (userMethods.isDesktop) {
+    }
+    userMethods.removeOnMousedown();
+    userMethods.mobileVersion()
+    userMethods.isDesktop = false
+  }
+
+  if (document.documentElement.clientWidth > 767) {
+    if (!userMethods.isDesktop) {
+    userMethods.desktopVersion()
+    }
+    userMethods.isDesktop = true
   }
 }
 
 "use strict";
 
-(function () {
+( function () {
 
   let sliderGallery = document.querySelector('.gallery__slider');
   let galleryList = sliderGallery.querySelector('.gallery__list');
@@ -35,6 +49,7 @@ window.onresize = function () { // обработчик на изменение 
   let displayTotalSlide = sliderFeedback.querySelector('.feedback__total-slides');
   let feedbackList = sliderFeedback.querySelector('.feedback__list');
   let totalFeedbackSlides = feedbackList.childElementCount;
+  let autoDuration = getComputedStyle(sliderFeedback).getPropertyValue('--auto-duration');
 
   sliderGallery.classList.remove('no-js');
 // добавляем индикаторы слайдов
@@ -43,31 +58,38 @@ window.onresize = function () { // обработчик на изменение 
   }
   indicatorContainer.children[0].classList.add('slider__ind-color');
   displayTotalSlide.textContent = totalFeedbackSlides + '';
+  displayCurrentSlide.textContent = '1';
 
 
   class Slider {
 
     swype; // DOM элемент (тег <UL>)
     slider; // DOM элемент (тег <UL>)
-    transition = 0; // плавный доезд слайда
     autoTranslate = false; // автодоезд слайда
-    counter = null; // текущий слайд
-    indicators = null; // контейнер индикаторов
-    tabIndex = null;
+    counter; // DOM элемент показывающий текущий слайд
+    indicators; //DOM элемент, контейнер индикаторов
+    tabIndex = false;  // [bool] нужно ли отключать фокус на неактивных слайдах
     slideWidth; // ширина одного слайда
     leftEdge; //до какого значения left двигать влево
     rightEdge; //до какого значения left двигать вправо
     buttonForward;
-    buttonBack
+    buttonBack;
+    DelayBeforeStart; // через сколько ms запускать автоскролл
+    timeShowSlide; // время показа слайда
 
     startSwype() {
 
       let {
         swype,
-        transition,
         counter,
         indicators,
       } = this
+
+      let slideWidth = this.slideWidth || swype.offsetWidth;
+      let leftEdge = this.leftEdge || slideWidth - slideWidth * swype.childElementCount;
+      let rightEdge = this.rightEdge || swype.offsetLeft;
+      let currentSlide = 0;
+      let left = 0;
 
       let isTouch = false;
       let touch = 'mousedown';
@@ -80,22 +102,16 @@ window.onresize = function () { // обработчик на изменение 
         touchUp = 'touchend';
       }
 
-      let currentSlide = 0;
-      let left = 0;
-      let slideWidth = this.slideWidth || swype.offsetWidth;
-      let leftEdge = this.leftEdge || swype.slideWidth - swype.slideWidth * swype.childElementCount;
-      let rightEdge = this.rightEdge || swype.offsetLeft;
-
       swype.querySelectorAll('img').forEach(img => img.draggable = false)
 
-      swype.addEventListener(touch, e => {
+          let onMousedown = e => {
 
         let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
         let shiftX = x - swype.offsetLeft;
         let relativeLeft = 0;
 
         let onMove = e => {
-          swype.style.transition = '';
+          swype.classList.remove('slider__list--swype')
           let xMove = isTouch ? e.changedTouches[0].clientX : e.clientX;
           left = xMove - shiftX;
 
@@ -114,33 +130,32 @@ window.onresize = function () { // обработчик на изменение 
         let onMouseUp = () => {
 
           if (this.autoTranslate) {
+            swype.classList.add('slider__list--swype')
 
-            swype.style.transition = transition + 'ms ease-in-out';
+          if (indicators) {
+            indicators.children[currentSlide].classList.remove('slider__ind-color');
+          }
 
-            if (indicators) {
-              indicators.children[currentSlide].classList.remove('slider__ind-color');
-            }
+          if (counter) {
+            counter.textContent = 1 + currentSlide + '';
+          }
+          // если переместили больше чем на половину слайда сдвигаем до конца автоматически
+          if (relativeLeft <= slideWidth * ( -50 / 100 )) {
+            left += -slideWidth - relativeLeft;
+          } else {
+            left -= relativeLeft;
+          }
 
-            if (counter) {
-              counter.textContent = 1 + currentSlide + '';
-            }
-            // если переместили больше чем на половину слайда сдвигаем до конца автоматически
-            if (relativeLeft <= slideWidth * ( -50 / 100 )) {
-              left += -slideWidth - relativeLeft;
-            } else {
-              left -= relativeLeft;
-            }
+          swype.style.left = left + 'px';
+          currentSlide = Math.round(Math.abs(left / slideWidth));
 
-            swype.style.left = left + 'px';
-            currentSlide = Math.round(Math.abs(left / slideWidth));
+          if (indicators) {
+            indicators.children[currentSlide].classList.add('slider__ind-color');
+          }
 
-            if (indicators) {
-              indicators.children[currentSlide].classList.add('slider__ind-color');
-            }
-
-            if (counter) {
-              counter.textContent = 1 + currentSlide + '';
-            }
+          if (counter) {
+            counter.textContent = 1 + currentSlide + '';
+          }
           }
           document.removeEventListener(touchMove, onMove);
           document.removeEventListener(touchUp, onMouseUp);
@@ -148,23 +163,29 @@ window.onresize = function () { // обработчик на изменение 
 
         document.addEventListener(touchMove, onMove);
         document.addEventListener(touchUp, onMouseUp);
-      });
+      };
+
+      swype.addEventListener(touch, onMousedown)
+      window.userMethods.removeOnMousedown = () => feedbackList.removeEventListener(touch, onMousedown)
     }
 
     startSlider() {
 
       let {
-        slider, // DOM элемент слайдера
-        counter, // текущий слайд
-        indicators, //индикатор слайдов
-        tabIndex, // нужно ли отключать фокус на неактивных слайдах
+        slider,
+        counter,
+        indicators,
+        tabIndex,
+        DelayBeforeStart,
         buttonForward,
         buttonBack
       } = this
 
+      let timeShowSlide = this.timeShowSlide || 4000;
       let slideContainer = slider.querySelector('.slider__list');
       let amountSlides = slideContainer.childElementCount;
       let translate = 0;
+      let delaySlide, intervalSlider, timer;
 
       let getFeedbackLink = function () { // вспомогательная функция, ищет элемент
         return slideContainer.children[translate].querySelector('.feedback__details');
@@ -173,11 +194,11 @@ window.onresize = function () { // обработчик на изменение 
       if (amountSlides > 1) { // если слайдов больше чем 1
 
         if (translate === 0) {
-        buttonBack.disabled = true;
+          buttonBack.disabled = true;
         }
 
         if (counter) {
-          displayCurrentSlide.textContent = translate + 1 + '';
+          counter.textContent = translate + 1 + '';
         }
 
         let moveSlide = function () { // переместить слайд на 100% ширины
@@ -196,6 +217,7 @@ window.onresize = function () { // обработчик на изменение 
         };
         // для ручного переключения сладов
         let onClickSlider = function () {
+          stopAutoScroll();
           slideContainer.classList.add('slider__list--click-duration');
           let forward = this === buttonForward;
 
@@ -225,15 +247,71 @@ window.onresize = function () { // обработчик на изменение 
           disableButton();
         };
 
+        //для автоматической прокрутки слайдов
+        let scrollAuto = function () {
+          slideContainer.classList.remove('slider__list--click-duration');
+          if (translate === 0) {
+            if (tabIndex) {
+              getFeedbackLink().tabIndex = -1;
+            }
+            disableButton();
+            translate += 1;
+            if (counter) {
+              counter.textContent = '1';
+            }
+            slideContainer.classList.add('slider__list--auto-duration');
+            moveSlide();
+            translate -= 1;
+            delaySlide = setTimeout(appendSlide, autoDuration)
+          }
+        }
+
+        let appendSlide = function () { // переместить первый слайд в конец списка
+          slideContainer.classList.remove('slider__list--auto-duration');
+          moveSlide();
+          slideContainer.appendChild(slideContainer.firstElementChild);
+          if (tabIndex && translate === 0) { // для отключения перехода на непереключеный слайд
+            getFeedbackLink().tabIndex = 0;
+          }
+        }
+
+        let startAutoScroll = function () {
+          timer = setTimeout(function () {
+            intervalSlider = setInterval(function () {
+              scrollAuto();
+            }, timeShowSlide);
+          }, DelayBeforeStart)
+        };
+
+        let stopAutoScroll = function () {
+          clearTimeout(timer);
+          clearTimeout(delaySlide);
+          clearInterval(intervalSlider);
+          slideContainer.classList.remove('slider__list--auto-duration');
+        }
+
+        // для запуска автоскролла
+        if (typeof DelayBeforeStart === 'number') {
+          autoDuration = parseInt(autoDuration) || 1000;
+          if (typeof autoDuration === 'number' && typeof timeShowSlide === 'number') {
+            timeShowSlide += autoDuration
+          }
+          startAutoScroll()
+        }
+
         buttonForward.addEventListener("click", onClickSlider);
         buttonBack.addEventListener("click", onClickSlider);
+        window.userMethods.stopAutoScroll = stopAutoScroll
+        window.userMethods.removeOnClick = () => {
+          buttonForward.removeEventListener("click", onClickSlider);
+          buttonBack.removeEventListener("click", onClickSlider);
+        }
       }
     }
   }
 
   class Gallery extends Slider {
     swype = galleryList;
-    transition = 300;
     autoTranslate = true;
     indicators = indicatorContainer; // контейнер индикаторов
   }
@@ -244,9 +322,9 @@ window.onresize = function () { // обработчик на изменение 
     counter = displayCurrentSlide; // текущий слайд
     buttonForward = this.slider.querySelector(".slider__forward");
     buttonBack = this.slider.querySelector(".slider__back")
-    transition = 400;
     autoTranslate = true;
     tabIndex = true;
+    DelayBeforeStart = 3000
   }
 
   class Program extends Slider {
@@ -258,18 +336,21 @@ window.onresize = function () { // обработчик на изменение 
   let gallary = new Gallery()
   new Program().startSwype()
 
-  window.mobileVersion = function () {
+  window.userMethods.mobileVersion = function () {
+    userMethods.removeOnClick();
+    userMethods.stopAutoScroll();
     gallary.startSwype()
     feedbackList.classList.remove('slider__list--click-duration');
     feedbackList.style.transform = 'translate(0)';
     feedbackList.style.left = 0;
     displayCurrentSlide.textContent = '1';
-    feedback.buttonBack.disabled = true;
-    feedback.buttonForward.disabled = true;
+    feedback.buttonBack.disabled = false;
     feedback.startSwype()
-  }
+  };
 
-  window.desktopVersion = function () {
+  window.userMethods.desktopVersion = function () {
+    feedbackList.classList.remove('slider__list--swype');
+    userMethods.removeOnMousedown();
     feedbackList.style.left = 0;
     feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
@@ -278,6 +359,7 @@ window.onresize = function () { // обработчик на изменение 
 
 
   if (document.documentElement.clientWidth <= 767) {
+    userMethods.isDesktop = false
     gallary.startSwype()
     feedback.startSwype()
   }
@@ -286,5 +368,5 @@ window.onresize = function () { // обработчик на изменение 
     feedback.startSlider()
   }
 
-})();
+} )();
 
