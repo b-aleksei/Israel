@@ -372,6 +372,8 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex; }
+  .programs__block:focus {
+    outline: none; }
 
 .programs__captions {
   width: 228px;
@@ -429,6 +431,8 @@ body {
   margin-left: 64px;
   margin-right: 102px;
   overflow-x: hidden; }
+  .programs__wrap:focus {
+    outline: none; }
 
 .programs__content {
   display: -webkit-box;

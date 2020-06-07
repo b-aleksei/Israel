@@ -265,20 +265,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 window.userMethods = {
-  isDesktop: true
+  isDesktop: true,
+  handler: {},
+  screenSize: document.documentElement.clientWidth
 };
 
 window.onresize = function () {
   // обработчик на изменение ширины окна
-  if (document.documentElement.clientWidth <= 767) {
-    if (userMethods.isDesktop) {}
+  userMethods.screenSize = document.documentElement.clientWidth;
 
-    userMethods.removeOnMousedown();
-    userMethods.mobileVersion();
+  if (userMethods.screenSize <= 767) {
+    userMethods.adjustResize();
+
+    if (userMethods.isDesktop) {
+      userMethods.mobileVersion();
+    }
+
     userMethods.isDesktop = false;
   }
 
-  if (document.documentElement.clientWidth > 767) {
+  if (userMethods.screenSize > 767) {
     if (!userMethods.isDesktop) {
       userMethods.desktopVersion();
     }
@@ -352,8 +358,6 @@ window.onresize = function () {
         var swype = this.swype,
             counter = this.counter,
             indicators = this.indicators;
-        var slideWidth = this.slideWidth || swype.offsetWidth;
-        var leftEdge = this.leftEdge || slideWidth - slideWidth * swype.childElementCount;
         var rightEdge = this.rightEdge || swype.offsetLeft;
         var currentSlide = 0;
         var left = 0;
@@ -369,11 +373,29 @@ window.onresize = function () {
           touchUp = 'touchend';
         }
 
+        if (indicators) {
+          for (var i = 1; i < indicators.childElementCount; i++) {
+            indicators.children[i].classList.remove('slider__ind-color');
+          }
+
+          indicators.children[0].classList.add('slider__ind-color');
+        }
+
+        swype.style.left = 0;
         swype.querySelectorAll('img').forEach(function (img) {
           return img.draggable = false;
         });
 
         var onMousedown = function onMousedown(e) {
+          var slideWidth = _this2.slideWidth || swype.offsetWidth;
+          console.log('slideWidth', slideWidth);
+          var leftEdge = slideWidth - slideWidth * swype.childElementCount;
+
+          if (swype === tabs) {
+            leftEdge = userMethods.screenSize - swype.offsetWidth;
+          }
+
+          console.log('leftEdge', leftEdge);
           var x = isTouch ? e.changedTouches[0].clientX : e.clientX;
           var shiftX = x - swype.offsetLeft;
           var relativeLeft = 0;
@@ -435,9 +457,10 @@ window.onresize = function () {
         };
 
         swype.addEventListener(touch, onMousedown);
+        var type = swype.getAttribute('id');
 
-        window.userMethods.removeOnMousedown = function () {
-          return feedbackList.removeEventListener(touch, onMousedown);
+        window.userMethods.handler[type] = function () {
+          swype.removeEventListener(touch, onMousedown);
         };
       }
     }, {
@@ -689,8 +712,6 @@ window.onresize = function () {
 
       _defineProperty(_assertThisInitialized(_this5), "swype", tabs);
 
-      _defineProperty(_assertThisInitialized(_this5), "leftEdge", document.documentElement.clientWidth - _this5.swype.offsetWidth);
-
       return _this5;
     }
 
@@ -699,23 +720,47 @@ window.onresize = function () {
 
   var feedback = new Feedback();
   var gallary = new Gallery();
-  new Program().startSwype();
+  var program = new Program();
+
+  window.userMethods.adjustResize = function () {
+    feedbackList.style.left = 0;
+    displayCurrentSlide.textContent = '1';
+  };
 
   window.userMethods.mobileVersion = function () {
-    userMethods.removeOnClick();
-    userMethods.stopAutoScroll();
+    if (userMethods.removeOnClick) {
+      userMethods.removeOnClick();
+    }
+
+    if (Object.keys(userMethods.handler).length) {
+      for (var key in userMethods.handler) {
+        userMethods.handler[key]();
+      }
+    }
+
+    if (userMethods.stopAutoScroll) {
+      userMethods.stopAutoScroll();
+    }
+
+    program.startSwype();
     gallary.startSwype();
     feedbackList.classList.remove('slider__list--click-duration');
     feedbackList.style.transform = 'translate(0)';
-    feedbackList.style.left = 0;
     displayCurrentSlide.textContent = '1';
-    feedback.buttonBack.disabled = false;
+    feedback.buttonBack.disabled = true;
+    feedback.buttonForward.disabled = true;
     feedback.startSwype();
   };
 
   window.userMethods.desktopVersion = function () {
     feedbackList.classList.remove('slider__list--swype');
-    userMethods.removeOnMousedown();
+
+    if (Object.keys(userMethods.handler).length) {
+      for (var key in userMethods.handler) {
+        userMethods.handler[key]();
+      }
+    }
+
     feedbackList.style.left = 0;
     feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
@@ -724,11 +769,14 @@ window.onresize = function () {
 
   if (document.documentElement.clientWidth <= 767) {
     userMethods.isDesktop = false;
+    program.startSwype();
     gallary.startSwype();
     feedback.startSwype();
+    feedback.buttonBack.disabled = true;
+    feedback.buttonForward.disabled = true;
   }
 
   if (document.documentElement.clientWidth > 767) {
-    feedback.startSlider();
+    feedback.startSlider(); // setTimeout(feedback.startSlider, 1500)
   }
 })();

@@ -90,7 +90,7 @@
         <input class="programs__toggle" id="voluntary" type="radio" name="program">
         <input class="programs__toggle" id="religious" type="radio" name="program">
         <div class="programs__block" tabindex="-1">
-          <ul class="programs__captions">
+          <ul id="program" class="programs__captions">
             <li><label class="programs__type programs__type--share" for="share">
               <svg width="32" height="36">
                 <use xlink:href="#first"></use>
@@ -236,7 +236,7 @@
           </picture>
           <p class="gallery__caption gallery__caption--1">Экскурсии по Израилю <br>и знакомство с его историей</p>
         </div>
-        <ul class="gallery__list slider__list">
+        <ul id="gallery" class="gallery__list slider__list">
           <li class="gallery__item gallery__item--2 slider__item">
             <picture>
               <source type="image/webp" media="(max-width: 767px)" srcset="img/mobile/2_m@1x.webp 1x, img/mobile/2_m@2x.webp 2x">
@@ -390,7 +390,7 @@
     <section class="feedback slider">
       <div class="feedback__container slider">
         <h2 class="feedback__title">Отзывы</h2>
-        <ul class="feedback__list slider__list">
+        <ul id="feedback" class="feedback__list slider__list">
           <li class="feedback__item slider__item">
             <div class="feedback__wrap-img">
               <picture>

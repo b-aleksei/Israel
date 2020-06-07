@@ -31,6 +31,10 @@
 
 .programs__block {
   display: flex;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .programs__captions {
@@ -86,6 +90,10 @@
   margin-left: 64px;
   margin-right: 102px;
   overflow-x: hidden;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .programs__content {

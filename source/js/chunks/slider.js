@@ -1,21 +1,24 @@
 //================================слайдер===========================
 window.userMethods = {
-  isDesktop: true
+  isDesktop: true,
+  handler: {},
+  screenSize: document.documentElement.clientWidth
 }
 
 window.onresize = function () { // обработчик на изменение ширины окна
+  userMethods.screenSize = document.documentElement.clientWidth
 
-  if (document.documentElement.clientWidth <= 767) {
-    if (userMethods.isDesktop) {
-    }
-    userMethods.removeOnMousedown();
+  if (userMethods.screenSize <= 767) {
+    userMethods.adjustResize()
+        if (userMethods.isDesktop) {
     userMethods.mobileVersion()
+        }
     userMethods.isDesktop = false
   }
 
-  if (document.documentElement.clientWidth > 767) {
+  if (userMethods.screenSize > 767) {
     if (!userMethods.isDesktop) {
-    userMethods.desktopVersion()
+      userMethods.desktopVersion()
     }
     userMethods.isDesktop = true
   }
@@ -85,8 +88,7 @@ window.onresize = function () { // обработчик на изменение 
         indicators,
       } = this
 
-      let slideWidth = this.slideWidth || swype.offsetWidth;
-      let leftEdge = this.leftEdge || slideWidth - slideWidth * swype.childElementCount;
+
       let rightEdge = this.rightEdge || swype.offsetLeft;
       let currentSlide = 0;
       let left = 0;
@@ -102,10 +104,24 @@ window.onresize = function () { // обработчик на изменение 
         touchUp = 'touchend';
       }
 
+      if (indicators) {
+        for (let i = 1; i < indicators.childElementCount; i++) {
+          indicators.children[i].classList.remove('slider__ind-color');
+        }
+        indicators.children[0].classList.add('slider__ind-color');
+      }
+
+      swype.style.left = 0;
       swype.querySelectorAll('img').forEach(img => img.draggable = false)
 
-          let onMousedown = e => {
-
+      let onMousedown = e => {
+        let slideWidth = this.slideWidth || swype.offsetWidth;
+        console.log('slideWidth', slideWidth);
+        let leftEdge = slideWidth - slideWidth * swype.childElementCount;
+        if (swype === tabs) {
+          leftEdge = userMethods.screenSize - swype.offsetWidth;
+        }
+        console.log('leftEdge', leftEdge);
         let x = isTouch ? e.changedTouches[0].clientX : e.clientX;
         let shiftX = x - swype.offsetLeft;
         let relativeLeft = 0;
@@ -132,30 +148,30 @@ window.onresize = function () { // обработчик на изменение 
           if (this.autoTranslate) {
             swype.classList.add('slider__list--swype')
 
-          if (indicators) {
-            indicators.children[currentSlide].classList.remove('slider__ind-color');
-          }
+            if (indicators) {
+              indicators.children[currentSlide].classList.remove('slider__ind-color');
+            }
 
-          if (counter) {
-            counter.textContent = 1 + currentSlide + '';
-          }
-          // если переместили больше чем на половину слайда сдвигаем до конца автоматически
-          if (relativeLeft <= slideWidth * ( -50 / 100 )) {
-            left += -slideWidth - relativeLeft;
-          } else {
-            left -= relativeLeft;
-          }
+            if (counter) {
+              counter.textContent = 1 + currentSlide + '';
+            }
+            // если переместили больше чем на половину слайда сдвигаем до конца автоматически
+            if (relativeLeft <= slideWidth * ( -50 / 100 )) {
+              left += -slideWidth - relativeLeft;
+            } else {
+              left -= relativeLeft;
+            }
 
-          swype.style.left = left + 'px';
-          currentSlide = Math.round(Math.abs(left / slideWidth));
+            swype.style.left = left + 'px';
+            currentSlide = Math.round(Math.abs(left / slideWidth));
 
-          if (indicators) {
-            indicators.children[currentSlide].classList.add('slider__ind-color');
-          }
+            if (indicators) {
+              indicators.children[currentSlide].classList.add('slider__ind-color');
+            }
 
-          if (counter) {
-            counter.textContent = 1 + currentSlide + '';
-          }
+            if (counter) {
+              counter.textContent = 1 + currentSlide + '';
+            }
           }
           document.removeEventListener(touchMove, onMove);
           document.removeEventListener(touchUp, onMouseUp);
@@ -166,7 +182,11 @@ window.onresize = function () { // обработчик на изменение 
       };
 
       swype.addEventListener(touch, onMousedown)
-      window.userMethods.removeOnMousedown = () => feedbackList.removeEventListener(touch, onMousedown)
+
+      let type = swype.getAttribute('id')
+      window.userMethods.handler[type] = () => {
+        swype.removeEventListener(touch, onMousedown)
+      }
     }
 
     startSlider() {
@@ -329,43 +349,64 @@ window.onresize = function () { // обработчик на изменение 
 
   class Program extends Slider {
     swype = tabs;
-    leftEdge = document.documentElement.clientWidth - this.swype.offsetWidth;
   }
 
   let feedback = new Feedback()
   let gallary = new Gallery()
-  new Program().startSwype()
+  let program = new Program();
 
-  window.userMethods.mobileVersion = function () {
-    userMethods.removeOnClick();
-    userMethods.stopAutoScroll();
+  window.userMethods.adjustResize = () => {
+    feedbackList.style.left = 0;
+    displayCurrentSlide.textContent = '1';
+  }
+
+  window.userMethods.mobileVersion = () => {
+    if (userMethods.removeOnClick) {
+      userMethods.removeOnClick();
+    }
+    if (Object.keys(userMethods.handler).length) {
+      for (let key in userMethods.handler) {
+        userMethods.handler[key]()
+      }
+    }
+    if (userMethods.stopAutoScroll) {
+      userMethods.stopAutoScroll();
+    }
+    program.startSwype()
     gallary.startSwype()
     feedbackList.classList.remove('slider__list--click-duration');
     feedbackList.style.transform = 'translate(0)';
-    feedbackList.style.left = 0;
     displayCurrentSlide.textContent = '1';
-    feedback.buttonBack.disabled = false;
+    feedback.buttonBack.disabled = true;
+    feedback.buttonForward.disabled = true;
     feedback.startSwype()
   };
 
-  window.userMethods.desktopVersion = function () {
+  window.userMethods.desktopVersion = () => {
     feedbackList.classList.remove('slider__list--swype');
-    userMethods.removeOnMousedown();
+    if (Object.keys(userMethods.handler).length) {
+      for (let key in userMethods.handler) {
+        userMethods.handler[key]()
+      }
+    }
     feedbackList.style.left = 0;
     feedbackList.style.transform = 'translate(0)';
     feedback.buttonForward.disabled = false;
     feedback.startSlider()
   }
 
-
   if (document.documentElement.clientWidth <= 767) {
     userMethods.isDesktop = false
+    program.startSwype()
     gallary.startSwype()
     feedback.startSwype()
+    feedback.buttonBack.disabled = true;
+    feedback.buttonForward.disabled = true;
   }
 
   if (document.documentElement.clientWidth > 767) {
     feedback.startSlider()
+    // setTimeout(feedback.startSlider, 1500)
   }
 
 } )();
