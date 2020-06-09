@@ -777,6 +777,6 @@ window.onresize = function () {
   }
 
   if (document.documentElement.clientWidth > 767) {
-    feedback.startSlider(); // setTimeout(feedback.startSlider, 1500)
+    feedback.startSlider();
   }
 })();

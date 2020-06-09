@@ -406,7 +406,6 @@ window.onresize = function () { // обработчик на изменение 
 
   if (document.documentElement.clientWidth > 767) {
     feedback.startSlider()
-    // setTimeout(feedback.startSlider, 1500)
   }
 
 } )();
